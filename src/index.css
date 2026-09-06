@@ -1,1 +1,69 @@
 @import 'tailwindcss';
+
+:root {
+  /*color palete section*/
+  --ts-blue-900: #003d9b; /*primary*/
+  --ts-blue-800: #0052cc; /*primary container*/
+  --ts-blue-gredient: linear-gradient(
+    90deg,
+    #0052cc 0%,
+    #003d9b 100%
+  ); /*primary container gradient*/
+  --ts-blue-500: #d7e2ff; /*Surface Highest*/
+  --ts-blue-400: #d7e2ff; /*Surface Medium*/
+  --ts-blue-300: #f1f3ff; /*Surface Low*/
+  --ts-default-background: #f9f9ff; /*Background*/
+  /*  Slate Neutrals*/
+  --ts-slate-900: #041b3c; /*slate dark*/
+  --ts-slate-500: #4f5f7b; /*slate medium*/
+  --ts-slate-200: #c3c6d6; /*slate light*/
+  /*Semantic*/
+  --ts-mint: #82f9be; /*success*/
+  --ts-darkred: #ba1a1a; /*error*/
+  --ts-yellow: #ffb300; /*warning*/
+  /*Typography*/
+  --ts-font-family: 'Inter', sans-serif;
+  /*radious*/
+  --ts--radious-xs: 2px;
+  --ts--radious-sm: 4px;
+  --ts-radious-md: 8px; /*cta section*/
+  --ts-radious-l: 12px; /*hero*/
+  /*spacing*/
+  --ts-space-1: 4px;
+  --ts-space-2: 6px;
+  --ts-space-3: 8px;
+  --ts-space-4: 16px;
+  --ts-space-5: 24px;
+}
+@theme {
+  --color-Primary: var(--ts-blue-900);
+  --color-Primary-Container: var(--ts-blue-800);
+  --color-Primary-Gradient: var(--ts-blue-gredient);
+  --color-Surface-Highest: var(--ts-blue-500);
+  --color-Surface-Medium: var(--ts-blue-400);
+  --color-Surface-Low: var(--ts-blue-300);
+  --color-Background: var(--ts-default-background);
+  --color-Slate-Dark: var(--ts-slate-900);
+  --color-Slate-Medium: var(--ts-slate-500);
+  --color-Slate-Light: var(--ts-slate-200);
+  --color-Success: var(--ts-mint);
+  --color-Error: var(--ts-darkred);
+  --color-Warning: var(--ts-yellow);
+  --font-family: var(--ts-font-family);
+  --text-display-lg: 56px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--font-weight: 700;
+  --text-Headline-LG: 32px;
+  --text-Headline-LG-line-height: 40px;
+  --text-Headline-LG-font-weight: 600;
+  --text-Title-MD: 18px;
+  --text-Title-MD-line-height: 24px;
+  --text-Title-MD-font-weight: 500;
+  --text-Body-MD: 14px;
+  --text-Body-MD-line-height: 22.75px;
+  --text-Body-MD-font-weight: 400;
+  --text-Label-Sm: 11px;
+  --text-Label-Sm-line-height: 16.5px;
+  --text-Label-Sm-font-weight: 700;
+  --text-Label-Sm-letter-spacing: 1.1px;
+}
