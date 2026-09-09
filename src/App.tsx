@@ -1,8 +1,21 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SignUp } from "./pages/SignUp";
+import Login from "./pages/Login"
 function App() {
+  
+
+
   return (
     <>
-      <h1 className="text-7xl text-red-900">taskly</h1>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/login" element={<Login/>}/>
+    </Routes>
+    </BrowserRouter>
     </>
+    
+  
   )
 }
 
