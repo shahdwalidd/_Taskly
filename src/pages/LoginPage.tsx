@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Loginschema, type LoginFormValues } from "../schemas/Loginschema";
-import { Logo } from "../components/shared/LogoIcon";
-import { AuthCard } from "./AuthCard";
+import { Header } from "../components/shared/Header";
+import { AuthCard } from "../components/shared/AuthCard";
 import { PasswordField } from "../components/shared/PasswordField";
 import { FormField } from "../components/shared/FormField";
 import { Button } from "../components/shared/Button";
@@ -57,7 +57,8 @@ const [rememberMe, setRememberMe] = useState(false);
 
   return (
     <>
-      <Logo />
+    <Header/>
+                 <div className="flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center bg-background px-6 py-12">
 
       <AuthCard>
         <div>
@@ -92,6 +93,8 @@ const [rememberMe, setRememberMe] = useState(false);
                 value={field.value}
                 onChange={field.onChange}
                 error={errors.password?.message}
+                  linkText="Forgot?"
+  onLinkClick={() => navigate("/forgot-password")}
               />
             )}
           />
@@ -117,6 +120,7 @@ const [rememberMe, setRememberMe] = useState(false);
         />
         </div>
       </AuthCard>
+      </div>
     </>
   );
 };

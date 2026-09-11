@@ -33,7 +33,7 @@ export function FormField({
                 onChange={(e) => onChange(e.target.value)}
                 className="w-full py-3.5 px-4 rounded-sm text-body-md bg-surface-highest placeholder:text-slate-medium focus:outline-none focus:ring-2 focus:ring-primary"
             />
-            {error?(<span className="text-label-sm text-error">{error}</span>):hint?(<span className="text-[11px] font-normal leading-[16.5px] tracking-[0px] text-slate-medium">{hint}</span>):null}
+            {error?(<span className="text-label-sm text-error">{error}</span>):hint?(<span className="text-[11px] font-normal leading-[16.5px] text-slate-medium">{hint}</span>):null}
         </div>
     )
 }

@@ -1,10 +1,10 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Logo } from "../components/shared/LogoIcon";
+import { Header } from "../components/shared/Header";
 import { Heading } from "../components/register-com/Heading";
 import { PasswordField } from "../components/shared/PasswordField";
 import { FormField } from "../components/shared/FormField";
-import { AuthCard } from "./AuthCard";
+import { AuthCard } from "../components/shared/AuthCard";
 import { Button } from "../components/shared/Button";
 import { FooterLink } from "../components/shared/FooterLink";
 import { PasswordRequirements } from "../components/register-com/PasswordRequirements";
@@ -42,10 +42,10 @@ if(error instanceof Error){
 }
   
     return (
-                <><div className="flex w-full  pb-6">
-  <Logo/>
-        </div>
-            <div className="flex flex-col ">
+                <> 
+                <Header/>
+                 <div className="flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center bg-background px-6 py-12">
+
         <AuthCard>
           
             <div className="mt-8 mb-10 w-full">
@@ -124,6 +124,7 @@ render={({field})=>(<PasswordField
             </div>
         </AuthCard>
         </div>
+       
         </>
     );
 }
