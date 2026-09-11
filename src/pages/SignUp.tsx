@@ -105,6 +105,8 @@ render={({field})=>(<PasswordField
                         value={field.value}
                         onChange={field.onChange}
                         error={errors.confirmPassword?.message}
+                          showVisibilityToggle={false}
+
                     />)}
                    />
                     

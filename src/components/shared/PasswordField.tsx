@@ -6,7 +6,8 @@ interface PasswordFieldProps {
     value: string;
     onChange: (value: string) => void;
     error?: string;
-    
+      showVisibilityToggle?: boolean;
+
   linkText?: string;
   onLinkClick?: () => void;
 }
@@ -17,7 +18,8 @@ export function PasswordField({
     value,
     onChange,
     error, linkText,
-  onLinkClick,}:PasswordFieldProps){
+  onLinkClick,  showVisibilityToggle = true,
+}:PasswordFieldProps){
         const [showPassword, setShowPassword] = useState(false);
         return(
             <div className="flex flex-col gap-1.5" >
@@ -45,8 +47,9 @@ placeholder={placeholder}
 onChange={ (e) =>onChange(e.target.value)} className="w-full px-4 py-3.5 radius-sm pr-12 text-body-md bg-surface-highest placeholder:text-slate-medium focus:outline-none focus:ring-2 focus:ring-primary"
 
 />
+{showVisibilityToggle && (
 <button type="button" onClick={()=>setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-medium">
-    <span className="material-symbols-outlined">{showPassword?"visibility_off" : "visibility"}</span></button>
+    <span className="material-symbols-outlined">{showPassword?"visibility_off" : "visibility"}</span></button>)}
 </div>
 {error&&(<span className="text-label-sm text-error">{error}</span>)}
             </div>

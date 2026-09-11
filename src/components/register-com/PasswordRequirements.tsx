@@ -21,8 +21,7 @@ export function PasswordRequirements({ password }: PasswordRequirementsProps) {
     ];
 
     return (
-        <ul className="flex flex-col gap-1.5 bg-surface-medium radius-md p-4">
-            {requirements.map((requirement) => (
+<ul className="hidden md:flex md:flex-col gap-1.5 bg-surface-medium radius-md p-4">            {requirements.map((requirement) => (
                 <li className="flex items-center gap-2" key={requirement.label}>
                     <span
                         className={`material-symbols-outlined text-xs ${requirement.met ? "text-on-success" : "text-slate-medium"}`}
