@@ -42,7 +42,10 @@ if(error instanceof Error){
 }
   
     return (
-        <><Logo/>
+                <><div className="flex w-full  pb-6">
+  <Logo/>
+        </div>
+            <div className="flex flex-col ">
         <AuthCard>
           
             <div className="mt-8 mb-10 w-full">
@@ -117,9 +120,10 @@ render={({field})=>(<PasswordField
             </form>
 
             <div className="mt-8">
-                <FooterLink text="Already have an account?" linkText="Log in" />
+                <FooterLink text="Already have an account?" linkText="Log in"  onLinkClick={()=> navigate("/login")}/>
             </div>
         </AuthCard>
+        </div>
         </>
     );
 }
