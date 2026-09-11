@@ -58,7 +58,7 @@ const [rememberMe, setRememberMe] = useState(false);
   return (
     <>
     <Header/>
-                 <div className="flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center bg-background px-6 py-12">
+                 <div className="flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center  bg-white md:bg-background px-6 py-12">
 
       <AuthCard>
         <div>
