@@ -1,11 +1,11 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent } from 'react'
 
 export interface RememberMeSectionProps {
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
-  onForgotPassword: () => void;
-  disabled?: boolean;
-  className?: string;
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
+  onForgotPassword: () => void
+  disabled?: boolean
+  className?: string
 }
 
 export function RememberMeSection({
@@ -13,17 +13,15 @@ export function RememberMeSection({
   onCheckedChange,
   onForgotPassword,
   disabled = false,
-  className = "",
+  className = '',
 }: RememberMeSectionProps) {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onCheckedChange(event.target.checked);
-  };
+    onCheckedChange(event.target.checked)
+  }
 
   return (
     <div className={`flex items-center justify-between ${className}`}>
-     
-      <label className="flex items-center gap-2 cursor-pointer select-none">
-       
+      <label className="flex cursor-pointer items-center gap-2 select-none">
         <input
           type="checkbox"
           checked={checked}
@@ -33,32 +31,30 @@ export function RememberMeSection({
         />
 
         <span
-          className={`w-5 h-5 md:w-4 md:h-4 rounded-xs border flex items-center justify-center shrink-0 transition-colors ${
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-xs border transition-colors md:h-4 md:w-4 ${
             checked
-              ? "bg-primary border-primary"
-              : "bg-white md:bg-surface-low border-slate-light"
-          } ${disabled ? "opacity-50" : ""}`}
+              ? 'bg-primary border-primary'
+              : 'md:bg-surface-low border-slate-light bg-white'
+          } ${disabled ? 'opacity-50' : ''}`}
         >
           {checked && (
-            <span className="material-symbols-outlined text-white text-[12px] leading-none">
+            <span className="material-symbols-outlined text-[12px] leading-none text-white">
               check
             </span>
           )}
         </span>
 
-        <span className=" text-body-md text-[#434654]">
-          Remember Me
-        </span>
+        <span className="text-body-md text-[#434654]">Remember Me</span>
       </label>
 
       <button
         type="button"
         onClick={onForgotPassword}
         disabled={disabled}
-        className="hidden md:inline text-[14px] font-medium text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xs disabled:opacity-50 disabled:pointer-events-none"
+        className="text-primary focus-visible:ring-primary hidden rounded-xs text-[14px] font-medium hover:underline focus:outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 md:inline"
       >
         Forgot Password?
       </button>
     </div>
-  );
+  )
 }

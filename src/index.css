@@ -5,7 +5,7 @@
   --ts-blue-800: #0052cc; /* primary container */
   --ts-blue-gradient: linear-gradient(90deg, #0052cc 0%, #003d9b 100%);
   --ts-blue-500: #d7e2ff; /* surface highest */
-  --ts-blue-400: #D7E2FF; 
+  --ts-blue-400: #d7e2ff;
   --ts-blue-300: #f1f3ff; /* surface low */
   --ts-default-background: #f9f9ff;
 
@@ -15,9 +15,9 @@
   --ts-slate-200: #c3c6d6;
 
   /* Semantic */
-  --ts-mint: #82f9be;    /* success */
+  --ts-mint: #82f9be; /* success */
   --ts-darkred: #ba1a1a; /* error */
-  --ts-yellow: #ffb300;  /* warning */
+  --ts-yellow: #ffb300; /* warning */
   --ts-darkgreen: #004e32;
 
   /* Typography */
@@ -26,7 +26,7 @@
   /* Radius (fixed spelling + naming) */
   --ts-radius-xs: 2px;
   --ts-radius-sm: 4px;
-  --ts-radius-md: 8px;  /* cta section */
+  --ts-radius-md: 8px; /* cta section */
   --ts-radius-lg: 12px; /* hero */
 
   /* Spacing */
@@ -51,7 +51,7 @@
   --color-success: var(--ts-mint);
   --color-error: var(--ts-darkred);
   --color-warning: var(--ts-yellow);
---color-on-success: var(--ts-darkgreen);
+  --color-on-success: var(--ts-darkgreen);
   --font-family-sans: var(--ts-font-family);
 
   --text-display-lg: 56px;
@@ -74,15 +74,15 @@
   --text-label-sm--line-height: 16.5px;
   --text-label-sm--font-weight: 700;
   --text-label-sm--letter-spacing: 0.55px;
---text-pp:30px;
---text-pp--line-height:36px;
---text-pp--letter-spacing:-0.75px;
---text-pp--font-weight:600;
+  --text-pp: 30px;
+  --text-pp--line-height: 36px;
+  --text-pp--letter-spacing: -0.75px;
+  --text-pp--font-weight: 600;
 
---text-boy-sm: 14px;
---text-boy-sm--font-weight: 400;
---text-boy-sm--line-height: 20px;
---text-boy-sm--letter-spacing: 0px;
+  --text-boy-sm: 14px;
+  --text-boy-sm--font-weight: 400;
+  --text-boy-sm--line-height: 20px;
+  --text-boy-sm--letter-spacing: 0px;
 
   /* Radius */
   --radius-xs: var(--ts-radius-xs);
@@ -97,7 +97,7 @@
   --spacing-4: var(--ts-space-4);
   --spacing-5: var(--ts-space-5);
 }
-@layer utilities{
+@layer utilities {
   .bg-gradient {
     background: var(--color-primary-gradient);
   }
