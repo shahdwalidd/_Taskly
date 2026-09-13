@@ -1,24 +1,24 @@
-interface FormFieldProps {
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form'
+interface FormFieldProps<T extends FieldValues> {
   label: string
-  name: string
+  name: Path<T>
   type?: 'text' | 'email' | 'password'
   placeholder?: string
   hint?: string
-  value: string
-  onChange: (value: string) => void
+
   error?: string
+  register: UseFormRegister<T>
 }
 
-export function FormField({
+export function FormField<T extends FieldValues>({
   label,
   name,
   type = 'text',
   placeholder,
   hint,
-  value,
-  onChange,
+  register,
   error,
-}: FormFieldProps) {
+}: FormFieldProps<T>) {
   return (
     <div className="flex flex-col gap-1.5">
       <label
@@ -29,17 +29,19 @@ export function FormField({
       </label>
       <input
         id={name}
-        name={name}
+        aria-describedby={error ? `${name}-error` : undefined}
         type={type}
-        value={value}
+
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
+        {...register(name)}
         className="text-body-md bg-surface-highest placeholder:text-slate-medium focus:ring-primary w-full rounded-sm px-4 py-3.5 focus:ring-2 focus:outline-none"
       />
       {error ? (
-        <span className="text-label-sm text-error">{error}</span>
+        <span id={`${name}-error`} className="text-label-sm text-error">
+          {error}
+        </span>
       ) : hint ? (
-        <span className="text-slate-medium text-[11px] leading-[16.5px] font-normal">
+        <span className="text-slate-medium text-label-sm font-normal">
           {hint}
         </span>
       ) : null}

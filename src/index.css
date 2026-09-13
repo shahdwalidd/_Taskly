@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
-@import 'material-symbols/outlined.css';
+
 :root {
   --ts-blue-900: #003d9b; /* primary */
   --ts-blue-800: #0052cc; /* primary container */
-  --ts-blue-gradient: linear-gradient(90deg, #0052cc 0%, #003d9b 100%);
+  --ts-blue-gradient: linear-gradient(97.13deg, #003d9b 0%, #0052cc 100%);
   --ts-blue-500: #d7e2ff; /* surface highest */
   --ts-blue-400: #d7e2ff;
+  --ts-gray-700: #434654;
   --ts-blue-300: #f1f3ff; /* surface low */
   --ts-default-background: #f9f9ff;
+  --ts-border-subtle: rgba(195, 198, 214, 0.1);
+  --ts-whitee-card: #ffffff;
 
   /* Slate neutrals */
   --ts-slate-900: #041b3c;
@@ -35,6 +39,7 @@
   --ts-space-3: 8px;
   --ts-space-4: 16px;
   --ts-space-5: 24px;
+  --ts-auth-padding-bottom: 74px;
 }
 
 @theme {
@@ -45,6 +50,7 @@
   --color-surface-medium: var(--ts-blue-400);
   --color-surface-low: var(--ts-blue-300);
   --color-background: var(--ts-default-background);
+  --color-border-subtle: var(--ts-border-subtle);
   --color-slate-dark: var(--ts-slate-900);
   --color-slate-medium: var(--ts-slate-500);
   --color-slate-light: var(--ts-slate-200);
@@ -52,7 +58,9 @@
   --color-error: var(--ts-darkred);
   --color-warning: var(--ts-yellow);
   --color-on-success: var(--ts-darkgreen);
-  --font-family-sans: var(--ts-font-family);
+  --color-grey: var(--ts-gray-700);
+  --color-authcard: var(--ts-whitee-card);
+  --font-sans: var(--ts-font-family);
 
   --text-display-lg: 56px;
   --text-display-lg--line-height: 56px;
@@ -79,6 +87,19 @@
   --text-pp--letter-spacing: -0.75px;
   --text-pp--font-weight: 600;
 
+  --text-heading-sm: 28px;
+  --text-heading-sm--line-height: 40px;
+  --text-heading-sm--letter-spacing: -0.8px;
+  --text-heading-sm--font-weight: 600;
+
+  --text-button: 16px;
+  --text-button--line-height: 24px;
+  --text-button--font-weight: 600;
+
+  --spacing-footer-mobile: 47.5px;
+
+  --shadow-button: 0px 1px 2px 0px #0000000d;
+
   --text-boy-sm: 14px;
   --text-boy-sm--font-weight: 400;
   --text-boy-sm--line-height: 20px;
@@ -96,6 +117,17 @@
   --spacing-3: var(--ts-space-3);
   --spacing-4: var(--ts-space-4);
   --spacing-5: var(--ts-space-5);
+  --spacing-icon-eye-height: 15px;
+  --spacing-icon-eye-width: 22px;
+  --spacing-icon-circle: 11.666666984558105px;
+  --layout-auth-padding-bottom: var(--ts-auth-padding-bottom);
+  --layout-auth-width: 576px;
+}
+@layer base {
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none;
+  }
 }
 @layer utilities {
   .bg-gradient {
@@ -107,4 +139,7 @@
 }
 * {
   box-sizing: border-box;
+}
+body {
+  font-family: var(--ts-font-family);
 }

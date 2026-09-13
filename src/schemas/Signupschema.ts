@@ -7,7 +7,7 @@ export const signupSchema = z
       .min(3, 'Name must be at least 3 characters.')
       .max(50, 'Name must be at most 50 characters.')
       .regex(
-        /^\p{L}+(?: \p{L}+)*$/u,
+        /^[\p{L}\p{M}]+(?: [\p{L}\p{M}]+)*$/u,
         'Name must contain letters only, with single spaces between words.',
       ),
     email: z
@@ -24,7 +24,7 @@ export const signupSchema = z
       .regex(/[a-z]/, 'Password must include at least one lowercase letter.')
       .regex(/\d/, 'Password must include at least one numeric digit.')
       .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
+        /[^\p{L}\p{N}\s]/u,
         'Password must include at least one special character.',
       ),
     confirmPassword: z.string().min(1, 'Please confirm your password.'),

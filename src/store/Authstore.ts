@@ -6,8 +6,8 @@ interface StoredSession {
   remember_me: boolean
   remember_until?: number
 }
-const one_month = 30 * 24 * 69 * 60 * 1000
-export function Savesession(
+const one_month = 30 * 24 * 60 * 60 * 1000
+export function saveSession(
   session: { access_token: string; refresh_token: string; expires_at: number },
   rememberMe: boolean,
 ) {
@@ -25,7 +25,7 @@ export function Savesession(
     localStorage.removeItem(storage_key)
   }
 }
-export function getsession(): StoredSession | null {
+export function getSession(): StoredSession | null {
   const findd =
     localStorage.getItem(storage_key) ?? sessionStorage.getItem(storage_key)
   if (!findd) return null
@@ -35,12 +35,12 @@ export function getsession(): StoredSession | null {
     data.remember_until !== undefined &&
     Date.now() > data.remember_until
   ) {
-    Clearsession()
+    clearSession()
     return null
   }
   return data
 }
-export function Clearsession() {
+export function clearSession() {
   localStorage.removeItem(storage_key)
   sessionStorage.removeItem(storage_key)
 }

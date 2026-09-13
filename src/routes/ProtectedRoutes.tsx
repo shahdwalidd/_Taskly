@@ -1,10 +1,10 @@
 import type React from 'react'
 import { useAuth } from '../hooks/Useauth'
 import { Navigate } from 'react-router-dom'
-interface protectedrouteprops {
+interface protectedRouteprops {
   children: React.ReactNode
 }
-export function Protectedroutes({ children }: protectedrouteprops) {
+export function ProtectedRoutes({ children }: protectedRouteprops) {
   const { isauth, isloading } = useAuth()
   if (isloading) {
     return null

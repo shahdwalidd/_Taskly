@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Savesession, Clearsession, getsession } from '../store/Authstore'
+import { useEffect, useRef, useState } from 'react'
+import { saveSession, clearSession, getSession } from '../store/Authstore'
 import { refreshAccessToken } from '../services/AuthService'
 
 interface Authstate {
@@ -8,14 +8,18 @@ interface Authstate {
 }
 
 export function useAuth(): Authstate {
+  const hasCheckedSession = useRef(false)
   const [state, setState] = useState<Authstate>({
     isauth: false,
     isloading: true,
   })
 
   useEffect(() => {
+    if (hasCheckedSession.current) return
+
+    hasCheckedSession.current = true
     async function checkSession() {
-      const session = getsession()
+      const session = getSession()
 
       if (!session) {
         setState({ isauth: false, isloading: false })
@@ -32,7 +36,7 @@ export function useAuth(): Authstate {
       try {
         const refresh = await refreshAccessToken(session.refresh_token)
 
-        Savesession(
+        saveSession(
           {
             access_token: refresh.access_token,
             refresh_token: refresh.refresh_token,
@@ -43,7 +47,7 @@ export function useAuth(): Authstate {
 
         setState({ isauth: true, isloading: false })
       } catch {
-        Clearsession()
+        clearSession()
         setState({ isauth: false, isloading: false })
       }
     }

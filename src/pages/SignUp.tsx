@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Header } from '../components/shared/Header'
 import { Heading } from '../components/register-com/Heading'
@@ -14,10 +14,9 @@ import { useNavigate } from 'react-router-dom'
 import { signUp } from '../services/AuthService'
 export function SignUp() {
   const navigate = useNavigate()
-  const [servererroe, setservereeror] = useState<string | null>(null)
-
+  const [serverError, setServerError] = useState<string | null>(null)
   const {
-    control,
+    register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
@@ -35,20 +34,20 @@ export function SignUp() {
   // eslint-disable-next-line react-hooks/incompatible-library
   const passwordValue = watch('password')
   const onSubmit = async (formvalues: SignupFormValues) => {
-    setservereeror(null)
+    setServerError(null)
     try {
       await signUp({
         email: formvalues.email,
         password: formvalues.password,
         data: {
           name: formvalues.name,
-          department: formvalues.jobTitle || undefined,
+          job_title: formvalues.jobTitle?.trim() || undefined,
         },
       })
       navigate('/login')
     } catch (error) {
       if (error instanceof Error) {
-        setservereeror(error.message)
+        setServerError(error.message)
       }
     }
   }
@@ -66,88 +65,54 @@ export function SignUp() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex w-full flex-col gap-6"
           >
-            <Controller
-              control={control}
+            <FormField
+              label="Name"
               name="name"
-              render={({ field }) => (
-                <FormField
-                  label="Name"
-                  name="name"
-                  placeholder="Enter your full name"
-                  hint="3-50 characters, letters only."
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.name?.message}
-                />
-              )}
+              placeholder="Enter your full name"
+              hint="3-50 characters, letters only."
+              register={register}
+              error={errors.name?.message}
             />
 
-            <Controller
-              control={control}
+            <FormField
+              label="Email"
               name="email"
-              render={({ field }) => (
-                <FormField
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="yourname@company.com"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.email?.message}
-                />
-              )}
+              type="email"
+              placeholder="yourname@company.com"
+              register={register}
+              error={errors.email?.message}
             />
 
-            <Controller
-              control={control}
+            <FormField
+              label="Job Title (Optional)"
               name="jobTitle"
-              render={({ field }) => (
-                <FormField
-                  label="Job Title (Optional)"
-                  name="jobTitle"
-                  placeholder="e.g. Project Manager"
-                  value={field.value ?? ''}
-                  onChange={field.onChange}
-                  error={errors.jobTitle?.message}
-                />
-              )}
+              placeholder="e.g. Project Manager"
+              register={register}
+              error={errors.jobTitle?.message}
             />
 
             <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
-              <Controller
-                control={control}
+              <PasswordField
+                label="Password"
                 name="password"
-                render={({ field }) => (
-                  <PasswordField
-                    label="Password"
-                    name="password"
-                    placeholder="Password"
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.password?.message}
-                  />
-                )}
+                placeholder="Password"
+                register={register}
+                error={errors.password?.message}
               />
-              <Controller
-                control={control}
+
+              <PasswordField
+                label="Confirm Password"
                 name="confirmPassword"
-                render={({ field }) => (
-                  <PasswordField
-                    label="Confirm Password"
-                    name="confirmPassword"
-                    placeholder="Repeat your password"
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.confirmPassword?.message}
-                    showVisibilityToggle={false}
-                  />
-                )}
+                placeholder="Repeat your password"
+                register={register}
+                error={errors.confirmPassword?.message}
+                showVisibilityToggle={false}
               />
             </div>
 
             <PasswordRequirements password={passwordValue} />
-            {servererroe && (
-              <p className="text-label-sm text-error">{servererroe}</p>
+            {serverError && (
+              <p className="text-label-sm text-error">{serverError}</p>
             )}
 
             <Button type="submit" disabled={isSubmitting}>

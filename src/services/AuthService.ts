@@ -5,7 +5,7 @@ interface SignupPayload {
   password: string
   data: {
     name: string
-    department?: string
+    job_title?: string
   }
 }
 interface SignupSuccessResponse {

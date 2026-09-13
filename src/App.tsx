@@ -1,22 +1,40 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { SignUp } from './pages/SignUp'
 import Login from './pages/LoginPage'
-import { Protectedroutes } from './routes/Protectedroutes'
-import { Navigate } from 'react-router-dom'
+import { ProtectedRoutes } from './routes/ProtectedRoutes'
+import { PublicRoutes } from './routes/PublicRoutes'
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/sign-up" replace />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+
+          <Route
+            path="/sign-up"
+            element={
+              <PublicRoutes>
+                <SignUp />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoutes>
+                {' '}
+                <Login />
+              </PublicRoutes>
+            }
+          />
           <Route
             path="/project"
             element={
-              <Protectedroutes>
+              <ProtectedRoutes>
                 <>Project page</>
-              </Protectedroutes>
+              </ProtectedRoutes>
             }
           />
         </Routes>

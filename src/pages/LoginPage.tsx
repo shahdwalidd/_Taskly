@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Loginschema, type LoginFormValues } from '../schemas/Loginschema'
 import { Header } from '../components/shared/Header'
 import { AuthCard } from '../components/shared/AuthCard'
@@ -10,16 +10,16 @@ import { Button } from '../components/shared/Button'
 import { FooterLink } from '../components/shared/FooterLink'
 import { useState } from 'react'
 import { Login as loginUser } from '../services/AuthService'
-import Loginheader from '../components/login-com/Loginheader'
-import { RememberMeSection } from '../components/login-com/Remeberme'
-import { Savesession } from '../store/Authstore'
+import LoginHeader from '../components/login-com/LoginHeader'
+import { RememberMeSection } from '../components/login-com/RememberMe'
+import { saveSession } from '../store/Authstore'
 const LoginPage = () => {
   const navigate = useNavigate()
   const [servererror, setservereeror] = useState<string | null>(null)
   const [rememberMe, setRememberMe] = useState(false)
 
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
@@ -37,7 +37,7 @@ const LoginPage = () => {
         email: values.email,
         password: values.password,
       })
-      Savesession(
+      saveSession(
         {
           access_token: result.access_token,
           refresh_token: result.refresh_token,
@@ -59,49 +59,36 @@ const LoginPage = () => {
       <Header />
       <div className="md:bg-background flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center bg-white px-6 py-12">
         <AuthCard>
-          <div>
-            <Loginheader />
+          <div className="mb-10">
+            <LoginHeader />
           </div>
           <form
             className="flex flex-col gap-6"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Controller
-              control={control}
+            <FormField
+              label="Email"
               name="email"
-              render={({ field }) => (
-                <FormField
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="yourname@company.com"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.email?.message}
-                />
-              )}
+              type="email"
+              placeholder="yourname@company.com"
+              register={register}
+              error={errors.email?.message}
             />
 
-            <Controller
-              control={control}
+            <PasswordField
+              label="Password"
               name="password"
-              render={({ field }) => (
-                <PasswordField
-                  label="Password"
-                  name="password"
-                  placeholder="Enter your password"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.password?.message}
-                  linkText="Forgot?"
-                  onLinkClick={() => navigate('/forgot-password')}
-                />
-              )}
+              placeholder="Enter your password"
+              register={register}
+              error={errors.password?.message}
+              linkText="Forgot?"
+              onLinkClick={() => {}}
             />
+
             <RememberMeSection
               checked={rememberMe}
               onCheckedChange={setRememberMe}
-              onForgotPassword={() => navigate('/forgot-password')}
+              onForgotPassword={() => {}}
             />
 
             {servererror && (

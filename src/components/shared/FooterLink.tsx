@@ -6,7 +6,7 @@ interface FooterLinkProps {
 
 export function FooterLink({ text, linkText, onLinkClick }: FooterLinkProps) {
   return (
-    <p className="text-body-md text-slate-medium mt-4 pt-[47.5px] pb-8 text-center md:pt-8">
+    <p className="text-body-md text-slate-medium mt-4 pt-(--spacing-footer-mobile) pb-8 text-center md:pt-8">
       {text}{' '}
       <button
         type="button"

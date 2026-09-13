@@ -1,27 +1,27 @@
 import { useState } from 'react'
-interface PasswordFieldProps {
+import type { UseFormRegister, FieldValues, Path } from 'react-hook-form'
+import eyeOn from '../../assets/icons/eyeon.svg'
+import eyeOff from '../../assets/icons/eye-off.svg'
+interface PasswordFieldProps<T extends FieldValues> {
   label: string
-  name: string
+  name: Path<T>
   placeholder?: string
-  value: string
-  onChange: (value: string) => void
   error?: string
   showVisibilityToggle?: boolean
-
   linkText?: string
   onLinkClick?: () => void
+  register: UseFormRegister<T>
 }
-export function PasswordField({
+export function PasswordField<T extends FieldValues>({
   label,
   name,
   placeholder,
-  value,
-  onChange,
+  register,
   error,
   linkText,
   onLinkClick,
   showVisibilityToggle = true,
-}: PasswordFieldProps) {
+}: PasswordFieldProps<T>) {
   const [showPassword, setShowPassword] = useState(false)
   return (
     <div className="flex flex-col gap-1.5">
@@ -46,12 +46,12 @@ export function PasswordField({
       <div className="relative">
         <input
           id={name}
-          name={name}
+          aria-describedby={error ? `${name}-error` : undefined}
           type={showPassword ? 'text' : 'password'}
-          value={value}
+
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
-          className="radius-sm text-body-md bg-surface-highest placeholder:text-slate-medium focus:ring-primary w-full px-4 py-3.5 pr-12 focus:ring-2 focus:outline-none"
+          {...register(name)}
+          className="text-body-md bg-surface-highest placeholder:text-slate-medium focus:ring-primary w-full rounded-sm px-4 py-3.5 pr-12 focus:ring-2 focus:outline-none"
         />
         {showVisibilityToggle && (
           <button
@@ -59,13 +59,19 @@ export function PasswordField({
             onClick={() => setShowPassword(!showPassword)}
             className="text-slate-medium absolute top-1/2 right-3 -translate-y-1/2"
           >
-            <span className="material-symbols-outlined">
-              {showPassword ? 'visibility_off' : 'visibility'}
-            </span>
+            <img
+              src={showPassword ? eyeOff : eyeOn}
+              alt=""
+              className="h-icon-eye-height w-icon-eye-width"
+            />
           </button>
         )}
       </div>
-      {error && <span className="text-label-sm text-error">{error}</span>}
+      {error && (
+        <span id={`${name}-error`} className="text-label-sm text-error">
+          {error}
+        </span>
+      )}{' '}
     </div>
   )
 }

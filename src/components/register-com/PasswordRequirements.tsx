@@ -1,3 +1,5 @@
+import circle from '../../assets/icons/circle.svg'
+import checkcircle from '../../assets/icons/checkcircle.svg'
 interface PasswordRequirementsProps {
   password: string
 }
@@ -19,16 +21,16 @@ export function PasswordRequirements({ password }: PasswordRequirementsProps) {
   ]
 
   return (
-    <ul className="bg-surface-medium radius-md hidden gap-1.5 p-4 md:flex md:flex-col">
+    <ul className="bg-surface-medium hidden gap-1.5 rounded-md p-4 md:flex md:flex-col">
       {' '}
       {requirements.map((requirement) => (
         <li className="flex items-center gap-2" key={requirement.label}>
-          <span
-            className={`material-symbols-outlined text-xs ${requirement.met ? 'text-on-success' : 'text-slate-medium'}`}
-          >
-            {requirement.met ? 'check_circle' : 'radio_button_unchecked'}
-          </span>
-          <span className="label-sm text-[#434654]">{requirement.label}</span>
+          <img
+            src={requirement.met ? checkcircle : circle}
+            alt=""
+            className="h-icon-circle w-icon-circle"
+          />
+          <span className="text-label-sm text-grey">{requirement.label}</span>
         </li>
       ))}
     </ul>

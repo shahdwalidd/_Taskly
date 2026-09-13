@@ -15,7 +15,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`w-full rounded-md px-4 py-3 text-[16px] leading-6 font-semibold text-white shadow-[0px_1px_2px_0px_#0000000D] transition-opacity ${
+      className={`text-button shadow-button w-full rounded-md px-4 py-3 text-white transition-opacity ${
         disabled
           ? 'bg-slate-light text-slate-medium cursor-not-allowed'
           : 'bg-gradient cursor-pointer hover:opacity-90'
