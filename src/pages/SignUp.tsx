@@ -1,5 +1,4 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/shared/Header'
 import { Heading } from '../components/register-com/Heading'
 import { PasswordField } from '../components/shared/PasswordField'
@@ -8,49 +7,19 @@ import { AuthCard } from '../components/shared/AuthCard'
 import { Button } from '../components/shared/Button'
 import { FooterLink } from '../components/shared/FooterLink'
 import { PasswordRequirements } from '../components/register-com/PasswordRequirements'
-import { signupSchema, type SignupFormValues } from '../schemas/Signupschema'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { signUp } from '../services/AuthService'
+
+import { useSignup } from '../hooks/useSignup'
 export function SignUp() {
   const navigate = useNavigate()
-  const [serverError, setServerError] = useState<string | null>(null)
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      jobTitle: '',
-      password: '',
-      confirmPassword: '',
-    },
-  })
-
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const passwordValue = watch('password')
-  const onSubmit = async (formvalues: SignupFormValues) => {
-    setServerError(null)
-    try {
-      await signUp({
-        email: formvalues.email,
-        password: formvalues.password,
-        data: {
-          name: formvalues.name,
-          job_title: formvalues.jobTitle?.trim() || undefined,
-        },
-      })
-      navigate('/login')
-    } catch (error) {
-      if (error instanceof Error) {
-        setServerError(error.message)
-      }
-    }
-  }
+    errors,
+    isSubmitting,
+    passwordValue,
+    serverError,
+    onSubmit,
+  } = useSignup()
 
   return (
     <>

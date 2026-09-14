@@ -1,50 +1,14 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY
-interface SignupPayload {
-  email: string
-  password: string
-  data: {
-    name: string
-    job_title?: string
-  }
-}
-interface SignupSuccessResponse {
-  access_token: string
-  user: {
-    id: string
-    email: string
-  }
-}
-interface SignupErrorResponse {
-  code: number
-  error_code: string
-  msg: string
-}
-interface LoginPayload {
-  email: string
-  password: string
-}
-
-interface LoginSuccessResponse {
-  access_token: string
-  refresh_token: string
-  expires_at: number
-  user: {
-    id: string
-    email: string
-  }
-}
-interface LoginErrorResponse {
-  code: number
-  error_code: string
-  msg: string
-}
-interface RefreshResponse {
-  access_token: string
-  refresh_token: string
-  expires_at: number
-}
-
+import type {
+  SignupPayload,
+  SignupSuccessResponse,
+  SignupErrorResponse,
+  LoginPayload,
+  LoginSuccessResponse,
+  LoginErrorResponse,
+  RefreshResponse,
+} from '../types/auth.types'
 export async function signUp(
   payload: SignupPayload,
 ): Promise<SignupSuccessResponse> {
