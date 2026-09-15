@@ -3,7 +3,7 @@ import { SignUp } from './pages/SignUp'
 import Login from './pages/LoginPage'
 import { ProtectedRoutes } from './routes/ProtectedRoutes'
 import { PublicRoutes } from './routes/PublicRoutes'
-
+import { ProjectsPage } from './pages/ProjectsPage'
 function App() {
   return (
     <>
@@ -33,7 +33,7 @@ function App() {
             path="/project"
             element={
               <ProtectedRoutes>
-                <>Project page</>
+               <ProjectsPage/>
               </ProtectedRoutes>
             }
           />

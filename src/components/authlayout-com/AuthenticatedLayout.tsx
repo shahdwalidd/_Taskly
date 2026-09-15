@@ -1,0 +1,44 @@
+import { useState, type ReactNode } from "react";
+import { Navbar } from "./Navbar";
+import { Sidebar } from "./Sidebar";
+import { MobileDrawer } from "./MobileDrawer";
+import { BottomNav } from "./BottomNav";
+
+interface AuthenticatedLayoutProps {
+
+  projectName?: string;
+  children: ReactNode;
+}
+
+export function AuthenticatedLayout({
+ 
+  projectName,
+  children,
+}: AuthenticatedLayoutProps) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-surface">
+      <Sidebar projectName={projectName} />
+
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Navbar
+          
+          onMenuClick={() => setIsDrawerOpen(true)}
+        />
+
+        <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
+          {children}
+        </main>
+      </div>
+
+      <MobileDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        projectName={projectName}
+      />
+
+      <BottomNav hasActiveProject={Boolean(projectName)} />
+    </div>
+  );
+}

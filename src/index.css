@@ -30,6 +30,7 @@
   /* Radius (fixed spelling + naming) */
   --ts-radius-xs: 2px;
   --ts-radius-sm: 4px;
+  --ts-radius-ssm:6px;
   --ts-radius-md: 8px; /* cta section */
   --ts-radius-lg: 12px; /* hero */
 
@@ -61,6 +62,7 @@
   --color-grey: var(--ts-gray-700);
   --color-authcard: var(--ts-whitee-card);
   --font-sans: var(--ts-font-family);
+  --color-slate-dark-70: rgba(4, 27, 60, 0.7);
 
   --text-display-lg: 56px;
   --text-display-lg--line-height: 56px;
@@ -104,13 +106,22 @@
   --text-boy-sm--font-weight: 400;
   --text-boy-sm--line-height: 20px;
   --text-boy-sm--letter-spacing: 0px;
-
+  --text-logo:20px;
+  --text-logo--font-weight:700;
+  --text-logo--line-height:28px;
+   --text-logo--letter-spacing: -0.5px;
+    --text-label-xs: 10px;
+  --text-label-xs--font-family: 'Inter', sans-serif;
+  --text-label-xs--font-weight: 700;
+  --text-label-xs--font-style: normal;
+  --text-label-xs--line-height: 20px;
+  --text-label-xs--letter-spacing: 1px;
   /* Radius */
   --radius-xs: var(--ts-radius-xs);
   --radius-sm: var(--ts-radius-sm);
   --radius-md: var(--ts-radius-md);
   --radius-lg: var(--ts-radius-lg);
-
+--radius-ssm:var(--ts-radius-ssm)
   /* Spacing */
   --spacing-1: var(--ts-space-1);
   --spacing-2: var(--ts-space-2);
@@ -119,9 +130,14 @@
   --spacing-5: var(--ts-space-5);
   --spacing-icon-eye-height: 15px;
   --spacing-icon-eye-width: 22px;
+  --spacing-icon-menu-width:18px;
   --spacing-icon-circle: 11.666666984558105px;
   --layout-auth-padding-bottom: var(--ts-auth-padding-bottom);
   --layout-auth-width: 576px;
+  /* border */
+    --color-border-subtle: rgba(0, 0, 0, 0.1);
+  --shadow-avatar: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+
 }
 @layer base {
   input[type='password']::-ms-reveal,
