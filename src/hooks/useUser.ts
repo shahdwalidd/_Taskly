@@ -1,71 +1,71 @@
-import { useEffect, useState } from "react";
-import { getUser } from "../services/UserService";
-import { getSession } from "../store/Authstore";
-import { useAuth } from "./useAuth";
-import type { UserResponse } from "../types/user.types";
+import { useEffect, useState } from 'react'
+import { getUser } from '../services/UserService'
+import { getSession } from '../store/Authstore'
+import { useAuth } from './useAuth'
+import type { UserResponse } from '../types/user.types'
 
 interface UseUserState {
-  user: UserResponse | null;
-  isLoading: boolean;
-  error: string | null;
+  user: UserResponse | null
+  isLoading: boolean
+  error: string | null
 }
 
 export function useUser(): UseUserState {
-  const { isauth, isloading: isAuthLoading } = useAuth();
+  const { isauth, isloading: isAuthLoading } = useAuth()
 
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserResponse | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isAuthLoading) return;
+    if (isAuthLoading) return
 
-    let isMounted = true;
+    let isMounted = true
 
     async function fetchUser() {
       if (!isauth) {
         if (isMounted) {
-          setUser(null);
-          setIsLoading(false);
-          setError(null);
-        }
-        return;
-      }
-
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const session = getSession();
-
-      if (!session) {
-        if (isMounted) {
-          setUser(null);
-          setIsLoading(false);
+          setUser(null)
+          setIsLoading(false)
+          setError(null)
         }
         return
       }
 
-      const userData = await getUser(session.access_token);
+      try {
+        setIsLoading(true)
+        setError(null)
 
-      if (isMounted) setUser(userData);
-    } catch (error) {
-      if (isMounted) {
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch user",
-        );
+        const session = getSession()
+
+        if (!session) {
+          if (isMounted) {
+            setUser(null)
+            setIsLoading(false)
+          }
+          return
+        }
+
+        const userData = await getUser(session.access_token)
+
+        if (isMounted) setUser(userData)
+      } catch (error) {
+        if (isMounted) {
+          setError(
+            error instanceof Error ? error.message : 'Failed to fetch user',
+          )
+        }
+      } finally {
+        if (isMounted) setIsLoading(false)
       }
-    } finally {
-      if (isMounted) setIsLoading(false);
     }
-  }
 
-    void fetchUser();
+    void fetchUser()
 
     return () => {
-      isMounted = false;
-    };
-  }, [isauth, isAuthLoading]);
+      isMounted = false
+    }
+  }, [isauth, isAuthLoading])
 
-  return { user, isLoading, error };
+  return { user, isLoading, error }
 }

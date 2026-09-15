@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { saveSession, clearSession, getSession } from '../store/Authstore'
-import {  refreshAccessToken } from '../services/AuthService'
+import { refreshAccessToken } from '../services/AuthService'
 import { logout } from '../services/AuthService'
 
 interface Authstate {
@@ -65,44 +65,48 @@ export function useAuth(): UseAuthReturn {
 
     checkSession()
   }, [])
- async function handleLogout() {
-  if (isLoggingOut.current) return
+  async function handleLogout() {
+    if (isLoggingOut.current) return
 
-  const session = getSession()
+    const session = getSession()
 
-  if (!session) {
-    clearSession()
-    setState((current) => ({ ...current, isauth: false, isloading: false }))
-    navigate('/login', { replace: true })
-    return
+    if (!session) {
+      clearSession()
+      setState((current) => ({ ...current, isauth: false, isloading: false }))
+      navigate('/login', { replace: true })
+      return
+    }
+
+    isLoggingOut.current = true
+    setState((current) => ({
+      ...current,
+      isLoggingOut: true,
+      logoutError: null,
+    }))
+
+    try {
+      await logout(session.access_token)
+      clearSession()
+      setState((current) => ({
+        ...current,
+        isauth: false,
+        isloading: false,
+        isLoggingOut: false,
+      }))
+      navigate('/login', { replace: true })
+    } catch (error) {
+      console.error('Remote logout failed:', error)
+      setState((current) => ({
+        ...current,
+        isLoggingOut: false,
+        logoutError: 'Logout failed, please try again.',
+      }))
+    } finally {
+      isLoggingOut.current = false
+    }
   }
-
-  isLoggingOut.current = true
-  setState((current) => ({ ...current, isLoggingOut: true, logoutError: null }))
-
-  try {
-    await logout(session.access_token)
-    clearSession()
-    setState((current) => ({
-      ...current,
-      isauth: false,
-      isloading: false,
-      isLoggingOut: false,
-    }))
-    navigate('/login', { replace: true })
-  } catch (error) {
-    console.error('Remote logout failed:', error)
-    setState((current) => ({
-      ...current,
-      isLoggingOut: false,
-      logoutError: 'Logout failed, please try again.',
-    }))
-  } finally {
-    isLoggingOut.current = false
+  return {
+    ...state,
+    logout: handleLogout,
   }
 }
- return {
-  ...state,
-  logout: handleLogout,
-}}
-

@@ -33,7 +33,7 @@ function App() {
             path="/project"
             element={
               <ProtectedRoutes>
-               <ProjectsPage/>
+                <ProjectsPage />
               </ProtectedRoutes>
             }
           />
