@@ -3,6 +3,7 @@ import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
 import { MobileDrawer } from "./MobileDrawer";
 import { BottomNav } from "./BottomNav";
+import { useAuth } from "../../hooks/useAuth";
 
 interface AuthenticatedLayoutProps {
 
@@ -16,10 +17,16 @@ export function AuthenticatedLayout({
   children,
 }: AuthenticatedLayoutProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { logout, isLoggingOut, logoutError } = useAuth();
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface">
-      <Sidebar projectName={projectName} />
+      <Sidebar
+        projectName={projectName}
+        logout={logout}
+        isLoggingOut={isLoggingOut}
+        logoutError={logoutError}
+      />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <Navbar
@@ -36,6 +43,9 @@ export function AuthenticatedLayout({
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         projectName={projectName}
+        logout={logout}
+        isLoggingOut={isLoggingOut}
+        logoutError={logoutError}
       />
 
       <BottomNav hasActiveProject={Boolean(projectName)} />

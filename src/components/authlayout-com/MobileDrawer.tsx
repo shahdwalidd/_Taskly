@@ -10,8 +10,11 @@ interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   projectName?: string;
+  logout: () => Promise<void>;
+  isLoggingOut: boolean;
+  logoutError: string | null;
 }
-export function  MobileDrawer({ isOpen,onClose,projectName}:MobileDrawerProps){
+export function MobileDrawer({ isOpen, onClose, projectName, logout, isLoggingOut, logoutError }: MobileDrawerProps){
   const hasActiveProject = Boolean(projectName);
 useEffect(() => {
     if (!isOpen) return;
@@ -52,9 +55,10 @@ useEffect(() => {
   )}
 </div>
 <div className="border-t border-black/10 pt-3">
-  <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50">
+  {logoutError && <p role="alert" className="px-3 py-2 text-xs text-red-600">{logoutError}</p>}
+  <button onClick={() => void logout()} disabled={isLoggingOut} className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60">
     <LogoutIcon className="h-5 w-5" />
-    <span>Logout</span>
+    <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
   </button>
 </div>
 </div>

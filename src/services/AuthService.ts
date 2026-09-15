@@ -62,3 +62,12 @@ export async function refreshAccessToken(
   }
   return result
 }
+export  async function logout(accessToken: string):Promise<void>{
+const response=await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:{apikey:SUPABASE_KEY,   Authorization: `Bearer ${accessToken}`
+,      'Content-Type': 'application/json',
+}})
+if(!response.ok){
+  const result= await response.json();
+  throw new Error(result.msg||'failed to logout')
+}
+}
