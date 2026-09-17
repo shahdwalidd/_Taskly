@@ -5,6 +5,7 @@ interface FormFieldProps<T extends FieldValues> {
   type?: 'text' | 'email' | 'password'
   placeholder?: string
   hint?: string
+  isRequired?: boolean  
 
   error?: string
   register: UseFormRegister<T>
@@ -18,6 +19,7 @@ export function FormField<T extends FieldValues>({
   hint,
   register,
   error,
+   isRequired,
 }: FormFieldProps<T>) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -26,6 +28,8 @@ export function FormField<T extends FieldValues>({
         className="text-label-sm text-slate-medium uppercase"
       >
         {label}
+          {isRequired && <span className="text-error ml-0.5">*</span>}
+
       </label>
       <input
         id={name}

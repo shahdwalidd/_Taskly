@@ -4,6 +4,7 @@ import Login from './pages/LoginPage'
 import { ProtectedRoutes } from './routes/ProtectedRoutes'
 import { PublicRoutes } from './routes/PublicRoutes'
 import { ProjectsPage } from './pages/ProjectsPage'
+import { AddProjectPage } from './pages/AddProjectPage'
 function App() {
   return (
     <>
@@ -37,6 +38,11 @@ function App() {
               </ProtectedRoutes>
             }
           />
+          <Route path='/project/add' element={
+            <ProtectedRoutes>
+              <AddProjectPage/>
+            </ProtectedRoutes>
+          }/>
         </Routes>
       </BrowserRouter>
     </>
