@@ -12,7 +12,9 @@ import { TextAreaField } from "../components/add,editproject-com/TextAreaField";
 import { AuthCard } from "../components/shared/AuthCard";
 import { ProTipBanner } from "../components/add,editproject-com/ProTipBanner";
 import { FormActions } from "../components/add,editproject-com/FormActions";
-
+import { getSession } from "../store/Authstore";
+import { createProject } from "../services/ProjectService";
+import { toast } from "sonner";
 
 const addProjectSchema = z.object({
   title: z.string().min(3, "Project title must be at least 3 characters.") .max(100, 'Project title must not exceed 100 characters'),
@@ -29,6 +31,7 @@ export function AddProjectPage() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<AddProjectFormValues>({
     resolver: zodResolver(addProjectSchema),
@@ -36,9 +39,31 @@ export function AddProjectPage() {
 
   const descriptionValue = useWatch({ control, name: "description" }) ?? "";
 
-  function onSubmit(values: AddProjectFormValues) {
-    console.log(values); 
+  async function onSubmit(values: AddProjectFormValues) {
+    const session = getSession();
+
+    if (!session) {
+      toast.error("Your session has expired. Please log in again.");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    try {
+      await createProject(
+        {
+          name: values.title,
+          description: values.description,
+        },
+        session.access_token
+      );
+      toast.success("Project created successfully");
+      reset();
+    } catch {
+      toast.error("Failed To Add New Project, Try Again Later");
+    }
   }
+
+  
 
   return (
     <AuthenticatedLayout>
