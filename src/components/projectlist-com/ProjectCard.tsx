@@ -18,8 +18,10 @@ export function ProjectCard({
       className="flex min-w-0 flex-col rounded-md p-6 text-left shadow-sm"
       onClick={onClick}
     >
-      <h2 className="min-w-0 whitespace-normal wrap-break-word">{name}</h2>
-      <p className="min-w-0 whitespace-normal wrap-break-words">{description}</p>
+      <h2 className="min-w-0 wrap-break-word whitespace-normal">{name}</h2>
+      <p className="wrap-break-words min-w-0 whitespace-normal">
+        {description}
+      </p>
 
       <div className="flex items-center justify-between pt-4">
         <span className="text-label-xs text-primary flex gap-1">
