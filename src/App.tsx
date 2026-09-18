@@ -41,11 +41,14 @@ function App() {
               </ProtectedRoutes>
             }
           />
-          <Route path='/project/add' element={
-            <ProtectedRoutes>
-              <AddProjectPage/>
-            </ProtectedRoutes>
-          }/>
+          <Route
+            path="/project/add"
+            element={
+              <ProtectedRoutes>
+                <AddProjectPage />
+              </ProtectedRoutes>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

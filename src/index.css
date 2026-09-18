@@ -66,7 +66,9 @@
   --color-white-70: #ffffffb2;
   --blur-glass: 20px;
   --color-overlay-dark: #43465499;
---color-overlay-gray:#737685;
+  --color-overlay-gray: #737685;
+  --color-lightblue: #e8edff;
+  --color-babyred: #ffdad6;
   --text-display-lg: 56px;
   --text-display-lg--line-height: 56px;
   --text-display-lg--font-weight: 700;
@@ -74,7 +76,7 @@
   --text-headline-lg: 36px;
   --text-headline-lg--line-height: 40px;
   --text-headline-lg--font-weight: 600;
- --text-headline-lg--letter-spacing: -0.9px;
+  --text-headline-lg--letter-spacing: -0.9px;
   --text-title-md: 18px;
   --text-title-md--line-height: 24px;
   --text-title-md--font-weight: 500;
@@ -121,11 +123,11 @@
 
   --text-label-xs--letter-spacing: 1px;
 
-   --text-span-sm: 12px;
+  --text-span-sm: 12px;
   --text-span-sm--line-height: 16px;
   --text-span-sm--letter-spacing: 1.2px;
   --text-span-sm--font-weight: 700;
- 
+
   --tracking-custom: 1.4px;
 
   /* Radius */
@@ -142,7 +144,7 @@
   --spacing-icon-eye-height: 15px;
   --spacing-icon-eye-width: 22px;
   --spacing-icon-menu-width: 18px;
-     --spacing-icon-xs: 3.7px;
+  --spacing-icon-xs: 3.7px;
   --spacing-icon-xs-height: 6px;
   --spacing-icon-circle: 11.666666984558105px;
   --layout-auth-padding-bottom: var(--ts-auth-padding-bottom);

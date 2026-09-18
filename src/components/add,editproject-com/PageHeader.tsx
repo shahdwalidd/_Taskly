@@ -1,12 +1,10 @@
-interface PageHeaderProps{
-    title:string,
+interface PageHeaderProps {
+  title: string
 }
-export function PageHeader({title}:PageHeaderProps){
-return(
-<h1 className="hidden md:flex text-headline-lg text-slate-dark mt-2 ">{title}</h1>
-
-
-
-)
-
+export function PageHeader({ title }: PageHeaderProps) {
+  return (
+    <h1 className="text-headline-lg text-slate-dark mt-2 hidden md:flex">
+      {title}
+    </h1>
+  )
 }
