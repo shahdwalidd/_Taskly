@@ -15,11 +15,11 @@ export function ProjectCard({
 }: ProjectCardProps) {
   return (
     <button
-      className="flex flex-col rounded-md p-6 text-left shadow-sm"
+      className="flex min-w-0 flex-col rounded-md p-6 text-left shadow-sm"
       onClick={onClick}
     >
-      <h2>{name}</h2>
-      <p>{description}</p>
+      <h2 className="min-w-0 whitespace-normal wrap-break-word">{name}</h2>
+      <p className="min-w-0 whitespace-normal wrap-break-words">{description}</p>
 
       <div className="flex items-center justify-between pt-4">
         <span className="text-label-xs text-primary flex gap-1">

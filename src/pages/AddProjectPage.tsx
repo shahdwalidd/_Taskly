@@ -1,6 +1,3 @@
-import { useForm, useWatch } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { AuthenticatedLayout } from '../components/authlayout-com/AuthenticatedLayout'
 import { PageBreadcrumb } from '../components/add,editproject-com/PageBreadcrumb'
@@ -11,59 +8,18 @@ import { TextAreaField } from '../components/add,editproject-com/TextAreaField'
 import { AuthCard } from '../components/shared/AuthCard'
 import { ProTipBanner } from '../components/add,editproject-com/ProTipBanner'
 import { FormActions } from '../components/add,editproject-com/FormActions'
-import { getSession } from '../store/Authstore'
-import { createProject } from '../services/ProjectService'
-import { toast } from 'sonner'
-
-const addProjectSchema = z.object({
-  title: z
-    .string()
-    .min(3, 'Project title must be at least 3 characters.')
-    .max(100, 'Project title must not exceed 100 characters'),
-
-  description: z.string().max(500).optional(),
-})
-
-type AddProjectFormValues = z.infer<typeof addProjectSchema>
+import { useAddProject } from '../hooks/useAddProject'
 
 export function AddProjectPage() {
   const navigate = useNavigate()
-
   const {
     register,
     handleSubmit,
-    control,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AddProjectFormValues>({
-    resolver: zodResolver(addProjectSchema),
-  })
-
-  const descriptionValue = useWatch({ control, name: 'description' }) ?? ''
-
-  async function onSubmit(values: AddProjectFormValues) {
-    const session = getSession()
-
-    if (!session) {
-      toast.error('Your session has expired. Please log in again.')
-      navigate('/login', { replace: true })
-      return
-    }
-
-    try {
-      await createProject(
-        {
-          name: values.title,
-          description: values.description,
-        },
-        session.access_token,
-      )
-      toast.success('Project created successfully')
-      reset()
-    } catch {
-      toast.error('Failed To Add New Project, Try Again Later')
-    }
-  }
+    onSubmit,
+    errors,
+    isSubmitting,
+    descriptionValue,
+  } = useAddProject()
 
   return (
     <AuthenticatedLayout>
@@ -86,7 +42,7 @@ export function AddProjectPage() {
             />
 
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
-              <FormField<AddProjectFormValues>
+              <FormField
                 label="Project Title"
                 name="title"
                 register={register}
