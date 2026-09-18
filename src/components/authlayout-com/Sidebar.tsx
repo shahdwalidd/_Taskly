@@ -89,7 +89,7 @@ export function Sidebar({
           className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-white/60 ${isCollapsed ? 'justify-center' : ''} `}
         >
           {isCollapsed ? (
-            <ChevronRightIcon className="h-5 w-5 shrink-0" />
+            <ChevronRightIcon className="h-5 w-5 shrink-0 " />
           ) : (
             <ChevronLeftIcon className="h-5 w-5 shrink-0" />
           )}
