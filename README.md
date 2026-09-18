@@ -1,73 +1,142 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Shared Components
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This document records the reusable UI components identified by reviewing the available screens in the Taskly application. The components below were selected because they appear on multiple screens and have a consistent purpose, behavior, or layout pattern. We did not treat visually similar elements as shared components unless they were used as the same reusable interface pattern.
 
-## React Compiler
+The screen references in this document are based on the images stored in the `docs/` folder.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Shared Components
 
-## Expanding the ESLint configuration
+| # | Component | Description | Used In | Screenshot |
+|---|---|---|---|---|
+| 1 | Header | Public authentication header with the Taskly brand. | Login, Register, Forgot Password, Reset Password | ![Header](docs/Login%20(Desktop).png) |
+| 2 | AuthCard | Centered form container used across authentication and project forms. | Login, Register, Forgot Password, Reset Password, Add Project, Edit Project | ![AuthCard](docs/Login%20(Desktop).png) |
+| 3 | FormField | Standard labeled input used for text and email entry. | Login, Register, Forgot Password, Reset Password, Add Project, Edit Project, Add New Task, Add New Epic | ![FormField](docs/Add%20New%20Project%20(Desktop).png) |
+| 4 | PasswordField | Password input with visibility toggle and validation state. | Login, Register, Reset Password | ![PasswordField](docs/Login%20(Desktop).png) |
+| 5 | Button | Primary action button for form submissions and navigation actions. | Login, Register, Forgot Password, Reset Password | ![Button](docs/Login%20(Desktop).png) |
+| 6 | FooterLink | Secondary text link for switching between authentication screens. | Login, Register, Reset Password | ![FooterLink](docs/Login%20(Desktop).png) |
+| 7 | AuthenticatedLayout | Shared application shell for all authenticated screens. | Projects, Add Project, Edit Project, Project Members, Project Epics, Project Tasks, Analytics | ![AuthenticatedLayout](docs/Projects%20List%20(Desktop).png) |
+| 8 | Navbar | Top navigation bar for authenticated screens. | All authenticated pages | ![Navbar](docs/Projects%20List%20(Desktop).png) |
+| 9 | Sidebar | Desktop navigation panel across project and dashboard flows. | Desktop authenticated pages | ![Sidebar](docs/Projects%20List%20(Desktop).png) |
+| 10 | MobileDrawer | Mobile navigation overlay used within the authenticated layout. | Mobile authenticated pages | ![MobileDrawer](docs/Projects%20List%20(Desktop).png) |
+| 11 | BottomNav | Fixed lower navigation for mobile authenticated views. | Mobile authenticated pages | ![BottomNav](docs/Projects%20List%20(Desktop).png) |
+| 12 | SidebarNavItem | Shared navigation row with icon and label. | Sidebar, MobileDrawer | ![SidebarNavItem](docs/Projects%20List%20(Desktop).png) |
+| 13 | ProjectAccordion | Expandable project list used in navigation shells. | Sidebar, MobileDrawer | ![ProjectAccordion](docs/Projects%20List%20(Desktop).png) |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Detailed Component Notes
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Header
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The Header is a public shared component used at the top of the authentication screens. It keeps branding and layout consistent across the login, register, forgot password, and reset password flows.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Used in: Login, Register, Forgot Password, Reset Password
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Forgot Password](docs/Forgot%20Password%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### AuthCard
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+AuthCard provides a consistent container for authentication and small form experiences. It is reused because the same card layout, spacing, and visual hierarchy appear across multiple pages, including project creation and editing forms.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Used in: Login, Register, Forgot Password, Reset Password, Add Project, Edit Project
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Forgot Password](docs/Forgot%20Password%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+
+### FormField
+
+FormField should be treated as a shared primitive because it is a recurring input pattern for user entry across form-heavy screens. It supports consistent labels, required indicators, hints, and validation styling.
+
+- Used in: Login, Register, Forgot Password, Reset Password, Add Project, Edit Project, Add New Task, Add New Epic
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Forgot Password](docs/Forgot%20Password%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+  - ![Add New Task](docs/Add%20New%20Task%20(Desktop).png)
+  - ![Add New Epic](docs/Add%20New%20Epic%20(Desktop).png)
+
+### PasswordField
+
+PasswordField is a specialized variant of the shared input pattern. It is reusable because it appears consistently on credential-related screens and includes the same visibility toggle and validation behavior.
+
+- Used in: Login, Register, Reset Password
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
+
+### Button
+
+Button is a foundational action component used wherever a primary action is required in a form. It appears repeatedly across authentication screens and should stay consistent in size, styling, and state behavior.
+
+- Used in: Login, Register, Forgot Password, Reset Password
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Forgot Password](docs/Forgot%20Password%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
+
+### FooterLink
+
+FooterLink is a reusable secondary action component that helps users move between authentication states without duplicating copy or interaction behavior.
+
+- Used in: Login, Register, Reset Password
+- Screens:
+  - ![Login](docs/Login%20(Desktop).png)
+  - ![Sign Up](docs/Sign%20Up%20(Desktop).png)
+  - ![Reset Password](docs/Reset%20Password%20(Desktop).png)
+
+### AuthenticatedLayout
+
+AuthenticatedLayout acts as the shared application shell for all protected pages. It groups the main navigation, layout spacing, and content container into a single reusable structure across project management screens.
+
+- Used in: Projects, Add Project, Edit Project, Project Members, Project Epics, Project Tasks, Analytics
+- Screens:
+  - ![Projects List](docs/Projects%20List%20(Desktop).png)
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+  - ![Project Members List](docs/Project%20Members%20List%20(Desktop).png)
+  - ![Invite Member Popup](docs/Invite%20Member%20Popup%20(Desktop).png)
+  - ![Project Epics List](docs/Project%20Epics%20List%20(Desktop).png)
+  - ![Epic Details Popup](docs/Epic%20Details%20Popup%20(Desktop).png)
+  - ![Add New Epic](docs/Add%20New%20Epic%20(Desktop).png)
+  - ![Add New Task](docs/Add%20New%20Task%20(Desktop).png)
+  - ![Project Tasks Board](docs/Project%20Tasks%20Board%20(Desktop).png)
+  - ![Tasks Calendar and Project Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png)
+
+### Navbar, Sidebar, MobileDrawer, BottomNav
+
+These navigation components work together as a responsive authenticated shell. They are reusable because they provide the same core behavior across the app: navigation, project selection, and user context, while adapting by screen size.
+
+- Navbar: all authenticated screens
+- Sidebar: desktop authenticated screens
+- MobileDrawer: mobile authenticated screens
+- BottomNav: mobile authenticated screens
+
+Reference screenshot:
+
+![Projects List](docs/Projects%20List%20(Desktop).png)
+
+### SidebarNavItem and ProjectAccordion
+
+These are lower-level navigation building blocks. They are reusable because they appear as part of the same feature set: item styling, state management, and project grouping across desktop and mobile navigation.
+
+- Used by: Sidebar, MobileDrawer
+- Reference screenshot:
+
+![Projects List](docs/Projects%20List%20(Desktop).png)
+
+## Conclusion
+
+The shared components in this project are not only visually similar—they are reused because they carry consistent purpose and behavior across screens. The most important reusable patterns are the authentication form primitives and the authenticated navigation shell. Keeping these as shared components reduces duplication and ensures a more consistent user experience across the app.
