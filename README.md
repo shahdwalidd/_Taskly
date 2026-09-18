@@ -11,19 +11,24 @@ The screen references in this document are based on the images stored in the `do
 
 | # | Component | Description | Used In | Screenshot |
 |---|---|---|---|---|
-| 1 | Header | Public authentication header with the Taskly brand. | Login, Register, Forgot Password, Reset Password | ![Header](docs/Login%20(Desktop).png) |
-| 2 | AuthCard | Centered form container used across authentication and project forms. | Login, Register, Forgot Password, Reset Password, Add Project, Edit Project | ![AuthCard](docs/Login%20(Desktop).png) |
-| 3 | FormField | Standard labeled input used for text and email entry. | Login, Register, Forgot Password, Reset Password, Add Project, Edit Project, Add New Task, Add New Epic | ![FormField](docs/Add%20New%20Project%20(Desktop).png) |
-| 4 | PasswordField | Password input with visibility toggle and validation state. | Login, Register, Reset Password | ![PasswordField](docs/Login%20(Desktop).png) |
-| 5 | Button | Primary action button for form submissions and navigation actions. | Login, Register, Forgot Password, Reset Password | ![Button](docs/Login%20(Desktop).png) |
-| 6 | FooterLink | Secondary text link for switching between authentication screens. | Login, Register, Reset Password | ![FooterLink](docs/Login%20(Desktop).png) |
-| 7 | AuthenticatedLayout | Shared application shell for all authenticated screens. | Projects, Add Project, Edit Project, Project Members, Project Epics, Project Tasks, Analytics | ![AuthenticatedLayout](docs/Projects%20List%20(Desktop).png) |
-| 8 | Navbar | Top navigation bar for authenticated screens. | All authenticated pages | ![Navbar](docs/Projects%20List%20(Desktop).png) |
-| 9 | Sidebar | Desktop navigation panel across project and dashboard flows. | Desktop authenticated pages | ![Sidebar](docs/Projects%20List%20(Desktop).png) |
-| 10 | MobileDrawer | Mobile navigation overlay used within the authenticated layout. | Mobile authenticated pages | ![MobileDrawer](docs/Projects%20List%20(Desktop).png) |
-| 11 | BottomNav | Fixed lower navigation for mobile authenticated views. | Mobile authenticated pages | ![BottomNav](docs/Projects%20List%20(Desktop).png) |
-| 12 | SidebarNavItem | Shared navigation row with icon and label. | Sidebar, MobileDrawer | ![SidebarNavItem](docs/Projects%20List%20(Desktop).png) |
-| 13 | ProjectAccordion | Expandable project list used in navigation shells. | Sidebar, MobileDrawer | ![ProjectAccordion](docs/Projects%20List%20(Desktop).png) |
+| 1 | Header | Public authentication header with the Taskly brand. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Forgot Password](docs/Forgot%20Password%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Forgot Password](docs/Forgot%20Password%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) |
+| 2 | AuthCard | Centered form container used across authentication and project forms. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Forgot Password](docs/Forgot%20Password%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png), [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Forgot Password](docs/Forgot%20Password%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) |
+| 3 | FormField | Standard labeled input used for text and email entry. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Forgot Password](docs/Forgot%20Password%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png), [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png), [Add New Task](docs/Add%20New%20Task%20(Desktop).png), [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Forgot Password](docs/Forgot%20Password%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) [Add New Task](docs/Add%20New%20Task%20(Desktop).png) [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png) |
+| 4 | PasswordField | Password input with visibility toggle and validation state. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) |
+| 5 | Button | Primary action button for form submissions and navigation actions. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Forgot Password](docs/Forgot%20Password%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Forgot Password](docs/Forgot%20Password%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) |
+| 6 | FooterLink | Secondary text link for switching between authentication screens. | [Login](docs/Login%20(Desktop).png), [Register](docs/Sign%20Up%20(Desktop).png), [Reset Password](docs/Reset%20Password%20(Desktop).png) | [Login](docs/Login%20(Desktop).png) [Register](docs/Sign%20Up%20(Desktop).png) [Reset Password](docs/Reset%20Password%20(Desktop).png) |
+| 7 | AuthenticatedLayout | Shared application shell for all authenticated screens. | [Projects](docs/Projects%20List%20(Desktop).png), [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png), [Project Members](docs/Project%20Members%20List%20(Desktop).png), [Invite Member Popup](docs/Invite%20Member%20Popup%20(Desktop).png), [Project Epics](docs/Project%20Epics%20List%20(Desktop).png), [Epic Details Popup](docs/Epic%20Details%20Popup%20(Desktop).png), [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png), [Add New Task](docs/Add%20New%20Task%20(Desktop).png), [Project Tasks Board](docs/Project%20Tasks%20Board%20(Desktop).png), [Tasks Calendar](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png), [Project Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) [Project Members](docs/Project%20Members%20List%20(Desktop).png) [Invite Member Popup](docs/Invite%20Member%20Popup%20(Desktop).png) [Project Epics](docs/Project%20Epics%20List%20(Desktop).png) [Epic Details Popup](docs/Epic%20Details%20Popup%20(Desktop).png) [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png) [Add New Task](docs/Add%20New%20Task%20(Desktop).png) [Project Tasks Board](docs/Project%20Tasks%20Board%20(Desktop).png) [Tasks Calendar](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) [Project Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) |
+| 8 | Navbar | Top navigation bar for authenticated screens. | [Projects](docs/Projects%20List%20(Desktop).png), [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png), [Project Members](docs/Project%20Members%20List%20(Desktop).png), [Project Epics](docs/Project%20Epics%20List%20(Desktop).png), [Project Tasks](docs/Project%20Tasks%20Board%20(Desktop).png), [Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) [Project Members](docs/Project%20Members%20List%20(Desktop).png) [Project Epics](docs/Project%20Epics%20List%20(Desktop).png) [Project Tasks](docs/Project%20Tasks%20Board%20(Desktop).png) [Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) |
+| 9 | Sidebar | Desktop navigation panel across project and dashboard flows. | [Projects](docs/Projects%20List%20(Desktop).png), [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png), [Project Members](docs/Project%20Members%20List%20(Desktop).png), [Project Epics](docs/Project%20Epics%20List%20(Desktop).png), [Project Tasks](docs/Project%20Tasks%20Board%20(Desktop).png), [Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) [Project Members](docs/Project%20Members%20List%20(Desktop).png) [Project Epics](docs/Project%20Epics%20List%20(Desktop).png) [Project Tasks](docs/Project%20Tasks%20Board%20(Desktop).png) [Analytics](docs/Tasks%20Calendar%20%26%20Project%20Analytics%20(Desktop).png) |
+| 10 | MobileDrawer | Mobile navigation overlay used within the authenticated layout. | [Projects](docs/Projects%20List%20(Desktop).png), [Mobile Project Views](docs/Projects%20List%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Mobile Project Views](docs/Projects%20List%20(Desktop).png) |
+| 11 | BottomNav | Fixed lower navigation for mobile authenticated views. | [Projects](docs/Projects%20List%20(Desktop).png), [Mobile Project Views](docs/Projects%20List%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Mobile Project Views](docs/Projects%20List%20(Desktop).png) |
+| 12 | SidebarNavItem | Shared navigation row with icon and label. | [Projects](docs/Projects%20List%20(Desktop).png), [Project Members](docs/Project%20Members%20List%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Project Members](docs/Project%20Members%20List%20(Desktop).png) |
+| 13 | ProjectAccordion | Expandable project list used in navigation shells. | [Projects](docs/Projects%20List%20(Desktop).png), [Project Members](docs/Project%20Members%20List%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) [Project Members](docs/Project%20Members%20List%20(Desktop).png) |
+| 14 | PageHeader | Reusable page title block for project-related screens. | [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png) | [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) |
+| 15 | FormSectionHeader | Reusable section heading with icon and description for grouped form content. | [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png) | [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) |
+| 16 | TextAreaField | Multi-line input used for descriptions and notes. | [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png), [Add New Task](docs/Add%20New%20Task%20(Desktop).png), [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png) | [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) [Add New Task](docs/Add%20New%20Task%20(Desktop).png) [Add New Epic](docs/Add%20New%20Epic%20(Desktop).png) |
+| 17 | FormActions | Shared action row for saving or canceling form operations. | [Add Project](docs/Add%20New%20Project%20(Desktop).png), [Edit Project](docs/Edit%20Project%20(Desktop).png) | [Add Project](docs/Add%20New%20Project%20(Desktop).png) [Edit Project](docs/Edit%20Project%20(Desktop).png) |
+| 18 | Pagination | Reusable page navigation for list-based data views. | [Projects](docs/Projects%20List%20(Desktop).png) | [Projects](docs/Projects%20List%20(Desktop).png) |
 
 ## Detailed Component Notes
 
@@ -136,6 +141,52 @@ These are lower-level navigation building blocks. They are reusable because they
 - Reference screenshot:
 
 ![Projects List](docs/Projects%20List%20(Desktop).png)
+
+### PageHeader
+
+PageHeader is a consistent document title block used by create and edit flows. It is reusable because project-related screens often share the same page-title rhythm, spacing, and hierarchy.
+
+- Used in: Add Project, Edit Project
+- Screens:
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+
+### FormSectionHeader
+
+FormSectionHeader is a reusable group heading used to separate longer forms into clear sections such as project information or details. It provides a consistent title, icon, and optional description layout.
+
+- Used in: Add Project, Edit Project
+- Screens:
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+
+### TextAreaField
+
+TextAreaField is a shared multiline input used for longer content like descriptions and notes. It is reusable in forms where the content is not limited to a single line and benefits from validation and counter behavior.
+
+- Used in: Add Project, Edit Project, Add New Task, Add New Epic
+- Screens:
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+  - ![Add New Task](docs/Add%20New%20Task%20(Desktop).png)
+  - ![Add New Epic](docs/Add%20New%20Epic%20(Desktop).png)
+
+### FormActions
+
+FormActions is a reusable action row for forms with confirm/cancel patterns. It is useful when multiple screens need the same final actions without duplicating layout or button behavior.
+
+- Used in: Add Project, Edit Project
+- Screens:
+  - ![Add Project](docs/Add%20New%20Project%20(Desktop).png)
+  - ![Edit Project](docs/Edit%20Project%20(Desktop).png)
+
+### Pagination
+
+Pagination is a shared list-control component used to move between pages of items. It is reusable because project lists and similar collections need the same pattern of previous/next navigation and page state.
+
+- Used in: Projects
+- Screens:
+  - ![Projects List](docs/Projects%20List%20(Desktop).png)
 
 ## Conclusion
 
