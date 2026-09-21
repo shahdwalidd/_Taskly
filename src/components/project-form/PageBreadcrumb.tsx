@@ -1,5 +1,4 @@
-import ArrowIcon from '../../assets/Arrowicon.svg?react'
-
+import ArrowIcon from '@/assets/Arrowicon.svg?react'
 interface BreadcrumbItem {
   label: string
   isActive?: boolean

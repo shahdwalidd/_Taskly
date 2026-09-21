@@ -1,4 +1,4 @@
-import LightIcon from '../../assets/LightIcon.svg?react'
+import LightIcon from '@/assets/LightIcon.svg?react'
 
 interface ProTipBannerProps {
   message: string

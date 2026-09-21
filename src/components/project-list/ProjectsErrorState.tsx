@@ -1,4 +1,4 @@
-import ErrorIcon from '../../assets/ErroIcon.svg?react'
+import ErrorIcon from '@/assets/ErroIcon.svg?react'
 interface ProjectsErrorStateProps {
   onRetry: () => void
 }

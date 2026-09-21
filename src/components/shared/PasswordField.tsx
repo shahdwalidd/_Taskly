@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { UseFormRegister, FieldValues, Path } from 'react-hook-form'
-import eyeOn from '../../assets/icons/eyeon.svg'
-import eyeOff from '../../assets/icons/eye-off.svg'
+import eyeOn from '@/assets/icons/eyeon.svg'
+import eyeOff from '@/assets/icons/eye-off.svg'
 interface PasswordFieldProps<T extends FieldValues> {
   label: string
   name: Path<T>

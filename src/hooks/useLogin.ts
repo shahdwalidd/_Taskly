@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Loginschema, type LoginFormValues } from '../schemas/Loginschema'
+import { Loginschema, type LoginFormValues } from '@/schemas/Loginschema'
 import { useState } from 'react'
-import { saveSession } from '../store/Authstore'
-import { Login as loginUser } from '../services/AuthService'
+import { saveSession } from '@/store/Authstore'
+import { Login as loginUser } from '@/services/AuthService'
 
 export function useLogin() {
   const navigate = useNavigate()

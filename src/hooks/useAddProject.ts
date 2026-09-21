@@ -6,9 +6,9 @@ import { toast } from 'sonner'
 import {
   addProjectSchema,
   type AddProjectFormValues,
-} from '../schemas/addProject.schema'
-import { createProject } from '../services/ProjectService'
-import { getSession } from '../store/Authstore'
+} from '@/schemas/addProject.schema'
+import { createProject } from '@/services/ProjectService'
+import { getSession } from '@/store/Authstore'
 
 export function useAddProject() {
   const navigate = useNavigate()

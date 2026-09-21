@@ -1,8 +1,8 @@
-import FolderIcon from '../../assets/icons/sideBaricons/ActiveProjectIcon.svg?react'
-import EpicsIcon from '../../assets/icons/sideBaricons/EpicsIcon.svg?react'
-import TasksIcon from '../../assets/icons/sideBaricons/TasksIcon.svg?react'
-import MembersIcon from '../../assets/icons/sideBaricons/MembersIcon.svg?react'
-import DetailsIcon from '../../assets/icons/sideBaricons/DetailsIcon.svg?react'
+import FolderIcon from '@/assets/icons/sideBaricons/ActiveProjectIcon.svg?react'
+import EpicsIcon from '@/assets/icons/sideBaricons/EpicsIcon.svg?react'
+import TasksIcon from '@/assets/icons/sideBaricons/TasksIcon.svg?react'
+import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
+import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 
 import type { ComponentType, SVGProps } from 'react'
 interface BottomNavItem {

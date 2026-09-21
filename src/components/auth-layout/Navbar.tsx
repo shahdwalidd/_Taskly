@@ -1,6 +1,6 @@
-import MenuIcon from '../../assets/icons/Menuicon.svg?react'
-import { getInitials } from '../../utils/getInitials'
-import { useUser } from '../../hooks/useUser'
+import MenuIcon from '@/assets/icons/Menuicon.svg?react'
+import { getInitials } from '@/utils/getInitials'
+import { useUser } from '@/hooks/useUser'
 interface NavbarProps {
   onMenuClick?: () => void
 }

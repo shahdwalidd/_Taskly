@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getSession } from '../store/Authstore'
-import type { Project } from '../types/project.types'
-import { getProjects } from '../services/ProjectService'
+import { getSession } from '@/store/Authstore'
+import type { Project } from '@/types/project.types'
+import { getProjects } from '@/services/ProjectService'
 type Projectstatus = 'loading' | 'error' | 'success'
 interface UseprojectReturn {
   status: Projectstatus
@@ -9,21 +9,21 @@ interface UseprojectReturn {
   refetch: () => void
 }
 export function useProjects(): UseprojectReturn {
-  const [status, setstatus] = useState<Projectstatus>('loading')
-  const [projects, setprojects] = useState<Project[]>([])
+  const [status, setStatus] = useState<Projectstatus>('loading')
+  const [projects, setProjects] = useState<Project[]>([])
   const fetchProjects = useCallback(async () => {
-    setstatus('loading')
+    setStatus('loading')
     const session = getSession()
     if (!session) {
-      setstatus('error')
+      setStatus('error')
       return
     }
     try {
       const data = await getProjects(session.access_token)
-      setprojects(data)
-      setstatus('success')
+      setProjects(data)
+      setStatus('success')
     } catch {
-      setstatus('error')
+      setStatus('error')
     }
   }, [])
   useEffect(() => {

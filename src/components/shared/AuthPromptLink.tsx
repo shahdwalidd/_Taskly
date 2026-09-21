@@ -1,20 +1,19 @@
-interface FooterLinkProps {
+interface AuthPromptLinkProps {
   text: string
   linkText: string
-  onLinkClick?: () => void
+  href: string
 }
 
-export function FooterLink({ text, linkText, onLinkClick }: FooterLinkProps) {
+export function AuthPromptLink({ text, linkText, href }: AuthPromptLinkProps) {
   return (
     <p className="text-body-md text-slate-medium pt-footer-mobile mt-4 pb-8 text-center md:pt-8">
       {text}{' '}
-      <button
-        type="button"
-        onClick={onLinkClick}
+      <a
+        href={href}
         className="text-primary font-semibold underline-offset-2 hover:underline"
       >
         {linkText}
-      </button>
+      </a>
     </p>
   )
 }

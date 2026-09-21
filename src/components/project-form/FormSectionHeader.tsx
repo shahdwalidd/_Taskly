@@ -1,4 +1,4 @@
-import HeaderIcon from '../../assets/AddprojIcon.svg?react'
+import HeaderIcon from '@/assets/AddprojIcon.svg?react'
 interface FormSectionHeaderProps {
   title: string
   description: string

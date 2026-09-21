@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { SidebarNavItem } from './SidebarNavItem'
-import FolderIcon from '../../assets/icons/sideBaricons/ActiveProjectIcon.svg?react'
-import EpicsIcon from '../../assets/icons/sideBaricons/EpicsIcon.svg?react'
-import TasksIcon from '../../assets/icons/sideBaricons/TasksIcon.svg?react'
-import MembersIcon from '../../assets/icons/sideBaricons/MembersIcon.svg?react'
-import DetailsIcon from '../../assets/icons/sideBaricons/DetailsIcon.svg?react'
-import ChevronIcon from '../../assets/icons/sideBaricons/ArrowbottomIcon.svg?react'
-const PROJECT_LINKS = [
+import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
+import FolderIcon from '@/assets/icons/sideBaricons/ActiveProjectIcon.svg?react'
+import EpicsIcon from '@/assets/icons/sideBaricons/EpicsIcon.svg?react'
+import TasksIcon from '@/assets/icons/sideBaricons/TasksIcon.svg?react'
+import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
+import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
+import ChevronIcon from '@/assets/icons/sideBaricons/ArrowbottomIcon.svg?react'
+const projectLinks = [
   { icon: EpicsIcon, label: 'Epics' },
   { icon: TasksIcon, label: 'Tasks' },
   { icon: MembersIcon, label: 'Members' },
@@ -37,7 +37,7 @@ export function ProjectAccordion({ projectName }: ProjectAccordionProps) {
 
       {isOpen && (
         <div className="bg-background space-y-1 p-1.5">
-          {PROJECT_LINKS.map((link) => (
+          {projectLinks.map((link) => (
             <SidebarNavItem
               key={link.label}
               icon={link.icon}

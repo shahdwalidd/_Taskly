@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signUp } from '../services/AuthService'
-import { signupSchema, type SignupFormValues } from '../schemas/Signupschema'
+import { signUp } from '@/services/AuthService'
+import { signupSchema, type SignupFormValues } from '@/schemas/Signupschema'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 export function useSignup() {
@@ -25,15 +25,15 @@ export function useSignup() {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const passwordValue = watch('password')
-  const onSubmit = async (formvalues: SignupFormValues) => {
+  const onSubmit = async (formValues: SignupFormValues) => {
     setServerError(null)
     try {
       await signUp({
-        email: formvalues.email,
-        password: formvalues.password,
+        email: formValues.email,
+        password: formValues.password,
         data: {
-          name: formvalues.name,
-          job_title: formvalues.jobTitle?.trim() || undefined,
+          name: formValues.name,
+          job_title: formValues.jobTitle?.trim() || undefined,
         },
       })
       navigate('/login')

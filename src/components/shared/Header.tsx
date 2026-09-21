@@ -1,4 +1,4 @@
-import { Logo } from './LogoIcon'
+import { Logo } from '@/components/shared/LogoIcon'
 
 export function Header() {
   return (

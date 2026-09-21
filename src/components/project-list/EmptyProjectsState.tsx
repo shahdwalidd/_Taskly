@@ -1,4 +1,4 @@
-import Emptyimage from '../../assets/Emptystate.svg'
+import Emptyimage from '@/assets/Emptystate.svg'
 interface EmptyProjectsStateProps {
   onCreateClick: () => void
 }

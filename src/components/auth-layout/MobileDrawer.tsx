@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { SidebarNavItem } from './SidebarNavItem'
-import { ProjectAccordion } from './ProjectAccordion'
+import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
+import { ProjectAccordion } from '@/components/auth-layout/ProjectAccordion'
 import LogoIcon from '../../../public/Iconlogo.svg?react'
-import FolderIcon from '../../assets/icons/sideBaricons/ProjectsIcon.svg?react'
-import StatsIcon from '../../assets/icons/sideBaricons/MyStatisticsIcon.svg?react'
-import CloseIcon from '../../assets/icons/sideBaricons/CloseIcon.svg?react'
-import LogoutIcon from '../../assets/icons/sideBaricons/LogoutIcon.svg?react'
+import FolderIcon from '@/assets/icons/sideBaricons/ProjectsIcon.svg?react'
+import StatsIcon from '@/assets/icons/sideBaricons/MyStatisticsIcon.svg?react'
+import CloseIcon from '@/assets/icons/sideBaricons/CloseIcon.svg?react'
+import LogoutIcon from '@/assets/icons/sideBaricons/LogoutIcon.svg?react'
 interface MobileDrawerProps {
   isOpen: boolean
   onClose: () => void

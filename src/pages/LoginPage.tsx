@@ -1,12 +1,12 @@
-import { Header } from '../components/shared/Header'
-import { AuthCard } from '../components/shared/AuthCard'
-import { PasswordField } from '../components/shared/PasswordField'
-import { FormField } from '../components/shared/FormField'
-import { Button } from '../components/shared/Button'
-import { FooterLink } from '../components/shared/FooterLink'
-import { useLogin } from '../hooks/useLogin'
-import LoginHeader from '../components/login-com/LoginHeader'
-import { RememberMeSection } from '../components/login-com/RememberMe'
+import { Header } from '@/components/shared/Header'
+import { AuthCard } from '@/components/shared/AuthCard'
+import { PasswordField } from '@/components/shared/PasswordField'
+import { FormField } from '@/components/shared/FormField'
+import { Button } from '@/components/shared/Button'
+import { AuthPromptLink } from '@/components/shared/AuthPromptLink'
+import { useLogin } from '@/hooks/useLogin'
+import LoginHeader from '@/components/login/LoginHeader'
+import { RememberMeSection } from '@/components/login/RememberMe'
 
 const LoginPage = () => {
   const {
@@ -16,7 +16,6 @@ const LoginPage = () => {
     rememberMe,
     isSubmitting,
     servererror,
-    navigate,
     onSubmit,
     handleSubmit,
   } = useLogin()
@@ -67,10 +66,10 @@ const LoginPage = () => {
             </Button>
           </form>
           <div className="mt-8">
-            <FooterLink
+            <AuthPromptLink
               text="Don't have an account? "
               linkText="Sign Up"
-              onLinkClick={() => navigate('/sign-up')}
+              href="/sign-up"
             />
           </div>
         </AuthCard>

@@ -1,16 +1,14 @@
-import { useNavigate } from 'react-router-dom'
-import { Header } from '../components/shared/Header'
-import { Heading } from '../components/register-com/Heading'
-import { PasswordField } from '../components/shared/PasswordField'
-import { FormField } from '../components/shared/FormField'
-import { AuthCard } from '../components/shared/AuthCard'
-import { Button } from '../components/shared/Button'
-import { FooterLink } from '../components/shared/FooterLink'
-import { PasswordRequirements } from '../components/register-com/PasswordRequirements'
+import { Header } from '@/components/shared/Header'
+import { Heading } from '@/components/register/Heading'
+import { PasswordField } from '@/components/shared/PasswordField'
+import { FormField } from '@/components/shared/FormField'
+import { AuthCard } from '@/components/shared/AuthCard'
+import { Button } from '@/components/shared/Button'
+import { AuthPromptLink } from '@/components/shared/AuthPromptLink'
+import { PasswordRequirements } from '@/components/register/PasswordRequirements'
 
-import { useSignup } from '../hooks/useSignup'
+import { useSignup } from '@/hooks/useSignup'
 export function SignUp() {
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -91,10 +89,10 @@ export function SignUp() {
           </form>
 
           <div className="mt-8">
-            <FooterLink
+            <AuthPromptLink
               text="Already have an account?"
               linkText="Log in"
-              onLinkClick={() => navigate('/login')}
+              href="/login"
             />
           </div>
         </AuthCard>

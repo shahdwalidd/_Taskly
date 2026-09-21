@@ -1,4 +1,4 @@
-import PlusIcon from '../../assets/PlusIcon.svg?react'
+import PlusIcon from '@/assets/PlusIcon.svg?react'
 interface AddProjectCardProps {
   onClick: () => void
 }

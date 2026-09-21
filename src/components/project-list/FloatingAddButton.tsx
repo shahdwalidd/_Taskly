@@ -1,4 +1,4 @@
-import PlusIcon from '../../assets/Whiteplus.svg?react'
+import PlusIcon from '@/assets/Whiteplus.svg?react'
 
 interface FloatingAddButtonProps {
   onClick: () => void

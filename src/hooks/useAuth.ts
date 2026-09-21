@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { saveSession, clearSession, getSession } from '../store/Authstore'
-import { refreshAccessToken } from '../services/AuthService'
-import { logout } from '../services/AuthService'
+import { saveSession, clearSession, getSession } from '@/store/Authstore'
+import { refreshAccessToken } from '@/services/AuthService'
+import { logout } from '@/services/AuthService'
 
 interface Authstate {
   isauth: boolean

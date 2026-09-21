@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import ChevronRightIcon from '../../assets/ChevronRightIcon.svg?react'
-import ChevronLeftIcon from '../../assets/ChevronLeftIcon.svg?react'
+import ChevronRightIcon from '@/assets/ChevronRightIcon.svg?react'
+import ChevronLeftIcon from '@/assets/ChevronLeftIcon.svg?react'
 interface PaginationProps {
   totalPages: number
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getUser } from '../services/UserService'
-import { getSession } from '../store/Authstore'
-import { useAuth } from './useAuth'
-import type { UserResponse } from '../types/user.types'
+import { getUser } from '@/services/UserService'
+import { getSession } from '@/store/Authstore'
+import { useAuth } from '@/hooks/useAuth'
+import type { UserResponse } from '@/types/user.types'
 
 interface UseUserState {
   user: UserResponse | null

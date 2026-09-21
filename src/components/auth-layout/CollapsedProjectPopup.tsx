@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { SidebarNavItem } from './SidebarNavItem'
+import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
 
-import EpicsIcon from '../../assets/icons/sideBaricons/EpicsIcon.svg?react'
-import TasksIcon from '../../assets/icons/sideBaricons/TasksIcon.svg?react'
-import MembersIcon from '../../assets/icons/sideBaricons/MembersIcon.svg?react'
-import DetailsIcon from '../../assets/icons/sideBaricons/DetailsIcon.svg?react'
+import EpicsIcon from '@/assets/icons/sideBaricons/EpicsIcon.svg?react'
+import TasksIcon from '@/assets/icons/sideBaricons/TasksIcon.svg?react'
+import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
+import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 
-const PROJECT_LINKS = [
+const projectLinks = [
   { icon: EpicsIcon, label: 'Epics' },
   { icon: TasksIcon, label: 'Tasks' },
   { icon: MembersIcon, label: 'Members' },
@@ -37,7 +37,7 @@ export function CollapsedProjectPopup({ onClose }: CollapsedProjectPopupProps) {
       ref={popupRef}
       className="bg-surface-highest backdrop-blur-glass absolute top-0 left-full ml-2 w-48 space-y-1 rounded-xl p-1.5 shadow-lg ring-1 ring-black/5"
     >
-      {PROJECT_LINKS.map((link) => (
+          {projectLinks.map((link) => (
         <SidebarNavItem key={link.label} icon={link.icon} label={link.label} />
       ))}
     </div>

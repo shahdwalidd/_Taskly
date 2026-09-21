@@ -1,11 +1,11 @@
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY
-import type { UserResponse } from '../types/user.types'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
+import type { UserResponse } from '@/types/user.types'
 export async function getUser(accessToken: string): Promise<UserResponse> {
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
     method: 'GET',
     headers: {
-      apikey: SUPABASE_KEY,
+      apikey: supabaseKey,
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },

@@ -1,18 +1,18 @@
 import type {
   AddProjectPayload,
   AddProjectErrorResponse,
-} from '../types/project.types'
-import type { Project, ProjectsErrorResponse } from '../types/project.types'
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY
+} from '@/types/project.types'
+import type { Project, ProjectsErrorResponse } from '@/types/project.types'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 export async function createProject(
   payload: AddProjectPayload,
   accessToken: string,
 ) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/projects`, {
+  const response = await fetch(`${supabaseUrl}/rest/v1/projects`, {
     method: 'POST',
     headers: {
-      apikey: SUPABASE_KEY,
+      apikey: supabaseKey,
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
@@ -40,21 +40,21 @@ export async function createProject(
   return result
 }
 export async function getProjects(accessToken: string): Promise<Project[]> {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_projects`, {
+  const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_projects`, {
     method: 'GET',
     headers: {
-      apikey: SUPABASE_KEY,
+      apikey: supabaseKey,
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   })
-  const responsetext = await response.text()
+  const responseText = await response.text()
   let result: unknown = null
-  if (responsetext) {
+  if (responseText) {
     try {
-      result = JSON.parse(responsetext)
+      result = JSON.parse(responseText)
     } catch {
-      result = responsetext
+      result = responseText
     }
   }
   if (!response.ok) {

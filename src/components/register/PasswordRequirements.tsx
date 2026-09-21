@@ -1,5 +1,5 @@
-import circle from '../../assets/icons/circle.svg'
-import checkcircle from '../../assets/icons/checkcircle.svg'
+import circle from '@/assets/icons/circle.svg'
+import checkcircle from '@/assets/icons/checkcircle.svg'
 interface PasswordRequirementsProps {
   password: string
 }
