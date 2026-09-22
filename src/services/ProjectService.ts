@@ -1,7 +1,7 @@
 import type {
   AddProjectPayload,
   AddProjectErrorResponse,
-  UpdateProjectPayload
+  UpdateProjectPayload,
 } from '@/types/project.types'
 import type { Project, ProjectsErrorResponse } from '@/types/project.types'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -9,35 +9,35 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 export async function updateProject(
   projectId: string,
   payload: UpdateProjectPayload,
-  accessToken: string
+  accessToken: string,
 ): Promise<void> {
   const response = await fetch(
     `${supabaseUrl}/rest/v1/projects?id=eq.${projectId}`,
     {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
         apikey: supabaseKey,
         Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
-    }
-  );
+    },
+  )
 
   if (!response.ok) {
-    const responseText = await response.text();
-    let result: unknown = null;
+    const responseText = await response.text()
+    let result: unknown = null
 
     if (responseText) {
       try {
-        result = JSON.parse(responseText);
+        result = JSON.parse(responseText)
       } catch {
-        result = responseText;
+        result = responseText
       }
     }
 
-    const errorData = result as ProjectsErrorResponse;
-    throw new Error(errorData?.message || "Failed to update project");
+    const errorData = result as ProjectsErrorResponse
+    throw new Error(errorData?.message || 'Failed to update project')
   }
 }
 
@@ -83,7 +83,6 @@ export async function getProjectById(
 
   return projects[0]
 }
-
 
 export async function createProject(
   payload: AddProjectPayload,
@@ -144,4 +143,3 @@ export async function getProjects(accessToken: string): Promise<Project[]> {
 
   return result as Project[]
 }
-

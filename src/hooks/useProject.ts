@@ -29,17 +29,12 @@ export function useProject() {
       }
 
       try {
-        const data = await getProjectById(
-          projectId,
-          session.access_token,
-        )
+        const data = await getProjectById(projectId, session.access_token)
 
         setProject(data)
       } catch (error) {
         setError(
-          error instanceof Error
-            ? error.message
-            : 'Failed to load project',
+          error instanceof Error ? error.message : 'Failed to load project',
         )
       } finally {
         setLoading(false)

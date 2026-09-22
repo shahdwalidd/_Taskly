@@ -1,6 +1,7 @@
 import Epicsicon from '@/assets/Epicsprimary.svg?react'
 import Tasksicon from '@/assets/Tasksprimary.svg?react'
 import Membersicon from '@/assets/Membersprimary.svg?react'
+import Foldereicon from '@/assets/folder-edit.svg?react'
 interface ProjectCardProps {
   name: string
   description: string
@@ -19,11 +20,11 @@ export function ProjectCard({
       onClick={onClick}
     >
       <h2 className="min-w-0 wrap-break-word whitespace-normal">{name}</h2>
-      <p className="wrap-break-words min-w-0 whitespace-normal">
+      <p className="wrap-break-words min-w-0 text-wrap whitespace-normal">
         {description}
       </p>
 
-      <div className="flex items-center justify-between pt-4">
+      <div className="flex flex-wrap items-center justify-between pt-4">
         <span className="text-label-xs text-primary flex gap-1">
           <Epicsicon className="h-4 w-4" />
           Epics
@@ -36,6 +37,11 @@ export function ProjectCard({
           {' '}
           <Membersicon className="h-4 w-4" />
           Members
+        </span>
+        <span className="text-label-xs text-primary flex gap-1">
+          {' '}
+          <Foldereicon className="h-4 w-4" />
+          Edit
         </span>
       </div>
       <div className="border-slate-light/10 mt-4 flex items-center justify-between border-t">

@@ -24,6 +24,6 @@ export interface ProjectsErrorResponse {
   message: string
 }
 export interface UpdateProjectPayload {
-  name: string;
-  description?: string;
+  name: string
+  description?: string
 }

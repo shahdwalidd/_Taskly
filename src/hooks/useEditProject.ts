@@ -15,7 +15,6 @@ import { getSession } from '@/store/Authstore'
 export function useEditProject() {
   const navigate = useNavigate()
 
-
   const {
     projectId,
     project,
@@ -60,19 +59,13 @@ export function useEditProject() {
         throw new Error('Authentication required')
       }
 
-      await updateProject(
-        projectId,
-        values,
-        session.access_token,
-      )
+      await updateProject(projectId, values, session.access_token)
 
       toast.success('Project updated successfully')
       navigate('/project')
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : 'Failed to update project'
+        error instanceof Error ? error.message : 'Failed to update project'
 
       setSaveError(message)
     } finally {
@@ -86,11 +79,7 @@ export function useEditProject() {
 
   return {
     projectName: project?.name ?? '',
-    status: isFetching
-      ? 'loading'
-      : fetchError
-        ? 'error'
-        : 'success',
+    status: isFetching ? 'loading' : fetchError ? 'error' : 'success',
     fetchError,
 
     register,

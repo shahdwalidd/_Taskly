@@ -50,14 +50,7 @@ function App() {
               </ProtectedRoutes>
             }
           />
-          <Route
-  path="/project/:projectId/edit"
-  element={
-    <ProtectedRoutes>
-      <EditProjectPage />
-    </ProtectedRoutes>
-  }
-/>
+
           <Route
             path="/project/:projectId/epics"
             element={
@@ -86,12 +79,11 @@ function App() {
             path="/project/:projectId/edit"
             element={
               <ProtectedRoutes>
-                <ProjectPage />
+                <EditProjectPage />
               </ProtectedRoutes>
             }
           />
         </Routes>
-       
       </BrowserRouter>
     </>
   )

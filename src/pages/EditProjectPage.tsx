@@ -10,13 +10,12 @@ import { FormField } from '@/components/shared/FormField'
 import { useEditProject } from '@/hooks/useEditProject'
 
 export function EditProjectPage() {
-  
   const {
     status,
     projectName,
     register,
     handleSubmit,
-     onCancel,
+    onCancel,
     errors,
     isSubmitting,
     descriptionValue,
@@ -26,7 +25,7 @@ export function EditProjectPage() {
   return (
     <AuthenticatedLayout projectName={projectName}>
       <div className="w-full md:px-10">
-        <div className="mb-6 mt-6">
+        <div className="mt-6 mb-6">
           <PageBreadcrumb
             items={[
               { label: 'Projects' },
@@ -45,7 +44,9 @@ export function EditProjectPage() {
 
         {status === 'error' && (
           <div className="flex flex-col items-center py-20 text-center">
-            <h2 className="text-xl font-extrabold text-ink">Something went wrong</h2>
+            <h2 className="text-ink text-xl font-extrabold">
+              Something went wrong
+            </h2>
             <p className="mt-2 text-gray-500">
               We couldn&apos;t load this project&apos;s data. Please try again.
             </p>
@@ -57,8 +58,8 @@ export function EditProjectPage() {
             <div className="h-full w-full md:flex md:justify-center">
               <AuthCard>
                 <FormSectionHeader
-                  title="Update Project Information"
-                  description="Modify the name and description of your project."
+                  title="Edit Project"
+                  description="Define the scope and foundational details of your project."
                 />
 
                 <form onSubmit={handleSubmit} className="mt-6 space-y-6">
@@ -85,7 +86,7 @@ export function EditProjectPage() {
                   )}
                   <FormActions
                     onBack={onCancel}
-                    submitLabel="Save"
+                    submitLabel="Save Changes"
                     isSubmitting={isSubmitting}
                   />
                 </form>
@@ -94,7 +95,7 @@ export function EditProjectPage() {
 
             <div className="flex justify-center">
               <div className="mb-4 w-full md:w-(--layout-auth-width)">
-                <ProTipBanner message="Changes take effect immediately after saving." />
+                <ProTipBanner message="You can invite project members and assign epics immediately after the initial creation process." />
               </div>
             </div>
           </>
@@ -103,7 +104,3 @@ export function EditProjectPage() {
     </AuthenticatedLayout>
   )
 }
-
-
-
-
