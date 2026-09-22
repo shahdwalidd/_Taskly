@@ -23,3 +23,7 @@ export interface ProjectsErrorResponse {
   hint: string | null
   message: string
 }
+export interface UpdateProjectPayload {
+  name: string;
+  description?: string;
+}

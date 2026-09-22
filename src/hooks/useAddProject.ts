@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import {
   addProjectSchema,
   type AddProjectFormValues,
-} from '@/schemas/addProject.schema'
+} from '@/schemas/Project.schema'
 import { createProject } from '@/services/ProjectService'
 import { getSession } from '@/store/Authstore'
 

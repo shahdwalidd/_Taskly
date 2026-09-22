@@ -10,3 +10,13 @@ export const addProjectSchema = z.object({
 })
 
 export type AddProjectFormValues = z.infer<typeof addProjectSchema>
+
+export const editProjectSchema = z.object({
+  name: z
+    .string()
+    .min(3, 'Project name must be at least 3 characters.')
+    .max(100, 'Project name must not exceed 100 characters.'),
+  description: z.string().max(500).optional(),
+})
+
+export type EditProjectFormValues = z.infer<typeof editProjectSchema>

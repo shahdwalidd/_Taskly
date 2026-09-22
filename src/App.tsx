@@ -6,7 +6,7 @@ import { ProtectedRoutes } from '@/routes/ProtectedRoutes'
 import { PublicRoutes } from '@/routes/PublicRoutes'
 import { ProjectsPage } from '@/pages/ProjectsPage'
 import { AddProjectPage } from '@/pages/AddProjectPage'
-
+import { EditProjectPage } from './pages/EditProjectPage'
 function App() {
   return (
     <>
@@ -49,7 +49,16 @@ function App() {
               </ProtectedRoutes>
             }
           />
+          <Route
+  path="/project/:projectId/edit"
+  element={
+    <ProtectedRoutes>
+      <EditProjectPage />
+    </ProtectedRoutes>
+  }
+/>
         </Routes>
+       
       </BrowserRouter>
     </>
   )
