@@ -7,16 +7,20 @@ import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
 import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 
 const projectLinks = [
-  { icon: EpicsIcon, label: 'Epics' },
-  { icon: TasksIcon, label: 'Tasks' },
-  { icon: MembersIcon, label: 'Members' },
-  { icon: DetailsIcon, label: 'Details' },
+  { icon: EpicsIcon, label: 'Epics', path: 'epics' },
+  { icon: TasksIcon, label: 'Tasks', path: 'tasks' },
+  { icon: MembersIcon, label: 'Members', path: 'members' },
+  { icon: DetailsIcon, label: 'Details', path: 'edit' },
 ]
 
 interface CollapsedProjectPopupProps {
+  projectId: string
   onClose: () => void
 }
-export function CollapsedProjectPopup({ onClose }: CollapsedProjectPopupProps) {
+export function CollapsedProjectPopup({
+  projectId,
+  onClose,
+}: CollapsedProjectPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -37,8 +41,14 @@ export function CollapsedProjectPopup({ onClose }: CollapsedProjectPopupProps) {
       ref={popupRef}
       className="bg-surface-highest backdrop-blur-glass absolute top-0 left-full ml-2 w-48 space-y-1 rounded-xl p-1.5 shadow-lg ring-1 ring-black/5"
     >
-          {projectLinks.map((link) => (
-        <SidebarNavItem key={link.label} icon={link.icon} label={link.label} />
+      {projectLinks.map((link) => (
+        <SidebarNavItem
+          key={link.label}
+          icon={link.icon}
+          label={link.label}
+          to={`/project/${projectId}/${link.path}`}
+          onNavigate={onClose}
+        />
       ))}
     </div>
   )

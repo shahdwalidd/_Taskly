@@ -10,6 +10,7 @@ interface MobileDrawerProps {
   isOpen: boolean
   onClose: () => void
   projectName?: string
+  projectId?: string
   logout: () => Promise<void>
   isLoggingOut: boolean
   logoutError: string | null
@@ -18,11 +19,12 @@ export function MobileDrawer({
   isOpen,
   onClose,
   projectName,
+  projectId,
   logout,
   isLoggingOut,
   logoutError,
 }: MobileDrawerProps) {
-  const hasActiveProject = Boolean(projectName)
+  const hasActiveProject = Boolean(projectName && projectId)
   useEffect(() => {
     if (!isOpen) return
     document.body.style.overflow = 'hidden'
@@ -51,13 +53,22 @@ export function MobileDrawer({
         </div>
 
         <div className="flex-1 space-y-1 overflow-y-auto">
-          <SidebarNavItem icon={FolderIcon} label="Projects" isActive />
+          <SidebarNavItem
+            icon={FolderIcon}
+            label="Projects"
+            to="/project"
+            onNavigate={onClose}
+          />
           <SidebarNavItem icon={StatsIcon} label="My Statistics" />
 
           {hasActiveProject && (
             <>
               <div className="my-2 border-t border-black/10 p-2" />
-              <ProjectAccordion projectName={projectName!} />
+              <ProjectAccordion
+                projectName={projectName!}
+                projectId={projectId!}
+                onNavigate={onClose}
+              />
             </>
           )}
         </div>

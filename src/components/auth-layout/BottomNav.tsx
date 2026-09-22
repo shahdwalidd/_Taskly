@@ -5,35 +5,42 @@ import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
 import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 
 import type { ComponentType, SVGProps } from 'react'
+import { NavLink } from 'react-router-dom'
 interface BottomNavItem {
   icon: ComponentType<SVGProps<SVGSVGElement>>
   label: string
+  path?: string
 }
 interface BottomNavProps {
-  hasActiveProject?: boolean
+  projectId?: string
 }
-export function BottomNav({ hasActiveProject = false }: BottomNavProps) {
-  const items: BottomNavItem[] = hasActiveProject
+export function BottomNav({ projectId }: BottomNavProps) {
+  const items: BottomNavItem[] = projectId
     ? [
-        { icon: EpicsIcon, label: 'Epics' },
-        { icon: TasksIcon, label: 'Tasks' },
+        { icon: EpicsIcon, label: 'Epics', path: 'epics' },
+        { icon: TasksIcon, label: 'Tasks', path: 'tasks' },
         { icon: FolderIcon, label: 'Projects' },
-        { icon: MembersIcon, label: 'Members' },
-        { icon: DetailsIcon, label: 'Details' },
+        { icon: MembersIcon, label: 'Members', path: 'members' },
+        { icon: DetailsIcon, label: 'Details', path: 'edit' },
       ]
     : [{ icon: FolderIcon, label: 'Projects' }]
   return (
     <nav className="bg-surface-low fixed inset-x-0 bottom-0 z-30 flex px-7 md:hidden">
-      {items.map(({ icon: Icon, label }) => {
-        const isActive = label === 'Projects'
+      {items.map(({ icon: Icon, label, path }) => {
+        const to =
+          path && projectId ? `/project/${projectId}/${path}` : '/project'
         return (
-          <button
+          <NavLink
             key={label}
-            className={`flex flex-1 flex-col items-center gap-1 py-2 text-xs ${isActive ? 'text-primary-container' : 'text-slate-dark-70'}`}
+            to={to}
+            end={label === 'Projects'}
+            className={({ isActive }) =>
+              `flex flex-1 flex-col items-center gap-1 py-2 text-xs ${isActive ? 'text-primary-container' : 'text-slate-dark-70'}`
+            }
           >
             <Icon />
             <span>{label}</span>
-          </button>
+          </NavLink>
         )
       })}
     </nav>

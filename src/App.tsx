@@ -6,6 +6,7 @@ import { ProtectedRoutes } from '@/routes/ProtectedRoutes'
 import { PublicRoutes } from '@/routes/PublicRoutes'
 import { ProjectsPage } from '@/pages/ProjectsPage'
 import { AddProjectPage } from '@/pages/AddProjectPage'
+import { ProjectPage } from '@/pages/ProjectPage'
 
 function App() {
   return (
@@ -46,6 +47,38 @@ function App() {
             element={
               <ProtectedRoutes>
                 <AddProjectPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/project/:projectId/epics"
+            element={
+              <ProtectedRoutes>
+                <ProjectPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/project/:projectId/tasks"
+            element={
+              <ProtectedRoutes>
+                <ProjectPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/project/:projectId/members"
+            element={
+              <ProtectedRoutes>
+                <ProjectPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/project/:projectId/edit"
+            element={
+              <ProtectedRoutes>
+                <ProjectPage />
               </ProtectedRoutes>
             }
           />
