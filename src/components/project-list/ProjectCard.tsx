@@ -1,7 +1,7 @@
 import Epicsicon from '@/assets/Epicsprimary.svg?react'
 import Tasksicon from '@/assets/Tasksprimary.svg?react'
 import Membersicon from '@/assets/Membersprimary.svg?react'
-import Foldereicon from '@/assets/folder-edit.svg?react'
+import Foldereicon from '@/assets/Folder-edit.svg?react'
 interface ProjectCardProps {
   name: string
   description: string
