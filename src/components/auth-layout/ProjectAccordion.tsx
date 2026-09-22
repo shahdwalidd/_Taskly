@@ -7,15 +7,21 @@ import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
 import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 import ChevronIcon from '@/assets/icons/sideBaricons/ArrowbottomIcon.svg?react'
 const projectLinks = [
-  { icon: EpicsIcon, label: 'Epics' },
-  { icon: TasksIcon, label: 'Tasks' },
-  { icon: MembersIcon, label: 'Members' },
-  { icon: DetailsIcon, label: 'Details' },
+  { icon: EpicsIcon, label: 'Epics', path: 'epics' },
+  { icon: TasksIcon, label: 'Tasks', path: 'tasks' },
+  { icon: MembersIcon, label: 'Members', path: 'members' },
+  { icon: DetailsIcon, label: 'Details', path: 'edit' },
 ]
 interface ProjectAccordionProps {
   projectName: string
+  projectId: string
+  onNavigate?: () => void
 }
-export function ProjectAccordion({ projectName }: ProjectAccordionProps) {
+export function ProjectAccordion({
+  projectName,
+  projectId,
+  onNavigate,
+}: ProjectAccordionProps) {
   const [isOpen, setIsOpen] = useState(true)
   return (
     <div className="rounded-ssm bg-surface-highest overflow-hidden">
@@ -42,6 +48,8 @@ export function ProjectAccordion({ projectName }: ProjectAccordionProps) {
               key={link.label}
               icon={link.icon}
               label={link.label}
+              to={`/project/${projectId}/${link.path}`}
+              onNavigate={onNavigate}
             />
           ))}
         </div>

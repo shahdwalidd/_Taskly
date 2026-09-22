@@ -12,6 +12,7 @@ import LogoutIcon from '@/assets/icons/sideBaricons/LogoutIcon.svg?react'
 
 interface SidebarProps {
   projectName?: string
+  projectId?: string
   logout: () => Promise<void>
   isLoggingOut: boolean
   logoutError: string | null
@@ -19,13 +20,14 @@ interface SidebarProps {
 
 export function Sidebar({
   projectName,
+  projectId,
   logout,
   isLoggingOut,
   logoutError,
 }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isPopupOpen, setIsPopupOpen] = useState(false)
-  const hasActiveProject = Boolean(projectName)
+  const hasActiveProject = Boolean(projectName && projectId)
 
   return (
     <aside
@@ -47,8 +49,8 @@ export function Sidebar({
           <SidebarNavItem
             icon={FolderIcon}
             label="Projects"
-            isActive
             isCollapsed={isCollapsed}
+            to="/project"
           />
           <SidebarNavItem
             icon={StatsIcon}
@@ -72,12 +74,16 @@ export function Sidebar({
                 </button>
                 {isPopupOpen && (
                   <CollapsedProjectPopup
+                    projectId={projectId!}
                     onClose={() => setIsPopupOpen(false)}
                   />
                 )}
               </div>
             ) : (
-              <ProjectAccordion projectName={projectName!} />
+              <ProjectAccordion
+                projectName={projectName!}
+                projectId={projectId!}
+              />
             )}
           </>
         )}

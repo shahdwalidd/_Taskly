@@ -7,11 +7,13 @@ import { useAuth } from '@/hooks/useAuth'
 
 interface AuthenticatedLayoutProps {
   projectName?: string
+  projectId?: string
   children: ReactNode
 }
 
 export function AuthenticatedLayout({
   projectName,
+  projectId,
   children,
 }: AuthenticatedLayoutProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -21,6 +23,7 @@ export function AuthenticatedLayout({
     <div className="bg-surface flex h-screen overflow-hidden">
       <Sidebar
         projectName={projectName}
+        projectId={projectId}
         logout={logout}
         isLoggingOut={isLoggingOut}
         logoutError={logoutError}
@@ -38,12 +41,13 @@ export function AuthenticatedLayout({
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         projectName={projectName}
+        projectId={projectId}
         logout={logout}
         isLoggingOut={isLoggingOut}
         logoutError={logoutError}
       />
 
-      <BottomNav hasActiveProject={Boolean(projectName)} />
+      <BottomNav projectId={projectId} />
     </div>
   )
 }

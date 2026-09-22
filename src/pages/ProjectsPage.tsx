@@ -16,7 +16,7 @@ export function ProjectsPage() {
   const { status, projects, refetch } = useProjects()
 
   return (
-    <AuthenticatedLayout projectName="Active Project Na...">
+    <AuthenticatedLayout>
       <div className="px-6 py-8 md:px-10">
         <ProjectPgeHeader
           title="Projects"
