@@ -1,4 +1,5 @@
 const storageKey = 'taskly_session'
+const recoveryAccessTokenKey = 'taskly_recovery_access_token'
 interface StoredSession {
   access_token: string
   refresh_token: string
@@ -43,4 +44,16 @@ export function getSession(): StoredSession | null {
 export function clearSession() {
   localStorage.removeItem(storageKey)
   sessionStorage.removeItem(storageKey)
+}
+
+export function saveRecoveryAccessToken(accessToken: string) {
+  sessionStorage.setItem(recoveryAccessTokenKey, accessToken)
+}
+
+export function getRecoveryAccessToken() {
+  return sessionStorage.getItem(recoveryAccessTokenKey)
+}
+
+export function clearRecoveryAccessToken() {
+  sessionStorage.removeItem(recoveryAccessTokenKey)
 }

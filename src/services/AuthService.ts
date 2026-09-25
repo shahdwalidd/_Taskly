@@ -1,5 +1,8 @@
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
+const resetPasswordRedirectUrl =
+  import.meta.env.VITE_RESET_PASSWORD_REDIRECT_URL ??
+  `${window.location.origin}/reset-password`
 import type {
   SignupPayload,
   SignupSuccessResponse,
@@ -74,5 +77,39 @@ export async function logout(accessToken: string): Promise<void> {
   if (!response.ok) {
     const result = await response.json()
     throw new Error(result.msg || 'failed to logout')
+  }
+}
+export  async function forgetPassword(email:string):Promise<void>{
+const response =await fetch(`${supabaseUrl}/auth/v1/recover`,{method:"POST",headers:{ apikey: supabaseKey,      'Content-Type': 'application/json',}
+    , body: JSON.stringify({
+      email,
+      redirect_to: resetPasswordRedirectUrl,
+    }),
+})
+
+
+ if (!response.ok) {
+    const result = await response.json().catch(() => null);
+    throw new Error(result?.msg || "Failed to send reset email. Please try again.");
+  }
+}
+
+export async function updatePassword(
+  password: string,
+  accessToken: string,
+): Promise<void> {
+  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+    method: 'PUT',
+    headers: {
+      apikey: supabaseKey,
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ password }),
+  })
+
+  if (!response.ok) {
+      const result = await response.json().catch(() => null)
+      throw new Error(result?.msg || result?.message || 'Failed to update password.')
   }
 }

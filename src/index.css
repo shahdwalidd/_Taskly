@@ -69,6 +69,7 @@
   --color-overlay-gray: #737685;
   --color-lightblue: #e8edff;
   --color-babyred: #ffdad6;
+  --color-darkgreen:#005235;
   --text-display-lg: 56px;
   --text-display-lg--line-height: 56px;
   --text-display-lg--font-weight: 700;
@@ -102,7 +103,9 @@
   --text-button: 16px;
   --text-button--line-height: 24px;
   --text-button--font-weight: 600;
-
+--text-caption: 13px;
+--text-caption--line-height: 19.5px;
+--text-caption--font-weight: 400;
   --spacing-footer-mobile: 47.5px;
 
   --shadow-button: 0px 1px 2px 0px #0000000d;

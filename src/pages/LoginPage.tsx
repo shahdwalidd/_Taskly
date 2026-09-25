@@ -7,6 +7,7 @@ import { AuthPromptLink } from '@/components/shared/AuthPromptLink'
 import { useLogin } from '@/hooks/useLogin'
 import LoginHeader from '@/components/login/LoginHeader'
 import { RememberMeSection } from '@/components/login/RememberMe'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
   const {
@@ -19,7 +20,7 @@ const LoginPage = () => {
     onSubmit,
     handleSubmit,
   } = useLogin()
-
+const navigate=useNavigate();
   return (
     <>
       <Header />
@@ -48,13 +49,13 @@ const LoginPage = () => {
               register={register}
               error={errors.password?.message}
               linkText="Forgot?"
-              onLinkClick={() => {}}
+              onLinkClick={() =>  {navigate("/forgot-password")}}
             />
 
             <RememberMeSection
               checked={rememberMe}
               onCheckedChange={setRememberMe}
-              onForgotPassword={() => {}}
+              onForgotPassword={() => {navigate("/forgot-password")}}
             />
 
             {servererror && (

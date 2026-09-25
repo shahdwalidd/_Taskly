@@ -1,4 +1,5 @@
 import z from 'zod'
+import { passwordSchema } from '@/schemas/Passwordschema'
 export const signupSchema = z
   .object({
     name: z
@@ -14,19 +15,7 @@ export const signupSchema = z
       .string()
       .min(1, 'Email is required.')
       .email('Please enter a valid email address.'),
-    password: z
-      .string()
-      .min(1, 'Password is required.')
-      .min(8, 'Password must be at least 8 characters.')
-      .max(64, 'Password must be at most 64 characters.')
-      .regex(/^\S*$/, 'Password must not contain spaces.')
-      .regex(/[A-Z]/, 'Password must include at least one uppercase letter.')
-      .regex(/[a-z]/, 'Password must include at least one lowercase letter.')
-      .regex(/\d/, 'Password must include at least one numeric digit.')
-      .regex(
-        /[^\p{L}\p{N}\s]/u,
-        'Password must include at least one special character.',
-      ),
+    password: passwordSchema,
     confirmPassword: z.string().min(1, 'Please confirm your password.'),
     jobTitle: z.string().optional(),
   })

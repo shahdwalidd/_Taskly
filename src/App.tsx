@@ -8,11 +8,15 @@ import { ProjectsPage } from '@/pages/ProjectsPage'
 import { AddProjectPage } from '@/pages/AddProjectPage'
 import { ProjectPage } from '@/pages/ProjectPage'
 import { EditProjectPage } from './pages/EditProjectPage'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
+import { ResetPasswordPage } from './pages/ResetPasswordPage'
+import { RecoveryLinkHandler } from '@/components/auth-layout/RecoveryLinkHandler'
 function App() {
   return (
     <>
       <Toaster richColors position="top-right" />
       <BrowserRouter>
+        <RecoveryLinkHandler />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
@@ -31,6 +35,23 @@ function App() {
               <PublicRoutes>
                 {' '}
                 <Login />
+              </PublicRoutes>
+            }
+          />
+            <Route
+            path="/forgot-password"
+            element={
+              <PublicRoutes>
+                {' '}
+               <ForgotPasswordPage/>
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoutes>
+                <ResetPasswordPage />
               </PublicRoutes>
             }
           />
