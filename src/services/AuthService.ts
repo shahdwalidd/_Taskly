@@ -79,18 +79,21 @@ export async function logout(accessToken: string): Promise<void> {
     throw new Error(result.msg || 'failed to logout')
   }
 }
-export  async function forgetPassword(email:string):Promise<void>{
-const response =await fetch(`${supabaseUrl}/auth/v1/recover`,{method:"POST",headers:{ apikey: supabaseKey,      'Content-Type': 'application/json',}
-    , body: JSON.stringify({
+export async function forgetPassword(email: string): Promise<void> {
+  const response = await fetch(`${supabaseUrl}/auth/v1/recover`, {
+    method: 'POST',
+    headers: { apikey: supabaseKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
       email,
       redirect_to: resetPasswordRedirectUrl,
     }),
-})
+  })
 
-
- if (!response.ok) {
-    const result = await response.json().catch(() => null);
-    throw new Error(result?.msg || "Failed to send reset email. Please try again.");
+  if (!response.ok) {
+    const result = await response.json().catch(() => null)
+    throw new Error(
+      result?.msg || 'Failed to send reset email. Please try again.',
+    )
   }
 }
 
@@ -109,7 +112,9 @@ export async function updatePassword(
   })
 
   if (!response.ok) {
-      const result = await response.json().catch(() => null)
-      throw new Error(result?.msg || result?.message || 'Failed to update password.')
+    const result = await response.json().catch(() => null)
+    throw new Error(
+      result?.msg || result?.message || 'Failed to update password.',
+    )
   }
 }

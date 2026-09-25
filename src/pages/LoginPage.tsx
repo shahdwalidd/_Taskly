@@ -20,7 +20,7 @@ const LoginPage = () => {
     onSubmit,
     handleSubmit,
   } = useLogin()
-const navigate=useNavigate();
+  const navigate = useNavigate()
   return (
     <>
       <Header />
@@ -49,13 +49,17 @@ const navigate=useNavigate();
               register={register}
               error={errors.password?.message}
               linkText="Forgot?"
-              onLinkClick={() =>  {navigate("/forgot-password")}}
+              onLinkClick={() => {
+                navigate('/forgot-password')
+              }}
             />
 
             <RememberMeSection
               checked={rememberMe}
               onCheckedChange={setRememberMe}
-              onForgotPassword={() => {navigate("/forgot-password")}}
+              onForgotPassword={() => {
+                navigate('/forgot-password')
+              }}
             />
 
             {servererror && (

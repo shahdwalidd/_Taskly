@@ -17,7 +17,7 @@ export function RecoveryLinkHandler() {
     if (!accessToken) return
 
     saveRecoveryAccessToken(accessToken)
-  window.history.replaceState(null, '', window.location.pathname)
+    window.history.replaceState(null, '', window.location.pathname)
     navigate('/reset-password', { replace: true })
   }, [location.hash, navigate])
 

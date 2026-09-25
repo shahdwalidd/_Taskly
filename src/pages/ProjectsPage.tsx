@@ -41,10 +41,10 @@ export function ProjectsPage() {
               {projects.map((project) => (
                 <ProjectCard
                   key={project.id}
+                  projectId={project.id}
                   name={project.name}
                   description={project.description}
                   createdAt={formDate(project.created_at)}
-                  onClick={() => navigate(`/project/${project.id}/epics`)}
                 />
               ))}
 

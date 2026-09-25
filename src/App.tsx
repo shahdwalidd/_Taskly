@@ -38,12 +38,12 @@ function App() {
               </PublicRoutes>
             }
           />
-            <Route
+          <Route
             path="/forgot-password"
             element={
               <PublicRoutes>
                 {' '}
-               <ForgotPasswordPage/>
+                <ForgotPasswordPage />
               </PublicRoutes>
             }
           />
