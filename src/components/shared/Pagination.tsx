@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import ChevronRightIcon from '@/assets/ChevronRightIcon.svg?react'
 import ChevronLeftIcon from '@/assets/ChevronLeftIcon.svg?react'
+import { cn } from '@/utils/cn'
 interface PaginationProps {
   totalPages: number
 }
@@ -23,11 +24,12 @@ export function Pagination({ totalPages }: PaginationProps) {
           key={page}
           onClick={() => setCurrentPage(page)}
           aria-current={currentPage === page ? 'page' : undefined}
-          className={`border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border ${
+          className={cn(
+            'border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border',
             currentPage === page
               ? 'bg-primary text-white'
-              : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
+              : 'border-gray-200 text-gray-600 hover:bg-gray-50',
+          )}
         >
           {page}
         </button>
@@ -41,11 +43,12 @@ export function Pagination({ totalPages }: PaginationProps) {
       <button
         onClick={() => setCurrentPage(totalPages)}
         aria-current={currentPage === totalPages ? 'page' : undefined}
-        className={`border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border ${
+        className={cn(
+          'border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border',
           currentPage === totalPages
             ? 'bg-primary text-white'
-            : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
-        }`}
+            : 'border-gray-200 text-gray-600 hover:bg-gray-50',
+        )}
       >
         {' '}
         {totalPages}
