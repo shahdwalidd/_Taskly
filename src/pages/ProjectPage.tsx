@@ -1,22 +1,28 @@
 import { useParams } from 'react-router-dom'
+
 import { AuthenticatedLayout } from '@/components/auth-layout/AuthenticatedLayout'
-import { useProjects } from '@/hooks/useProjects'
+import { useProject } from '@/hooks/useProject'
 
 export function ProjectPage() {
-  const { projectId } = useParams()
+  const { projectId } = useParams<{ projectId: string }>()
 
-  const { status, projects } = useProjects()
-  const project = projects.find((item) => item.id === projectId)
+  const { project, loading, error } = useProject(projectId)
 
   return (
-    <AuthenticatedLayout projectId={projectId} projectName={project?.name}>
+    <AuthenticatedLayout
+      projectId={projectId}
+      projectName={project?.name}
+    >
       <div className="px-6 py-8 md:px-10">
-        {status === 'loading' && (
-          <p className="text-slate-dark-70 mt-6 text-sm">Loading project...</p>
+        {loading && (
+          <p className="text-slate-dark-70 mt-6 text-sm">
+            Loading project...
+          </p>
         )}
-        {status === 'error' && (
+
+        {error && (
           <p className="text-error mt-6 text-sm">
-            Unable to load project details.
+            {error}
           </p>
         )}
       </div>

@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-
 import { getProjectById } from '@/services/ProjectService'
 import { getSession } from '@/store/Authstore'
 import type { Project } from '@/types/project.types'
 
-export function useProject() {
-  const { projectId } = useParams<{ projectId: string }>()
-
+export function useProject(projectId?: string) {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,6 +25,9 @@ export function useProject() {
       }
 
       try {
+        setLoading(true)
+        setError(null)
+
         const data = await getProjectById(projectId, session.access_token)
 
         setProject(data)
@@ -36,6 +35,7 @@ export function useProject() {
         setError(
           error instanceof Error ? error.message : 'Failed to load project',
         )
+        setProject(null)
       } finally {
         setLoading(false)
       }
@@ -45,7 +45,6 @@ export function useProject() {
   }, [projectId])
 
   return {
-    projectId,
     project,
     loading,
     error,
