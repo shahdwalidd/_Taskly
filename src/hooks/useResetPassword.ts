@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { updatePassword } from '@/services/AuthService'
-import {
-  clearRecoveryAccessToken,
-  getRecoveryAccessToken,
-} from '@/store/Authstore'
+
 
 export function useResetPassword() {
   const navigate = useNavigate()
+  const recoveryParams = new URLSearchParams(
+  window.location.hash.slice(1),
+)
+
+const recoveryType = recoveryParams.get('type')
+const accessToken = recoveryParams.get('access_token')
+
+const hasAccessToken =
+  recoveryType === 'recovery' && Boolean(accessToken)
   const [isSaved, setIsSaved] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [requestError, setRequestError] = useState<string | null>(null)
   const [secondsLeft, setSecondsLeft] = useState(3)
-  const [hasAccessToken] = useState(() => Boolean(getRecoveryAccessToken()))
 
   useEffect(() => {
     if (!isSaved) return
@@ -35,19 +40,17 @@ export function useResetPassword() {
     setRequestError(null)
     setSecondsLeft(3)
 
-    const accessToken = getRecoveryAccessToken()
-
-    if (!accessToken) {
-      setRequestError(
-        'This reset link is invalid or has expired. Please request a new one.',
-      )
-      setIsLoading(false)
-      return false
-    }
+  if (!hasAccessToken || !accessToken) {
+  setRequestError(
+    'This reset link is invalid or has expired. Please request a new one.',
+  )
+  setIsLoading(false)
+  return false
+}
 
     try {
       await updatePassword(password, accessToken)
-      clearRecoveryAccessToken()
+  
       setIsSaved(true)
       return true
     } catch (error) {

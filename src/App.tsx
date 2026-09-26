@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { SignUp } from '@/pages/SignUp'
 import Login from '@/pages/LoginPage'
@@ -10,16 +10,16 @@ import { ProjectPage } from '@/pages/ProjectPage'
 import { EditProjectPage } from './pages/EditProjectPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
-import { RecoveryLinkHandler } from '@/components/app-layout/RecoveryLinkHandler'
+import { RecoveryLinkHandler } from './components/app-layout/RecoveryLinkHandler'
 function App() {
   return (
     <>
       <Toaster richColors position="top-right" />
       <BrowserRouter>
-        <RecoveryLinkHandler />
+      <RecoveryLinkHandler/>
+        
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+       
 
           <Route
             path="/sign-up"

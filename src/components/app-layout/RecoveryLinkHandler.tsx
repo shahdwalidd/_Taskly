@@ -1,24 +1,19 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { saveRecoveryAccessToken } from '@/store/Authstore'
 
 export function RecoveryLinkHandler() {
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const hash = window.location.hash || location.hash
-    if (!hash) return
+    const params = new URLSearchParams(location.hash.slice(1))
 
-    const params = new URLSearchParams(hash.slice(1))
-    if (params.get('type') !== 'recovery') return
-
+    const type = params.get('type')
     const accessToken = params.get('access_token')
-    if (!accessToken) return
 
-    saveRecoveryAccessToken(accessToken)
-    window.history.replaceState(null, '', window.location.pathname)
-    navigate('/reset-password', { replace: true })
+    if (type !== 'recovery' || !accessToken) return
+
+    navigate(`/reset-password${location.hash}`, { replace: true })
   }, [location.hash, navigate])
 
   return null

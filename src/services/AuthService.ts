@@ -1,8 +1,6 @@
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
-const resetPasswordRedirectUrl =
-  import.meta.env.VITE_RESET_PASSWORD_REDIRECT_URL ??
-  `${window.location.origin}/reset-password`
+
 import type {
   SignupPayload,
   SignupSuccessResponse,
@@ -85,7 +83,7 @@ export async function forgetPassword(email: string): Promise<void> {
     headers: { apikey: supabaseKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email,
-      redirect_to: resetPasswordRedirectUrl,
+      
     }),
   })
 
