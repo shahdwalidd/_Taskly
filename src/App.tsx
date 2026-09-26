@@ -16,11 +16,9 @@ function App() {
     <>
       <Toaster richColors position="top-right" />
       <BrowserRouter>
-      <RecoveryLinkHandler/>
-        
-        <Routes>
-       
+        <RecoveryLinkHandler />
 
+        <Routes>
           <Route
             path="/sign-up"
             element={

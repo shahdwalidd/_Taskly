@@ -45,5 +45,3 @@ export function clearSession() {
   localStorage.removeItem(storageKey)
   sessionStorage.removeItem(storageKey)
 }
-
-
