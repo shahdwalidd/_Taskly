@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
+import { SidebarNavItem } from '@/components/app-layout/SidebarNavItem'
 
 import EpicsIcon from '@/assets/icons/sideBaricons/EpicsIcon.svg?react'
 import TasksIcon from '@/assets/icons/sideBaricons/TasksIcon.svg?react'

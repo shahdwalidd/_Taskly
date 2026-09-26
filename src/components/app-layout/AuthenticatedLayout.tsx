@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react'
-import { Navbar } from '@/components/auth-layout/Navbar'
-import { Sidebar } from '@/components/auth-layout/Sidebar'
-import { MobileDrawer } from '@/components/auth-layout/MobileDrawer'
-import { BottomNav } from '@/components/auth-layout/BottomNav'
+import { Navbar } from '@/components/app-layout/Navbar'
+import { Sidebar } from '@/components/app-layout/Sidebar'
+import { MobileDrawer } from '@/components/app-layout/MobileDrawer'
+import { BottomNav } from '@/components/app-layout/BottomNav'
 import { useAuth } from '@/hooks/useAuth'
 
 interface AuthenticatedLayoutProps {

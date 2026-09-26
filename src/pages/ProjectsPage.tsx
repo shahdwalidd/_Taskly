@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { AuthenticatedLayout } from '@/components/auth-layout/AuthenticatedLayout'
+import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
 import { ProjectPgeHeader } from '@/components/project-list/ProjectsPageHeader'
 import { ProjectCard } from '@/components/project-list/ProjectCard'
 import { AddProjectCard } from '@/components/project-list/AddProjectCard'

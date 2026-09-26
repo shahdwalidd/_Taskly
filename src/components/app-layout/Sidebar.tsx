@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
-import { ProjectAccordion } from '@/components/auth-layout/ProjectAccordion'
-import { CollapsedProjectPopup } from '@/components/auth-layout/CollapsedProjectPopup'
+import { SidebarNavItem } from '@/components/app-layout/SidebarNavItem'
+import { ProjectAccordion } from '@/components/app-layout/ProjectAccordion'
+import { CollapsedProjectPopup } from '@/components/app-layout/CollapsedProjectPopup'
 import LogoIcon from '../../../public/Iconlogo.svg?react'
 import FolderIcon from '@/assets/icons/sideBaricons/ProjectsIcon.svg?react'
 import StatsIcon from '@/assets/icons/sideBaricons/MyStatisticsIcon.svg?react'
@@ -46,7 +46,7 @@ export function Sidebar({
         >
           <LogoIcon className="text-brand h-6 w-6 shrink-0" />
           {!isCollapsed && (
-            <span className="text-ink text-lg font-extrabold tracking-tight">
+            <span className="text-slate-dark text-lg font-extrabold tracking-tight">
               TASKLY
             </span>
           )}

@@ -10,7 +10,7 @@ import { ProjectPage } from '@/pages/ProjectPage'
 import { EditProjectPage } from './pages/EditProjectPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
-import { RecoveryLinkHandler } from '@/components/auth-layout/RecoveryLinkHandler'
+import { RecoveryLinkHandler } from '@/components/app-layout/RecoveryLinkHandler'
 function App() {
   return (
     <>

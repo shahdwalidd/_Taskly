@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
-import { ProjectAccordion } from '@/components/auth-layout/ProjectAccordion'
+import { SidebarNavItem } from '@/components/app-layout/SidebarNavItem'
+import { ProjectAccordion } from '@/components/app-layout/ProjectAccordion'
 import LogoIcon from '../../../public/Iconlogo.svg?react'
 import FolderIcon from '@/assets/icons/sideBaricons/ProjectsIcon.svg?react'
 import StatsIcon from '@/assets/icons/sideBaricons/MyStatisticsIcon.svg?react'

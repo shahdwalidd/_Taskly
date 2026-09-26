@@ -19,30 +19,35 @@ The app is workable as a demo, but it is not yet robust enough to be treated as 
 ## 2. Critical Issues
 
 ### 1) Auth/session state is split across multiple places and not treated as a single source of truth
+
 - File: src/hooks/useAuth.ts, src/store/Authstore.ts, src/services/AuthService.ts
 - Problem: Session truth lives in localStorage/sessionStorage plus a custom hook state (`isauth`, `isloading`). The hook uses a ref (`hasCheckedSession`) to ensure it only runs once, but the system is still not globally consistent. Multiple components call `getSession()` directly and re-derive auth state instead of sharing a single canonical auth model.
 - Why it matters: This creates a stale/duplicated source of truth and increases the risk of divergent auth states between route guards, page loads, and logout behavior.
 - Recommended fix: Consolidate auth/session state into a single hook or provider that owns the session, refresh logic, and auth status; use that for all route guards and UI instead of calling storage directly from unrelated components.
 
 ### 2) Project routes do not have a coherent source of truth for project context
+
 - File: src/pages/ProjectPage.tsx, src/components/auth-layout/AuthenticatedLayout.tsx, src/hooks/useProject.ts, src/hooks/useProjects.ts
 - Problem: `ProjectPage` calls `useProjects()` and finds the project by matching `projectId` from the URL. `AuthenticatedLayout` also receives `projectName` and `projectId` as props from page-level logic. Meanwhile `useProject()` separately fetches a project by ID. This duplicates project loading and results in multiple representations of the same data.
 - Why it matters: The UI can display a project name in the sidebar while the main project page is using another fetch result. This creates stale/partial state, inconsistent loading/error behavior, and makes project navigation fragile.
 - Recommended fix: Use one project context/hook per project route and pass the resolved project object down, or fetch project-by-id once in the route and reuse it consistently.
 
 ### 3) Public/protected route gating is incomplete and can create loops or blank states
+
 - File: src/routes/ProtectedRoutes.tsx, src/routes/PublicRoutes.tsx, src/hooks/useAuth.ts
 - Problem: Route guards return `null` while `isloading` is true. That means the app renders nothing during auth initialization, which is acceptable for a blank splash state but not ideal. More importantly, auth initialization is only checked once using a ref; if the app is mounted in a different route context or the user navigates quickly, the guard behavior can become inconsistent.
 - Why it matters: The app may render blank screens or redirect unexpectedly during refresh and navigation race conditions. It also makes it harder to reason about initial auth recovery.
 - Recommended fix: Initialize auth status once at an app-level boundary and make route wrappers explicitly handle pending state with a proper loading screen/skeleton instead of `null`.
 
 ### 4) Add/edit project forms use inconsistent field naming and do not map cleanly to backend data
+
 - File: src/pages/AddProjectPage.tsx, src/hooks/useAddProject.ts, src/schemas/Project.schema.ts, src/hooks/useEditProject.ts
 - Problem: Add form uses `title` in schema and hook, while edit form uses `name`. The backend payload for create uses `{ name, description }`, but the form uses `{ title, description }` and then transforms it to `name` in the submit function. This is not wrong in code, but it is inconsistent and easy to break.
 - Why it matters: This type of mismatch increases maintenance cost and increases the chance of bugs when the API contract or forms evolve.
 - Recommended fix: Use a single canonical schema and field naming across create/edit flow, and keep the API transformation at the service boundary only.
 
 ### 5) The app is missing a true project detail page and the current project route is only a shell
+
 - File: src/pages/ProjectPage.tsx
 - Problem: The page loads the project list and simply renders a placeholder for loading/error states. There is no actual project details, tasks, epics, or members UI. The route is effectively a stub.
 - Why it matters: The route hierarchy suggests a feature-rich product, but the implementation is incomplete; navigation and sidebar links imply functionality that is not actually present.
@@ -53,6 +58,7 @@ The app is workable as a demo, but it is not yet robust enough to be treated as 
 ## 3. Actual Bugs
 
 ### Bug 1: `useAuth` may retain stale auth status across navigations and route changes
+
 - File: src/hooks/useAuth.ts
 - Function: `useAuth`
 - Problem: `hasCheckedSession` is a ref inside the hook instance, not across the app. Each hook instance mount runs the effect once within its own component. This is not a global auth state and does not guard actual app-level auth.
@@ -60,6 +66,7 @@ The app is workable as a demo, but it is not yet robust enough to be treated as 
 - Recommended fix: Move session checking into a dedicated auth provider or a single root-level initialization step.
 
 ### Bug 2: `ProjectPage` uses `useProjects()` to resolve a project by ID instead of fetching the target object
+
 - File: src/pages/ProjectPage.tsx
 - Function: `ProjectPage`
 - Problem: It does not call a project-by-id endpoint; it filters a list of all projects client-side. If the list is stale or the project is not in that list, the sidebar title and main page have no consistent data.
@@ -67,6 +74,7 @@ The app is workable as a demo, but it is not yet robust enough to be treated as 
 - Recommended fix: Always resolve the project from a dedicated API call by ID or from a cached store keyed by projectId.
 
 ### Bug 3: `useResetPassword` reads the recovery token once and never re-reads it after it is cleared or replaced
+
 - File: src/hooks/useResetPassword.ts
 - Function: `useResetPassword`
 - Problem: `const [hasAccessToken] = useState(() => Boolean(getRecoveryAccessToken()))` captures the token at first render only. If the token is added after the component mount, or if the flow changes, the component may not react correctly.
@@ -74,18 +82,21 @@ The app is workable as a demo, but it is not yet robust enough to be treated as 
 - Recommended fix: Derive `hasAccessToken` from the current `getRecoveryAccessToken()` value in an effect or memo, not a one-time state initializer.
 
 ### Bug 4: `RecoveryLinkHandler` stores the recovery token in sessionStorage, but there is no token expiry or cleanup beyond a password reset success
+
 - File: src/components/auth-layout/RecoveryLinkHandler.tsx, src/store/Authstore.ts
 - Problem: Recovery tokens are persisted in sessionStorage and can remain valid even after the page is refreshed; there is no explicit check for missing or expired token states beyond the reset process.
 - Why it can break: A stale recovery token may be reused after expiration, leaving users on a reset page that should have been invalidated.
 - Recommended fix: Validate token presence and lifetime on reset route entry and clear it after failed or expired attempts.
 
 ### Bug 5: The app uses `window.location.origin` in a module-level constant for reset redirect URL
+
 - File: src/services/AuthService.ts
 - Problem: `resetPasswordRedirectUrl` is created at module load time and may evaluate before `window` is available in some SSR or non-browser contexts. Vite client build is browser-only, but the pattern is brittle and can fail in tests or future non-browser rendering.
 - Why it can break: It can cause runtime errors in environments where this module is executed before the browser environment is ready.
 - Recommended fix: Compute the redirect URL lazily at request time or in a browser-only function.
 
 ### Bug 6: Some route and form names do not match the backend contract, creating subtle mismatches
+
 - File: src/pages/AddProjectPage.tsx, src/hooks/useAddProject.ts, src/services/ProjectService.ts, src/schemas/Project.schema.ts
 - Problem: The frontend uses `title` in form schema, then transforms it to `name` on API calls. This is legal, but is inconsistent with `EditProjectPage` which uses `name` directly and with the backend contract that appears to expect `name` for a project.
 - Why it can break: It becomes easy to create hidden bugs in validation, API request formatting, and new features added later.
@@ -119,11 +130,13 @@ Overall: the structure is readable and not chaotic, but it is not yet shaped aro
 ## 6. React Issues
 
 ### Good patterns
+
 - Components mostly keep a single responsibility.
 - The use of `useForm` and `useWatch` is straightforward.
 - `NavLink` usage for sidebar navigation is mostly appropriate.
 
 ### Problems
+
 - `useAuth` is a hook that both reads session state and triggers navigation. This mixes data access and side effects inside a hook that is used across route wrappers and layout components.
 - `useProjects` is invoked in `ProjectPage`, but the page is not actually a detail view. This is a strong sign of component-level misuse of data fetching logic.
 - `Sidebar` and `MobileDrawer` both implement similar menu logic and both pass `logout` directly from `useAuth`, which creates duplicated UI behavior in two render trees.
@@ -137,11 +150,13 @@ The React code is not fundamentally broken, but it lacks a consistent compositio
 ## 7. TypeScript Issues
 
 ### Strengths
+
 - The project uses TypeScript and many interfaces are explicit.
 - Some generic form components are typed reasonably well.
 - `zod` inference is used correctly in several places.
 
 ### Problems
+
 - `ProjectService.ts` uses broad `unknown` casting and manually reconstructs typed objects from `JSON.parse(...)`. That is workable but not ideal and increases the chance of incorrect runtime assumptions.
 - `AuthService.ts` is very loose on response types; all errors are treated through `msg` or `message` fallbacks without a stricter API-style wrapper.
 - Some interfaces are duplicated across the codebase (for example, project payload structures and error shapes are repeated or partially repeated rather than normalized).
@@ -155,12 +170,14 @@ The TypeScript quality is acceptable for a small app, but the app would be more 
 ## 8. Authentication Issues
 
 ### What is implemented reasonably well
+
 - Session persistence is intentionally split between localStorage and sessionStorage based on the Remember Me option.
 - Login stores tokens and expiration values.
 - Public and protected routes do basic auth gating.
 - A recovery token is temporarily stored and then cleared on password reset.
 
 ### Issues
+
 - There is no central auth provider. The app effectively treats auth as a local hook state plus browser storage, which is more fragile than a single auth context.
 - `useAuth` can silently clear the session and navigate without a true centralized auth lifecycle. This is functional but not production-grade.
 - Expiration is checked in `useAuth` but not consistently enforced at the service boundary; a stale session could still be used until a route triggers re-check.
@@ -193,6 +210,7 @@ This is a practical implementation, but not strongly resilient.
 ## 10. Routing Issues
 
 ### Current route map
+
 - `/` → redirect to `/login`
 - `/sign-up` → public
 - `/login` → public
@@ -206,6 +224,7 @@ This is a practical implementation, but not strongly resilient.
 - `/project/:projectId/edit` → protected
 
 ### Issues
+
 - The project sub-routes are defined but largely empty shell pages. This makes route existence look richer than the actual feature set.
 - There is no consistent dynamic child route pattern for the project shell. The route guards are at the route level, but project state does not come from a single nested route structure.
 - `/project/:projectId/...` is treated as a route for pages that are not actually implemented; these links exist in the sidebar and card UI but the pages themselves are effectively placeholders.
@@ -232,11 +251,13 @@ In short: the UI appears to support full project navigation, but the data and pa
 ## 12. API / Services Issues
 
 ### Strengths
+
 - The project keeps `fetch` calls in a service layer rather than embedding them in components.
 - The API base URL is centralized via environment variables.
 - Bearer token headers are consistently applied for protected calls.
 
 ### Problems
+
 - There is no standardized helper for API requests, response parsing, or error normalization. Each service function duplicates boilerplate and manually parses JSON/text.
 - Error handling is inconsistent across services; some throw `result.msg`, some throw `message`, some parse a response body and some do not.
 - `AuthService.ts` and `ProjectService.ts` both check `response.ok` and parse JSON manually but do not centralize a base request pattern.
@@ -253,6 +274,7 @@ This is acceptable for a prototype, but not for a production-grade client contra
 There are no React Context providers in this project. The app uses custom hooks and browser storage instead of provider-based state.
 
 ### Provider inventory
+
 - Provider: None
 - Current Location: N/A
 - Responsibility: N/A
@@ -260,6 +282,7 @@ There are no React Context providers in this project. The app uses custom hooks 
 - Reason: The app behaves as if it needs a global auth state provider, but this responsibility is currently split across the hook, route guards, and localStorage. This is the key missing app-level layer.
 
 ### Conclusion
+
 A provider layer is not required for a very small app, but this project is at the point where a dedicated auth/session provider would make the route guard and session lifecycle much more reliable. The current pattern is a functional workaround, not a robust architecture.
 
 ---
@@ -267,6 +290,7 @@ A provider layer is not required for a very small app, but this project is at th
 ## 14. State Management Review
 
 ### Local State
+
 - Login password rememeber toggle in `useLogin()`
 - Form state in `react-hook-form`
 - Drawer open/close state in `AuthenticatedLayout` and `Sidebar`
@@ -274,26 +298,31 @@ A provider layer is not required for a very small app, but this project is at th
 - Project form save state in `useEditProject` and `useAddProject`
 
 ### Global State
+
 - There is no true global state management library.
 - Auth status is effectively global in practice but not implemented as global state.
 - User name display in `Navbar` depends on `useUser` and `useAuth`, which makes it feel global without being truly centralized.
 
 ### Server State
+
 - Projects list fetched by `useProjects()`
 - Project detail fetched by `useProject()`
 - User data fetched by `useUser()`
 - Auth token refresh and logout requests are server-side
 
 ### URL State
+
 - `projectId` is used in route params and is the correct source of truth for route-specific project context.
 - Recovery token is also stored in the URL hash and then translated into browser storage.
 
 ### Derived State
+
 - `Sidebar` computes `hasActiveProject` from `projectName` and `projectId`.
 - `BottomNav` derives nav items from projectId.
 - `PasswordRequirements` computes validation states from the password field value.
 
 ### Problem areas
+
 - The app has duplicated state: project name is derived in multiple places, session is read from storage in multiple places, and auth state is partly in hook state and partly in storage.
 - There is a mild state duplication problem between `useProject` and `useProjects`.
 - The app should not separately maintain auth state in multiple components when a single auth state model can cover the same need.
@@ -303,21 +332,25 @@ A provider layer is not required for a very small app, but this project is at th
 ## 15. Component Review
 
 ### Good components
+
 - `Header`, `AuthCard`, `FormField`, and `Button` provide a reusable foundation and are readable.
 - `SidebarNavItem` is a clear abstraction for navigation items.
 - `ProjectCard` is readable and focused.
 
 ### Components that are too coupled or too large
+
 - `AuthenticatedLayout` is a shell component that directly orchestrates layout, drawer state, project nav, and logout. This is acceptable for a simple app but is beginning to do too much.
 - `Sidebar` and `MobileDrawer` each repeat similar structure and logic. This is the clearest example of duplicated component-level UI logic and should be unified or at least composed more deliberately.
 - `ProjectPage` is only a shell; it is not real feature code, but it still participates in route-level layout and project navigation logic.
 
 ### Components that should be split
+
 - `Sidebar` should ideally be split into a `SidebarShell` and a `ProjectSidebarSection` or a `ProjectNavigationPanel` to keep the state and layout responsibilities cleaner.
 - `MobileDrawer` should share a common nav item building pattern with `Sidebar` instead of repeating the same navigation entries and logout UI logic.
 - `ProjectAccordion` is fine as a focused component, but it is still tied to the app’s project route model rather than a generic navigation list component.
 
 ### Components that should be merged
+
 - `Sidebar` and `MobileDrawer` are similar enough that a common nav composition/hook would be more maintainable than two separate implementations.
 
 ---
@@ -325,10 +358,12 @@ A provider layer is not required for a very small app, but this project is at th
 ## 16. Hook Review
 
 ### Strong hooks
+
 - `useCountdown` is simple and focused.
 - `useForgotPassword` is fairly clean and keeps related form state and resend logic together.
 
 ### Weak hooks
+
 - `useAuth` does too much: token read, refresh, logout, route state, and navigation. This is not a clean single-purpose hook.
 - `useProjects` is simple but reloads the whole project list on each route mount and does not have a stable project cache or a single source of truth.
 - `useProject` is a detail fetch hook but is paired with a route that is not actually a detail page. It is not a bug by itself, but it is a signal that the architecture is incomplete.
@@ -341,11 +376,13 @@ The hooks are not badly written, but they need more discipline around ownership 
 ## 17. Forms Review
 
 ### Form quality
+
 - `LoginPage`, `SignUp`, `ForgotPasswordPage`, `ResetPasswordPage`, `AddProjectPage`, and `EditProjectPage` all use `react-hook-form` and Zod validation consistently.
 - Validation messages are readable and user-facing.
 - Disabled submit states are implemented for async actions.
 
 ### Issues
+
 - Add/edit project form names are inconsistent (`title` vs `name`).
 - Form error messages are useful, but some of the field naming and placeholder language is not perfectly aligned with the actual backend data model.
 - Some forms have a `Remember Me` toggle but no actual persistence logic in the form layer beyond the hook.
@@ -359,6 +396,7 @@ The forms are generally solid, but they are not yet standardized around a single
 ## 18. Loading / Error / Empty States
 
 ### Present
+
 - Project list: loading skeletons, error state, empty state
 - Auth route guards: loading returns null
 - Login: server error state
@@ -367,6 +405,7 @@ The forms are generally solid, but they are not yet standardized around a single
 - Add project: submit toasts and session-expired redirect
 
 ### Missing or weak
+
 - `ProjectPage` has only a basic loading/error placeholder and no actual content states.
 - No page-level empty states for missing project IDs or invalid project URLs.
 - `useAuth` route initialization uses a silent `null`, which is a blank state rather than a deliberate loading screen.
@@ -379,11 +418,13 @@ The app handles the common states reasonably, but project-specific flows are sti
 ## 19. Tailwind / Styling Review
 
 ### Strengths
+
 - Tailwind classes are mostly readable and consistent.
 - The UI uses a small number of shared classes and a theme-like palette through variable names.
 - The app is not over-abstraction-heavy in the styling layer.
 
 ### Problems
+
 - There are many custom class names such as `text-boy-sm`, `text-pp`, `text-logo`, etc. Those may be valid design tokens, but without a clear token catalog they can become opaque and hard to maintain.
 - Some class strings are long and repetitive across multiple components.
 - There are cases where custom CSS variable syntax is used in class names such as `md:w-(--layout-auth-width)`, which may be valid in Tailwind v4 but can be harder to reason about and maintain.
@@ -396,11 +437,13 @@ Overall, the style system is serviceable, but the app would benefit from a small
 ## 20. Accessibility Review
 
 ### Good
+
 - Form labels are used in most places.
 - Many buttons have visible text or labels.
 - `aria-label` is used for menu toggles and alert text exists for some errors.
 
 ### Problems
+
 - `PasswordField` visibility toggle button has no accessible label on the toggle icon; it only renders an `img` with `alt=""`.
 - Some focused/hover states exist, but keyboard focus styling is not consistently strong across custom interactive elements.
 - The app has a drawer and overlays, but they are not backed with more explicit dialog semantics or focus-management logic.
@@ -427,6 +470,7 @@ The app is not performance-heavy, but there is enough redundant data fetching to
 ## 22. Dependency Review
 
 ### KEEP
+
 - react, react-dom, react-router-dom: required for the app’s routing and UI.
 - @hookform/resolvers, react-hook-form, zod: this is a solid choice for typed forms and validation.
 - tailwindcss, @tailwindcss/vite: directly used for styling and Vite integration.
@@ -434,10 +478,12 @@ The app is not performance-heavy, but there is enough redundant data fetching to
 - vite, @vitejs/plugin-react, @types/*, typescript, eslint: required for modern Vite React app development.
 
 ### REMOVE or reassess
+
 - `tailwind-merge` is present in package.json but no direct usage was identified in the inspected code. It may be a leftover dependency or planned for future use. It is not serving an immediate purpose in this app as reviewed.
 - `vite-plugin-svgr` is used in the code for SVG imports, so it should stay.
 
 ### OPTIONAL
+
 - `sonner` is optional only if toast notifications are deemed larger than necessary, but in this project it is already used effectively.
 
 There is no evidence of a dependency problem severe enough to justify removal beyond `tailwind-merge` as a likely unused package.
@@ -466,6 +512,7 @@ There is no evidence of a dependency problem severe enough to justify removal be
 ## 24. Files That Should Be Split
 
 ### src/components/auth-layout/AuthenticatedLayout.tsx
+
 - Current responsibility: layout shell + project nav + logout state + drawer visibility
 - Split into:
   - `AppShell` or `AppLayout` — page shell and structure
@@ -475,6 +522,7 @@ There is no evidence of a dependency problem severe enough to justify removal be
 - Reason: The component currently manages multiple UI concerns and is too central for a growing app.
 
 ### src/components/auth-layout/Sidebar.tsx
+
 - Current responsibility: sidebar display, collapse state, project accordion, logout button, and project-specific nav.
 - Split into:
   - `Sidebar` layout container
@@ -483,9 +531,11 @@ There is no evidence of a dependency problem severe enough to justify removal be
 - Reason: The current file merges layout state, project-specific UI, and action state.
 
 ### src/components/auth-layout/MobileDrawer.tsx
+
 - Similar issue: menu composition, project section, and footer actions are entangled in one component.
 
 ### src/hooks/useAuth.ts
+
 - Split into:
   - `useSessionRecovery()` or `useAuthState()` for session loading / validation
   - `useLogout()` or `useAuthActions()` for sign-out actions
@@ -506,29 +556,36 @@ The main theme here is not merging in general; it is aligning the same domain co
 ## 26. Duplicated Logic
 
 ### API logic
+
 - Auth endpoints in `AuthService.ts` each parse response bodies with slightly different patterns.
 - Project endpoints in `ProjectService.ts` hand-parse JSON/text for every request.
 - The same session check (`getSession()`) is repeated across multiple hooks.
 
 ### State
+
 - Auth status is effectively duplicated between hook state and persisted session state.
 - Project name is passed down as props in multiple places without a single canonical project state container.
 
 ### Types
+
 - Project payload and error types are duplicated in a way that is not normalized.
 - The app uses both `Project` and `project`-like response shapes without a stronger shared API contract.
 
 ### Components
+
 - Sidebar and MobileDrawer share nearly the same navigation structure and project actions.
 - Auth pages share `Header`, `AuthCard`, and form elements, which is good, but the `PasswordField` and `FormField` patterns could be further standardized.
 
 ### Utilities
+
 - Password requirements are defined in both `src/utils/passwordRequirements.ts` and `src/components/register/PasswordRequirements.tsx`. They are not exactly identical and are a sign of duplicated validation logic.
 
 ### Validation
+
 - Password validation logic exists in `Passwordschema.ts` and is partly duplicated in `PasswordRequirements.tsx` and `getPasswordRequirements()`. This is a maintainability risk.
 
 ### Auth logic
+
 - Route guards and session checks use similar logic separately, without a central source of truth.
 
 ---
@@ -538,62 +595,62 @@ The main theme here is not merging in general; it is aligning the same domain co
 A more coherent structure for the project would look like this:
 
 src/
-  app/
-    App.tsx
-    routes/
-      ProtectedRoutes.tsx
-      PublicRoutes.tsx
-  features/
-    auth/
-      api/
-        authApi.ts
-      components/
-        LoginForm.tsx
-        ResetPasswordForm.tsx
-      hooks/
-        useAuth.ts
-        useLogin.ts
-        useResetPassword.ts
-      types/
-        auth.types.ts
-      storage/
-        sessionStorage.ts
-    projects/
-      api/
-        projectApi.ts
-      components/
-        ProjectCard.tsx
-        ProjectListHeader.tsx
-        ProjectSidebar.tsx
-      hooks/
-        useProjects.ts
-        useProject.ts
-        useAddProject.ts
-        useEditProject.ts
-      types/
-        project.types.ts
-    users/
-      api/
-        userApi.ts
-      hooks/
-        useUser.ts
-  shared/
-    components/
-      AuthCard.tsx
-      Button.tsx
-      FormField.tsx
-      PasswordField.tsx
-      Header.tsx
-    utils/
-      formatDate.ts
-      getInitials.ts
-      passwordRequirements.ts
-  schemas/
-    authSchemas.ts
-    projectSchemas.ts
-  styles/
-    index.css
-  main.tsx
+app/
+App.tsx
+routes/
+ProtectedRoutes.tsx
+PublicRoutes.tsx
+features/
+auth/
+api/
+authApi.ts
+components/
+LoginForm.tsx
+ResetPasswordForm.tsx
+hooks/
+useAuth.ts
+useLogin.ts
+useResetPassword.ts
+types/
+auth.types.ts
+storage/
+sessionStorage.ts
+projects/
+api/
+projectApi.ts
+components/
+ProjectCard.tsx
+ProjectListHeader.tsx
+ProjectSidebar.tsx
+hooks/
+useProjects.ts
+useProject.ts
+useAddProject.ts
+useEditProject.ts
+types/
+project.types.ts
+users/
+api/
+userApi.ts
+hooks/
+useUser.ts
+shared/
+components/
+AuthCard.tsx
+Button.tsx
+FormField.tsx
+PasswordField.tsx
+Header.tsx
+utils/
+formatDate.ts
+getInitials.ts
+passwordRequirements.ts
+schemas/
+authSchemas.ts
+projectSchemas.ts
+styles/
+index.css
+main.tsx
 
 This is not a large architectural change; it is mostly a better grouping of existing code.
 

@@ -11,7 +11,7 @@ import { createProject } from '@/services/ProjectService'
 import { getSession } from '@/store/Authstore'
 
 export function useAddProject() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,

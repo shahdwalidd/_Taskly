@@ -1,4 +1,4 @@
-import { AuthenticatedLayout } from '@/components/auth-layout/AuthenticatedLayout'
+import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
 import { PageHeader } from '@/components/project-form/PageHeader'
 import { PageBreadcrumb } from '@/components/project-form/PageBreadcrumb'
 import { AuthCard } from '@/components/shared/AuthCard'
