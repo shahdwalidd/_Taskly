@@ -12,7 +12,6 @@ import { getSession } from '@/store/Authstore'
 
 export function useAddProject() {
   const navigate = useNavigate()
-
   const {
     register,
     handleSubmit,

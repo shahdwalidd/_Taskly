@@ -1,4 +1,5 @@
 import type { ChangeEvent } from 'react'
+import { cn } from '@/utils/cn'
 
 export interface RememberMeSectionProps {
   checked: boolean
@@ -20,7 +21,7 @@ export function RememberMeSection({
   }
 
   return (
-    <div className={`flex items-center justify-between ${className}`}>
+    <div className={cn('flex items-center justify-between', className)}>
       <label className="flex cursor-pointer items-center gap-2 select-none">
         <input
           type="checkbox"

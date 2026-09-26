@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
+import { SidebarNavItem } from '@/components/app-layout/SidebarNavItem'
 import FolderIcon from '@/assets/icons/sideBaricons/ActiveProjectIcon.svg?react'
 import EpicsIcon from '@/assets/icons/sideBaricons/EpicsIcon.svg?react'
 import TasksIcon from '@/assets/icons/sideBaricons/TasksIcon.svg?react'
 import MembersIcon from '@/assets/icons/sideBaricons/MembersIcon.svg?react'
 import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 import ChevronIcon from '@/assets/icons/sideBaricons/ArrowbottomIcon.svg?react'
+import { cn } from '@/utils/cn'
 const projectLinks = [
   { icon: EpicsIcon, label: 'Epics', path: 'epics' },
   { icon: TasksIcon, label: 'Tasks', path: 'tasks' },
@@ -35,9 +36,10 @@ export function ProjectAccordion({
           <span className="truncate">{projectName}</span>
         </span>
         <ChevronIcon
-          className={`h-icon-menu-width w-icon-menu-width shrink-0 transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : ''
-          }`}
+          className={cn(
+            'h-icon-menu-width w-icon-menu-width shrink-0 transition-transform duration-200',
+            isOpen && 'rotate-180',
+          )}
         />
       </button>
 

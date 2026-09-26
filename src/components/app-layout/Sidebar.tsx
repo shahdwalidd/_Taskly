@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { SidebarNavItem } from '@/components/auth-layout/SidebarNavItem'
-import { ProjectAccordion } from '@/components/auth-layout/ProjectAccordion'
-import { CollapsedProjectPopup } from '@/components/auth-layout/CollapsedProjectPopup'
+import { SidebarNavItem } from '@/components/app-layout/SidebarNavItem'
+import { ProjectAccordion } from '@/components/app-layout/ProjectAccordion'
+import { CollapsedProjectPopup } from '@/components/app-layout/CollapsedProjectPopup'
 import LogoIcon from '../../../public/Iconlogo.svg?react'
 import FolderIcon from '@/assets/icons/sideBaricons/ProjectsIcon.svg?react'
 import StatsIcon from '@/assets/icons/sideBaricons/MyStatisticsIcon.svg?react'
@@ -9,6 +9,7 @@ import FolderOutlineIcon from '@/assets/icons/sideBaricons/ActiveProjectIcon.svg
 import ChevronLeftIcon from '@/assets/icons/sideBaricons/chevlefticon.svg?react'
 import ChevronRightIcon from '@/assets/icons/sideBaricons/chevrightIcon.svg?react'
 import LogoutIcon from '@/assets/icons/sideBaricons/LogoutIcon.svg?react'
+import { cn } from '@/utils/cn'
 
 interface SidebarProps {
   projectName?: string
@@ -31,15 +32,21 @@ export function Sidebar({
 
   return (
     <aside
-      className={`bg-surface-low hidden h-screen shrink-0 flex-col justify-between p-3 transition-all duration-200 md:flex ${isCollapsed ? 'w-20' : 'w-64'} `}
+      className={cn(
+        'bg-surface-low hidden h-screen shrink-0 flex-col justify-between p-3 transition-all duration-200 md:flex',
+        isCollapsed ? 'w-20' : 'w-64',
+      )}
     >
       <div>
         <div
-          className={`mb-4 flex items-center gap-2 px-2 py-2 ${isCollapsed ? 'justify-center' : ''}`}
+          className={cn(
+            'mb-4 flex items-center gap-2 px-2 py-2',
+            isCollapsed && 'justify-center',
+          )}
         >
           <LogoIcon className="text-brand h-6 w-6 shrink-0" />
           {!isCollapsed && (
-            <span className="text-ink text-lg font-extrabold tracking-tight">
+            <span className="text-slate-dark text-lg font-extrabold tracking-tight">
               TASKLY
             </span>
           )}
@@ -92,7 +99,10 @@ export function Sidebar({
       <div className="space-y-1 border-t border-black/10 pt-3">
         <button
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-white/60 ${isCollapsed ? 'justify-center' : ''} `}
+          className={cn(
+            'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-white/60',
+            isCollapsed && 'justify-center',
+          )}
         >
           {isCollapsed ? (
             <ChevronRightIcon className="h-5 w-5 shrink-0" />
@@ -110,7 +120,10 @@ export function Sidebar({
         <button
           onClick={() => void logout()}
           disabled={isLoggingOut}
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 ${isCollapsed ? 'justify-center' : ''} disabled:cursor-not-allowed disabled:opacity-60`}
+          className={cn(
+            'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60',
+            isCollapsed && 'justify-center',
+          )}
         >
           <LogoutIcon className="h-5 w-5 shrink-0" />
           {!isCollapsed && (

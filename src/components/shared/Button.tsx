@@ -1,3 +1,5 @@
+import { cn } from '@/utils/cn'
+
 interface ButtonProps {
   children: React.ReactNode
   onClick?: () => void
@@ -15,11 +17,12 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`text-button shadow-button w-full rounded-md px-4 py-3 text-white transition-opacity ${
+      className={cn(
+        'text-button shadow-button w-full rounded-md px-4 py-3 text-white transition-opacity',
         disabled
           ? 'bg-slate-light text-slate-medium cursor-not-allowed'
-          : 'bg-gradient cursor-pointer hover:opacity-90'
-      } `}
+          : 'bg-gradient cursor-pointer hover:opacity-90',
+      )}
     >
       {children}
     </button>

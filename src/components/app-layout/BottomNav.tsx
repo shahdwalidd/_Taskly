@@ -6,6 +6,7 @@ import DetailsIcon from '@/assets/icons/sideBaricons/DetailsIcon.svg?react'
 
 import type { ComponentType, SVGProps } from 'react'
 import { NavLink } from 'react-router-dom'
+import { cn } from '@/utils/cn'
 interface BottomNavItem {
   icon: ComponentType<SVGProps<SVGSVGElement>>
   label: string
@@ -35,7 +36,10 @@ export function BottomNav({ projectId }: BottomNavProps) {
             to={to}
             end={label === 'Projects'}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-1 py-2 text-xs ${isActive ? 'text-primary-container' : 'text-slate-dark-70'}`
+              cn(
+                'flex flex-1 flex-col items-center gap-1 py-2 text-xs',
+                isActive ? 'text-primary-container' : 'text-slate-dark-70',
+              )
             }
           >
             <Icon />

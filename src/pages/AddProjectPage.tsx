@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { AuthenticatedLayout } from '@/components/auth-layout/AuthenticatedLayout'
+import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
 import { PageBreadcrumb } from '@/components/project-form/PageBreadcrumb'
 import { PageHeader } from '@/components/project-form/PageHeader'
 import { FormSectionHeader } from '@/components/project-form/FormSectionHeader'
