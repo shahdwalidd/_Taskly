@@ -8,7 +8,7 @@ export function InviteMemberButton({ onClick }: InviteMemberButtonProps) {
       <button
         type="button"
         onClick={onClick}
-        className="bg-gradient text-button shadow-invite-button hidden shrink-0 cursor-pointer items-center gap-3 rounded-md px-6 text-white md:inline-flex"
+        className="bg-primary text-button shadow-invite-button hidden shrink-0 cursor-pointer items-center gap-3 rounded-xs px-6 py-3 text-white md:inline-flex"
       >
         <InviteIcon />
         Invite Member
