@@ -4,28 +4,19 @@ import { MembersSkeleton } from '@/components/project-members/Membersskeleton'
 import { MembersTable } from '@/components/project-members/Memberstable'
 import { PageBreadcrumb } from '@/components/project-form/PageBreadcrumb'
 import { ErrorState } from '@/components/shared/ErrorState'
+import { useProjectMembersPage } from '@/hooks/useProjectMembersPage'
 
-import type { Member } from '@/types/projectmembers.types'
+export function ProjectMembersPage() {
+  const {
+    projectId,
+    projectName,
+    members,
+    isLoading,
+    isError,
+    handleRetry,
+    handleInvite,
+  } = useProjectMembersPage()
 
-interface ProjectMembersPageProps {
-  projectId: string
-  projectName: string
-  members?: Member[]
-  isLoading: boolean
-  isError: boolean
-  onRetry: () => void
-  onInvite: () => void
-}
-
-export function ProjectMembersPage({
-  projectId,
-  projectName,
-  members = [],
-  isLoading,
-  isError,
-  onRetry,
-  onInvite,
-}: ProjectMembersPageProps) {
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
       <div className="flex flex-col gap-12 px-6 py-8 md:px-10">
@@ -34,7 +25,7 @@ export function ProjectMembersPage({
         ) : isError ? (
           <ErrorState
             message="We couldn't load this project's information. Please try again."
-            onRetry={onRetry}
+            onRetry={handleRetry}
           />
         ) : (
           <>
@@ -51,11 +42,17 @@ export function ProjectMembersPage({
                 <h1 className="text-headline-lg text-slate-dark w-full text-center md:w-auto md:text-left">
                   Project Members
                 </h1>
-                <InviteMemberButton onClick={onInvite} />
+                <InviteMemberButton onClick={handleInvite} />
               </div>
             </div>
 
-            <MembersTable members={members} />
+            {members.length > 0 ? (
+              <MembersTable members={members} />
+            ) : (
+              <p className="text-body-md text-grey text-center">
+                No members have been added to this project yet.
+              </p>
+            )}
           </>
         )}
       </div>

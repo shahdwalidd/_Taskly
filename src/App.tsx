@@ -91,18 +91,7 @@ function App() {
             path="/project/:projectId/members"
             element={
               <ProtectedRoutes>
-                <ProjectMembersPage
-                  projectId={''}
-                  projectName={''}
-                  isLoading={false}
-                  isError={false}
-                  onRetry={function (): void {
-                    throw new Error('')
-                  }}
-                  onInvite={function (): void {
-                    throw new Error('')
-                  }}
-                />
+                <ProjectMembersPage />
               </ProtectedRoutes>
             }
           />

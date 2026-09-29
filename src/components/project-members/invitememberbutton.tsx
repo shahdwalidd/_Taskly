@@ -17,7 +17,7 @@ export function InviteMemberButton({ onClick }: InviteMemberButtonProps) {
         type="button"
         onClick={onClick}
         aria-label="Invite Member"
-        className="bg-gradient shadow-invite-button fixed right-4 bottom-24 flex size-10 cursor-pointer items-center justify-center rounded-lg text-white md:hidden"
+        className="bg-gradient shadow-invite-button fixed right-4 bottom-54 flex size-10 cursor-pointer items-center justify-center rounded-lg text-white md:hidden"
       >
         <InviteIcon />
       </button>
