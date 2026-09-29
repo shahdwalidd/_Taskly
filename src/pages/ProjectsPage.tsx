@@ -5,10 +5,10 @@ import { ProjectCard } from '@/components/project-list/ProjectCard'
 import { AddProjectCard } from '@/components/project-list/AddProjectCard'
 import { FloatingAddButton } from '@/components/project-list/FloatingAddButton'
 import { Pagination } from '@/components/shared/Pagination'
+import { ErrorState } from '@/components/shared/ErrorState'
 import { formDate } from '@/utils/formatDate'
 import { useProjects } from '@/hooks/useProjects'
 import { ProjectCardSkelton } from '@/components/project-list/ProjectCardSkeleton'
-import { ProjectsErrorState } from '@/components/project-list/ProjectsErrorState'
 import { EmptyProjectsState } from '@/components/project-list/EmptyProjectsState'
 
 export function ProjectsPage() {
@@ -31,7 +31,12 @@ export function ProjectsPage() {
           </div>
         )}
 
-        {status === 'error' && <ProjectsErrorState onRetry={refetch} />}
+        {status === 'error' && (
+          <ErrorState
+            message="We're having trouble retrieving your projects right now. Please try again in a moment."
+            onRetry={refetch}
+          />
+        )}
         {status === 'success' && projects.length === 0 && (
           <EmptyProjectsState onCreateClick={() => navigate('/project/add')} />
         )}

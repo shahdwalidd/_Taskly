@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getProjectById } from '@/services/ProjectService'
 import { getSession } from '@/store/Authstore'
 import type { Project } from '@/types/project.types'
@@ -7,6 +7,7 @@ export function useProject(projectId?: string) {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
     async function fetchProject() {
@@ -42,11 +43,16 @@ export function useProject(projectId?: string) {
     }
 
     fetchProject()
-  }, [projectId])
+  }, [projectId, retryCount])
+
+  const refetch = useCallback(() => {
+    setRetryCount((count) => count + 1)
+  }, [])
 
   return {
     project,
     loading,
     error,
+    refetch,
   }
 }

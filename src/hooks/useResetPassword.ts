@@ -50,7 +50,6 @@ export function useResetPassword() {
       setIsSaved(true)
       return true
     } catch (error) {
-      console.error('Password reset request failed:', error)
       setRequestError(error instanceof Error ? error.message : String(error))
       return false
     } finally {

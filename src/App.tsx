@@ -11,6 +11,7 @@ import { EditProjectPage } from './pages/EditProjectPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { RecoveryLinkHandler } from './components/app-layout/RecoveryLinkHandler'
+import { ProjectMembersPage } from './pages/ProjectMembersPage'
 function App() {
   return (
     <>
@@ -90,7 +91,7 @@ function App() {
             path="/project/:projectId/members"
             element={
               <ProtectedRoutes>
-                <ProjectPage />
+                <ProjectMembersPage />
               </ProtectedRoutes>
             }
           />
