@@ -109,6 +109,7 @@
   --spacing-footer-mobile: 47.5px;
 
   --shadow-button: 0px 1px 2px 0px #0000000d;
+  --shadow-invite-button: 0px 8px 16px rgba(0, 61, 155, 0.2);
 
   --text-boy-sm: 14px;
   --text-boy-sm--font-weight: 400;
