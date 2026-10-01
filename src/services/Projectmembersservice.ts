@@ -4,7 +4,7 @@ import type { Member, ProjectMemberDto } from '@/types/projectmembers.types'
 
 function toMember(dto: ProjectMemberDto): Member {
   return {
-    id: dto.member_id,
+    id: dto.user_id,
     name: dto.metadata.name ,
     email: dto.email,
     role: dto.role,

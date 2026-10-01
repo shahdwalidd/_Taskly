@@ -1,28 +1,29 @@
 interface EpicActionsProps {
-  onBack: () => void
+  onCancel: () => void
   submitLabel: string
   isSubmitting?: boolean
 }
 
 export function EpicActions({
-  onBack,
+  onCancel,
   submitLabel,
   isSubmitting = false,
 }:EpicActionsProps) {
   return (
-    <div className="mt-8 flex flex-col-reverse items-center gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
+    <div className="border-border-subtle mt-8 flex flex-col-reverse gap-4 border-t pt-8 md:flex-row md:items-center md:justify-end md:gap-8">
       <button
         type="button"
-        onClick={onBack}
-        className="text-boy-sm text-slate-medium hover:text-slate-dark font-bold"
+        onClick={onCancel}
+        disabled={isSubmitting}
+        className="text-button text-slate-medium hover:text-slate-dark cursor-pointer text-center disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Back
+        Cancel
       </button>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-primary text-authcard w-full rounded-sm px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+        className="bg-gradient shadow-invite-button text-button h-12 w-full cursor-pointer rounded-md px-8 text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
       >
         {isSubmitting ? 'Creating...' : submitLabel}
       </button>

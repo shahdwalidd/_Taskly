@@ -1,3 +1,4 @@
+import SelectIcon from "@/assets/selecticon.svg?react"
 interface AssigneeOption {
   label: string
   value: string
@@ -42,7 +43,6 @@ export function AssigneeSelect({
           className="bg-surface-highest text-slate-dark focus:ring-primary-container h-12 w-full cursor-pointer appearance-none rounded-md px-4 pr-12 text-base outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="">{placeholder}</option>
-
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -50,13 +50,18 @@ export function AssigneeSelect({
           ))}
         </select>
 
+        <SelectIcon
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2"
+        />
+
        
       </div>
 
       {error && (
         <p
           id={`${id}-error`}
-          className="text-sm text-red-600"
+          className="text-sm text-error"
         >
           {error}
         </p>
