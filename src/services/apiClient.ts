@@ -1,9 +1,16 @@
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 
+interface ApiResponse<T> {
+  data: T
+  headers: Headers
+}
+
 interface ApiRequestOptions extends RequestInit {
   accessToken?: string
+  includeHeaders?: boolean
 }
+
 function extractErrorMessage(result: unknown): string | undefined {
   if (typeof result === 'object' && result !== null) {
     if ('message' in result)
@@ -13,11 +20,19 @@ function extractErrorMessage(result: unknown): string | undefined {
   return undefined
 }
 
+export function apiRequest<T>(
+  endpoint: string,
+  options: ApiRequestOptions & { includeHeaders: true },
+): Promise<ApiResponse<T>>
+export function apiRequest<T>(
+  endpoint: string,
+  options?: ApiRequestOptions & { includeHeaders?: false },
+): Promise<T>
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {},
-): Promise<T> {
-  const { accessToken, headers, ...requestOptions } = options
+): Promise<T | ApiResponse<T>> {
+  const { accessToken, headers, includeHeaders, ...requestOptions } = options
 
   const response = await fetch(`${supabaseUrl}${endpoint}`, {
     ...requestOptions,
@@ -45,6 +60,13 @@ export async function apiRequest<T>(
     throw new Error(
       apiMessage ?? `Request failed with status ${response.status}`,
     )
+  }
+
+  if (includeHeaders) {
+    return {
+      data: result as T,
+      headers: response.headers,
+    } as ApiResponse<T>
   }
 
   return result as T

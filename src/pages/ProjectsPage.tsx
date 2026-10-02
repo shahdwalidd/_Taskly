@@ -7,13 +7,36 @@ import { FloatingAddButton } from '@/components/project-list/FloatingAddButton'
 import { Pagination } from '@/components/shared/Pagination'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { formDate } from '@/utils/formatDate'
+import { useMediaQuery } from '@/hooks/useMediaQuery' 
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll' 
 import { useProjects } from '@/hooks/useProjects'
 import { ProjectCardSkelton } from '@/components/project-list/ProjectCardSkeleton'
 import { EmptyProjectsState } from '@/components/project-list/EmptyProjectsState'
 
 export function ProjectsPage() {
   const navigate = useNavigate()
-  const { status, projects, refetch } = useProjects()
+  const isMobile = !useMediaQuery('(min-width: 768px)')
+  const {
+    status,
+    projects,
+    refetch,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    loadMore,
+    loadingMore,
+    loadMoreFailed,
+    hasMore,
+  } = useProjects(isMobile)
+
+  const sentinelRef = useInfiniteScroll(
+    loadMore,
+    isMobile &&
+      status === 'success' &&
+      hasMore &&
+      !loadingMore &&
+      !loadMoreFailed,
+  )
 
   return (
     <AuthenticatedLayout>
@@ -56,9 +79,43 @@ export function ProjectsPage() {
               <AddProjectCard onClick={() => navigate('/project/add')} />
             </div>
 
-            <div className="mt-12 flex justify-end">
-              <Pagination totalPages={15} />
-            </div>
+            {!isMobile && (
+              <div className="mt-12 flex justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+
+            {isMobile && (
+              <div className="mt-8 flex flex-col items-center gap-3">
+                {hasMore && <div ref={sentinelRef} className="h-1 w-full" />}
+
+                {loadingMore && (
+                  <div
+                    role="status"
+                    aria-label="Loading more projects"
+                    className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary"
+                  />
+                )}
+
+                {loadMoreFailed && (
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-sm text-gray-600">
+                      Failed to load projects
+                    </p>
+                    <button
+                      onClick={loadMore}
+                      className="rounded-xs border border-gray-200 px-4 py-2 text-sm"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>

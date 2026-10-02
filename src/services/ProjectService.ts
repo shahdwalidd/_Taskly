@@ -45,10 +45,29 @@ export async function createProject(
     body: JSON.stringify(payload),
   })
 }
-export async function getProjects(accessToken: string): Promise<Project[]> {
-  const result = await apiRequest<Project[]>('/rest/v1/rpc/get_projects', {
+export async function getProjects(
+  accessToken: string,
+  limit?: number,
+  offset?: number,
+): Promise<{ projects: Project[]; totalCount: number }> {
+  const paginationQuery =
+    limit !== undefined && offset !== undefined
+      ? `?limit=${limit}&offset=${offset}`
+      : ''
+  const result = await apiRequest<Project[]>(`/rest/v1/rpc/get_projects${paginationQuery}`, {
     method: 'GET',
+    includeHeaders: true,
+    headers: {
+        Prefer: 'count=exact',
+      },
     accessToken,
   })
-  return result as Project[]
+  const contentRange = result.headers.get('Content-Range')
+  const match = contentRange?.match(/\/(\d+)$/)
+  const totalCount = match ? Number(match[1]) : 0
+
+  return {
+    projects: result.data,
+    totalCount,
+  }
 }
