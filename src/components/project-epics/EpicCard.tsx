@@ -1,4 +1,4 @@
-import { EpicAssignee } from './Epicassignee'
+import { EpicAssignee } from './EpicAssignee'
 import { EpicCardFooter } from './EpicFooter'
 import { EpicId } from './EpicId'
 

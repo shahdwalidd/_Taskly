@@ -13,6 +13,7 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { RecoveryLinkHandler } from './components/app-layout/RecoveryLinkHandler'
 import { ProjectMembersPage } from './pages/ProjectMembersPage'
 import { CreateEpicPage } from './pages/CreateEpicPage'
+import { EpicsPage } from './pages/ProjectEpics'
 function App() {
   return (
     <>
@@ -76,7 +77,7 @@ function App() {
             path="/project/:projectId/epics"
             element={
               <ProtectedRoutes>
-                <ProjectPage />
+             <EpicsPage/>
               </ProtectedRoutes>
             }
           />

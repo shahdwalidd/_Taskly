@@ -20,9 +20,9 @@ export function NewEpicButton({ onClick }: NewEpicButtonProps) {
         type="button"
         onClick={onClick}
         aria-label="New Epic"
-        className="bg-primary-container shadow-invite-button fixed right-6 bottom-24 flex size-14 cursor-pointer items-center justify-center rounded-lg text-white md:hidden"
+ className='md:hidden'
       >
-        <PlusIcon aria-hidden="true" className="size-6" />
+        <PlusIcon aria-hidden="true" className="fixed right-6 bottom-24 flex size-14 cursor-pointer" />
       </button>
     </>
   )

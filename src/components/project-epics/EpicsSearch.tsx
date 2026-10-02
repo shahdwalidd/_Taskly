@@ -15,7 +15,7 @@ export function EpicSearchInput({
     <div className="relative w-full">
       <SearchIcon
         aria-hidden="true"
-        className="text-slate-medium pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 md:left-3 md:size-4"
+        className="text-slate-medium pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 md:left-3 md:size-4"
       />
       <input
         type="text"
