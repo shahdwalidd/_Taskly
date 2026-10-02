@@ -28,7 +28,7 @@ export function useProjects(isMobile: boolean): UseprojectReturn {
   const currentPage =
     Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1
 
-  const limit = 5
+  const limit = 10
   const [totalCount, setTotalCount] = useState(0)
   const totalPages = Math.ceil(totalCount / limit)
 
