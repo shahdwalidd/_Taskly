@@ -5,6 +5,7 @@ import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout
 import { EpicsHeader } from '@/components/project-epics/EpicsHeader'
 import { EpicsList } from '@/components/project-epics/EpicsList'
 import { EpicsSkeleton } from '@/components/project-epics/Epicsskeleton'
+import { EmptyEpicsState } from '@/components/project-epics/EmptyEpicsState'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
@@ -54,17 +55,19 @@ export function EpicsPage() {
               onNewEpic={() => navigate(`/project/${projectId}/epics/new`)}
             />
 
-            {filteredEpics.length > 0 ? (
+            {epics.length === 0 ? (
+              <EmptyEpicsState
+                onCreateClick={() => navigate(`/project/${projectId}/epics/new`)}
+              />
+            ) : filteredEpics.length > 0 ? (
               <EpicsList epics={filteredEpics} />
             ) : (
               <div className="text-grey flex min-h-56 flex-col items-center justify-center gap-2 text-center">
                 <h2 className="text-slate-dark text-lg font-semibold">
-                  {epics.length === 0 ? 'No epics yet' : 'No matching epics'}
+                  No matching epics
                 </h2>
                 <p className="text-sm">
-                  {epics.length === 0
-                    ? 'Create the first epic to get started.'
-                    : 'Try a different search term.'}
+                  Try a different search term.
                 </p>
               </div>
             )}
