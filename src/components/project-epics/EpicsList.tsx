@@ -15,6 +15,7 @@ export function EpicsList({ epics }: EpicsListProps) {
             code={epic.code}
             title={epic.title}
             assigneeName={epic.assigneeName}
+            assigneeAvatar={epic.assigneeAvatar}
             createdBy={epic.createdBy}
             date={epic.date}
           />

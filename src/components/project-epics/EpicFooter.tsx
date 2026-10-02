@@ -1,5 +1,6 @@
 import CalendarIcon from '@/assets/CalendarIcon.svg?react'
 import CreatedByIcon from '@/assets/CreatedByIcon.svg?react'
+import { formDate } from '@/utils/formatDate'
 
 interface EpicCardFooterProps {
   createdBy: string
@@ -19,7 +20,7 @@ export function EpicCardFooter({ createdBy, date }: EpicCardFooterProps) {
 
       <p className="flex shrink-0 items-center gap-1.5">
         <CalendarIcon />
-        {date}
+        {date ? formDate(date) : 'No deadline'}
       </p>
     </div>
   )

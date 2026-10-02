@@ -6,6 +6,7 @@ interface EpicCardProps {
   code: string
   title: string
   assigneeName: string
+  assigneeAvatar?: string
   createdBy: string
   date: string
 }
@@ -14,6 +15,7 @@ export function EpicCard({
   code,
   title,
   assigneeName,
+  assigneeAvatar,
   createdBy,
   date,
 }: EpicCardProps) {
@@ -28,7 +30,7 @@ export function EpicCard({
         {title}
       </h3>
 
-      <EpicAssignee name={assigneeName} />
+      <EpicAssignee name={assigneeName} avatarUrl={assigneeAvatar} />
 
       <EpicCardFooter createdBy={createdBy} date={date} />
     </article>
