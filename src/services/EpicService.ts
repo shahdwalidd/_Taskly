@@ -45,19 +45,34 @@ export async function createEpic(
 export async function getEpics(
   projectId: string,
   accessToken: string,
-): Promise<EpicListItem[]> {
+  limit?:number,
+  offset?:number,
+): Promise<{ epics: EpicListItem[]; totalCount: number }> {
+  const paginationQuery =
+    limit !== undefined && offset !== undefined
+      ? `&limit=${limit}&offset=${offset}`
+      : ''
   const params = new URLSearchParams({ project_id: `eq.${projectId}` })
   const result = await apiRequest<EpicResponse[]>(
-    `/rest/v1/project_epics?${params.toString()}`,
+    `/rest/v1/project_epics?${params.toString()}${paginationQuery}`,
     {
       method: 'GET',
+      includeHeaders: true,
+    headers: {
+        Prefer: 'count=exact',
+      },
       accessToken,
     },
   )
-
-  if (!Array.isArray(result)) {
+ const contentRange = result.headers.get('Content-Range')
+  const match = contentRange?.match(/\/(\d+)$/)
+  const totalCount = match ? Number(match[1]) : 0
+  if (!Array.isArray(result.data)) {
     throw new Error('The project epics response was invalid')
   }
 
-  return result.map(toEpicListItem)
+  return {
+    epics: result.data.map(toEpicListItem),
+    totalCount,
+  }
 }
