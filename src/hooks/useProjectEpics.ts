@@ -21,7 +21,7 @@ export function useProjectEpics(projectId: string, isMobile: boolean) {
 		error: null,
 	})
 	const [retryCount, setRetryCount] = useState(0)
-	const limit = 1
+	const limit = 10
 	const [searchParams, setSearchParams] = useSearchParams()
 	const requestedPage = Number(searchParams.get('page') ?? 1)
 
