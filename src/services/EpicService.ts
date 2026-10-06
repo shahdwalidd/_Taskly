@@ -45,8 +45,8 @@ export async function createEpic(
 export async function getEpics(
   projectId: string,
   accessToken: string,
-  limit?:number,
-  offset?:number,
+  limit?: number,
+  offset?: number,
 ): Promise<{ epics: EpicListItem[]; totalCount: number }> {
   const paginationQuery =
     limit !== undefined && offset !== undefined
@@ -58,13 +58,13 @@ export async function getEpics(
     {
       method: 'GET',
       includeHeaders: true,
-    headers: {
+      headers: {
         Prefer: 'count=exact',
       },
       accessToken,
     },
   )
- const contentRange = result.headers.get('Content-Range')
+  const contentRange = result.headers.get('Content-Range')
   const match = contentRange?.match(/\/(\d+)$/)
   const totalCount = match ? Number(match[1]) : 0
   if (!Array.isArray(result.data)) {

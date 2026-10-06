@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getSession } from '@/store/Authstore'
@@ -14,13 +13,13 @@ interface UseprojectReturn {
   totalPages: number
   setCurrentPage: (page: number) => void
   refetch: () => void
-  loadMore: () => void 
-  loadingMore: boolean 
-  loadMoreFailed: boolean 
-  hasMore: boolean 
+  loadMore: () => void
+  loadingMore: boolean
+  loadMoreFailed: boolean
+  hasMore: boolean
 }
 
-export function useProjects(isMobile: boolean): UseprojectReturn { 
+export function useProjects(isMobile: boolean): UseprojectReturn {
   const [status, setStatus] = useState<Projectstatus>('loading')
   const [projects, setProjects] = useState<Project[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
@@ -32,12 +31,12 @@ export function useProjects(isMobile: boolean): UseprojectReturn {
   const [totalCount, setTotalCount] = useState(0)
   const totalPages = Math.ceil(totalCount / limit)
 
-  const [loadingMore, setLoadingMore] = useState(false) 
-  const [loadMoreFailed, setLoadMoreFailed] = useState(false) 
-  const nextPageRef = useRef(2) 
-  const isFetchingRef = useRef(false) 
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [loadMoreFailed, setLoadMoreFailed] = useState(false)
+  const nextPageRef = useRef(2)
+  const isFetchingRef = useRef(false)
 
-  const hasMore = isMobile && projects.length < totalCount 
+  const hasMore = isMobile && projects.length < totalCount
 
   const setCurrentPage = useCallback(
     (page: number) => {
@@ -52,7 +51,7 @@ export function useProjects(isMobile: boolean): UseprojectReturn {
   )
 
   useEffect(() => {
-    if (isMobile) return 
+    if (isMobile) return
     const normalizedPage =
       totalPages > 0 ? Math.min(currentPage, totalPages) : currentPage
     if (searchParams.get('page') !== String(normalizedPage)) {
@@ -61,7 +60,6 @@ export function useProjects(isMobile: boolean): UseprojectReturn {
       setSearchParams(nextParams, { replace: true })
     }
   }, [currentPage, searchParams, setSearchParams, totalPages, isMobile])
-
 
   const fetchProjects = useCallback(async () => {
     setStatus('loading')
@@ -72,12 +70,12 @@ export function useProjects(isMobile: boolean): UseprojectReturn {
       return
     }
     try {
-      const page = isMobile ? 1 : currentPage 
+      const page = isMobile ? 1 : currentPage
       const offset = (page - 1) * limit
       const result = await getProjects(session.access_token, limit, offset)
       setProjects(result.projects)
       setTotalCount(result.totalCount)
-      nextPageRef.current = 2 
+      nextPageRef.current = 2
       setStatus('success')
     } catch {
       setStatus('error')

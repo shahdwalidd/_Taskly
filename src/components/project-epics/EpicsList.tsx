@@ -1,4 +1,3 @@
-
 import type { EpicListItem } from '@/types/epics.types'
 import { EpicCard } from './EpicCard'
 

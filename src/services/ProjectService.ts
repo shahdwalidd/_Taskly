@@ -54,14 +54,17 @@ export async function getProjects(
     limit !== undefined && offset !== undefined
       ? `?limit=${limit}&offset=${offset}`
       : ''
-  const result = await apiRequest<Project[]>(`/rest/v1/rpc/get_projects${paginationQuery}`, {
-    method: 'GET',
-    includeHeaders: true,
-    headers: {
+  const result = await apiRequest<Project[]>(
+    `/rest/v1/rpc/get_projects${paginationQuery}`,
+    {
+      method: 'GET',
+      includeHeaders: true,
+      headers: {
         Prefer: 'count=exact',
       },
-    accessToken,
-  })
+      accessToken,
+    },
+  )
   const contentRange = result.headers.get('Content-Range')
   const match = contentRange?.match(/\/(\d+)$/)
   const totalCount = match ? Number(match[1]) : 0

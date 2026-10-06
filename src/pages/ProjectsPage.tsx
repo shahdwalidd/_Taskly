@@ -7,8 +7,8 @@ import { FloatingAddButton } from '@/components/project-list/FloatingAddButton'
 import { Pagination } from '@/components/shared/Pagination'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { formDate } from '@/utils/formatDate'
-import { useMediaQuery } from '@/hooks/useMediaQuery' 
-import { useInfiniteScroll } from '@/hooks/useInfiniteScroll' 
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useProjects } from '@/hooks/useProjects'
 import { ProjectCardSkelton } from '@/components/project-list/ProjectCardSkeleton'
 import { EmptyProjectsState } from '@/components/project-list/EmptyProjectsState'
@@ -97,7 +97,7 @@ export function ProjectsPage() {
                   <div
                     role="status"
                     aria-label="Loading more projects"
-                    className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary"
+                    className="border-t-primary h-6 w-6 animate-spin rounded-full border-2 border-gray-300"
                   />
                 )}
 

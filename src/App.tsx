@@ -77,7 +77,7 @@ function App() {
             path="/project/:projectId/epics"
             element={
               <ProtectedRoutes>
-             <EpicsPage/>
+                <EpicsPage />
               </ProtectedRoutes>
             }
           />
@@ -85,7 +85,7 @@ function App() {
             path="/project/:projectId/epics/new"
             element={
               <ProtectedRoutes>
-              <CreateEpicPage/>
+                <CreateEpicPage />
               </ProtectedRoutes>
             }
           />
