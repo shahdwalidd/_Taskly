@@ -10,13 +10,36 @@ import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
 export function EpicsPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
-  const { epics, status, error, refetch } = useProjectEpics(projectId)
+  const {
+    epics,
+    status,
+    error,
+    refetch,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    loadMore,
+    loadingMore,
+    loadMoreFailed,
+    hasMore,
+  } = useProjectEpics(projectId, isMobile)
+  const sentinelRef = useInfiniteScroll(
+    loadMore,
+    isMobile &&
+      status === 'success' &&
+      hasMore &&
+      !loadingMore &&
+      !loadMoreFailed,
+  )
   const projectName = project?.name ?? 'Project'
 
   const filteredEpics = useMemo(() => {
@@ -73,11 +96,43 @@ export function EpicsPage() {
             )}
 
             <div className="flex justify-end pt-4 md:pt-8">
-              <Pagination
-                currentPage={1}
-                totalPages={15}
-                onPageChange={() => undefined}
-              />
+               {!isMobile && (
+              <div className="mt-12 flex justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+
+            {isMobile && (
+              <div className="mt-8 flex flex-col items-center gap-3">
+                {hasMore && <div ref={sentinelRef} className="h-1 w-full" />}
+
+                {loadingMore && (
+                  <div
+                    role="status"
+                    aria-label="Loading more epics"
+                    className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary"
+                  />
+                )}
+
+                {loadMoreFailed && (
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-sm text-gray-600">
+                      Failed to load epics
+                    </p>
+                    <button
+                      onClick={loadMore}
+                      className="rounded-xs border border-gray-200 px-4 py-2 text-sm"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+              </div>
+              )}
             </div>
           </>
         )}
