@@ -1,5 +1,5 @@
 import CalendarIcon from '@/assets/CalendarIcon.svg?react'
-import { EpicValueBox } from './Epicvaluebox'
+import { EpicValueBox } from './EpicValueeBox'
 
 interface EpicDateValueProps {
   date?: string

@@ -1,5 +1,5 @@
 import { getInitials } from '@/utils/getInitials'
-import { EpicValueBox } from './Epicvaluebox'
+import { EpicValueBox } from './EpicValueeBox'
 
 interface EpicPersonValueProps {
   name?: string
