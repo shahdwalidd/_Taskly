@@ -1,7 +1,7 @@
-
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
+import { EpicDetailsModal } from '@/components/epics-popup/EpicDetailsModal'
 import { EpicsHeader } from '@/components/project-epics/EpicsHeader'
 import { EpicsList } from '@/components/project-epics/EpicsList'
 import { EpicsSkeleton } from '@/components/project-epics/Epicsskeleton'
@@ -9,14 +9,18 @@ import { EmptyEpicsState } from '@/components/project-epics/EmptyEpicsState'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
+import { useEpicDetails } from '@/hooks/useEpicDetails'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import type { EpicListItem } from '@/types/epics.types'
 
 export function EpicsPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
+  const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
   const {
@@ -64,7 +68,10 @@ export function EpicsPage() {
 
         {status === 'error' && (
           <ErrorState
-            message={error ?? "We're having trouble retrieving your epics right now. Please try again."}
+            message={
+              error ??
+              "We're having trouble retrieving your epics right now. Please try again."
+            }
             onRetry={refetch}
           />
         )}
@@ -80,63 +87,76 @@ export function EpicsPage() {
 
             {epics.length === 0 ? (
               <EmptyEpicsState
-                onCreateClick={() => navigate(`/project/${projectId}/epics/new`)}
+                onCreateClick={() =>
+                  navigate(`/project/${projectId}/epics/new`)
+                }
               />
             ) : filteredEpics.length > 0 ? (
-              <EpicsList epics={filteredEpics} />
+              <EpicsList epics={filteredEpics} onEpicClick={setSelectedEpic} />
             ) : (
               <div className="text-grey flex min-h-56 flex-col items-center justify-center gap-2 text-center">
                 <h2 className="text-slate-dark text-lg font-semibold">
                   No matching epics
                 </h2>
-                <p className="text-sm">
-                  Try a different search term.
-                </p>
+                <p className="text-sm">Try a different search term.</p>
               </div>
             )}
 
             <div className="flex justify-end pt-4 md:pt-8">
-               {!isMobile && (
-              <div className="mt-12 flex justify-end">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                />
-              </div>
-            )}
-
-            {isMobile && (
-              <div className="mt-8 flex flex-col items-center gap-3">
-                {hasMore && <div ref={sentinelRef} className="h-1 w-full" />}
-
-                {loadingMore && (
-                  <div
-                    role="status"
-                    aria-label="Loading more epics"
-                    className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary"
+              {!isMobile && (
+                <div className="mt-12 flex justify-end">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
                   />
-                )}
+                </div>
+              )}
 
-                {loadMoreFailed && (
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="text-sm text-gray-600">
-                      Failed to load epics
-                    </p>
-                    <button
-                      onClick={loadMore}
-                      className="rounded-xs border border-gray-200 px-4 py-2 text-sm"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                )}
-              </div>
+              {isMobile && (
+                <div className="mt-8 flex flex-col items-center gap-3">
+                  {hasMore && <div ref={sentinelRef} className="h-1 w-full" />}
+
+                  {loadingMore && (
+                    <div
+                      role="status"
+                      aria-label="Loading more epics"
+                      className="border-t-primary h-6 w-6 animate-spin rounded-full border-2 border-gray-300"
+                    />
+                  )}
+
+                  {loadMoreFailed && (
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-sm text-gray-600">
+                        Failed to load epics
+                      </p>
+                      <button
+                        onClick={loadMore}
+                        className="rounded-xs border border-gray-200 px-4 py-2 text-sm"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </>
         )}
       </div>
+      {selectedEpic && (
+        <EpicDetailsModal
+          code={epicDetails.epic?.code ?? selectedEpic.code}
+          status={epicDetails.status}
+          epic={epicDetails.epic}
+          error={epicDetails.error}
+          onRetry={epicDetails.retry}
+          onClose={() => setSelectedEpic(null)}
+          onCopyLink={() => {
+            void navigator.clipboard.writeText(window.location.href)
+          }}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }

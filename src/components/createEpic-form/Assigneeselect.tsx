@@ -1,4 +1,4 @@
-import SelectIcon from "@/assets/selecticon.svg?react"
+import SelectIcon from '@/assets/selecticon.svg?react'
 interface AssigneeOption {
   label: string
   value: string
@@ -25,10 +25,7 @@ export function AssigneeSelect({
 }: AssigneeSelectProps) {
   return (
     <div className="flex flex-col gap-3">
-      <label
-        htmlFor={id}
-        className="text-label-sm text-grey uppercase"
-      >
+      <label htmlFor={id} className="text-label-sm text-grey uppercase">
         Assignee
       </label>
 
@@ -40,7 +37,7 @@ export function AssigneeSelect({
           onChange={(event) => onChange(event.target.value)}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}
-          className="bg-surface-highest text-slate-dark focus:ring-primary-container h-12 w-full cursor-pointer appearance-none rounded-md px-4 pr-12 text-base outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="bg-surface-highest text-slate-dark focus:ring-primary-container h-12 w-full cursor-pointer appearance-none rounded-md px-4 pr-12 text-base transition outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="">{placeholder}</option>
           {options.map((option) => (
@@ -54,15 +51,10 @@ export function AssigneeSelect({
           aria-hidden="true"
           className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2"
         />
-
-       
       </div>
 
       {error && (
-        <p
-          id={`${id}-error`}
-          className="text-sm text-error"
-        >
+        <p id={`${id}-error`} className="text-error text-sm">
           {error}
         </p>
       )}

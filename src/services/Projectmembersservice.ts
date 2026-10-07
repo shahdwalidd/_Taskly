@@ -1,11 +1,10 @@
-
 import { apiRequest } from '@/services/apiClient'
 import type { Member, ProjectMemberDto } from '@/types/projectmembers.types'
 
 function toMember(dto: ProjectMemberDto): Member {
   return {
     id: dto.user_id,
-    name: dto.metadata.name ,
+    name: dto.metadata.name,
     email: dto.email,
     role: dto.role,
   }
@@ -15,7 +14,6 @@ export async function getProjectMembers(
   projectId: string,
   accessToken: string,
 ): Promise<Member[]> {
-
   if (!projectId) {
     throw new Error('Project id is required to load members')
   }

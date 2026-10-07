@@ -29,7 +29,7 @@ export function useProjectMembersPage() {
   }, [projectError, membersStatus, refetchProject, refetchMembers])
 
   const handleInvite = useCallback(() => {
-   console.log()
+    console.log()
   }, [])
 
   return {

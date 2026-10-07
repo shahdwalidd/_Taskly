@@ -3,10 +3,7 @@ import ChevronLeftIcon from '@/assets/ChevronLeftIcon.svg?react'
 import { cn } from '@/utils/cn'
 type PageItem = number | 'ellipsis'
 
-function getVisiblePages(
-  currentPage: number,
-  totalPages: number,
-): PageItem[] {
+function getVisiblePages(currentPage: number, totalPages: number): PageItem[] {
   if (totalPages <= 1) {
     return []
   }
@@ -41,13 +38,13 @@ interface PaginationProps {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
-
 }
 
-export function Pagination({  currentPage,
+export function Pagination({
+  currentPage,
   totalPages,
-  onPageChange, }: PaginationProps) {
-
+  onPageChange,
+}: PaginationProps) {
   if (totalPages <= 1) {
     return null
   }
@@ -56,7 +53,7 @@ export function Pagination({  currentPage,
   return (
     <nav className="hidden items-center gap-2 md:flex" aria-label="Pagination">
       <button
-      onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
         aria-label="Previous page"
         className="border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
@@ -90,9 +87,7 @@ export function Pagination({  currentPage,
         ),
       )}
       <button
-        onClick={() =>
-          onPageChange(Math.min(totalPages, currentPage + 1))
-        }
+        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
         aria-label="Next page"
         className="border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"

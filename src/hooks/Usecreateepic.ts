@@ -37,12 +37,10 @@ export function useCreateEpic() {
     },
   })
 
-  const descriptionValue =
-    useWatch({ control, name: 'description' }) ?? ''
+  const descriptionValue = useWatch({ control, name: 'description' }) ?? ''
   const assigneeValue = useWatch({ control, name: 'assignee_id' }) ?? ''
   const deadlineValue = useWatch({ control, name: 'deadline' }) ?? ''
 
-  
   const memberOptions = members.map((member) => ({
     label: `${member.name} (${member.role})`,
     value: member.id,
@@ -82,7 +80,7 @@ export function useCreateEpic() {
         projectId,
         {
           title: values.title.trim(),
-          description: values.description?.trim() ||" ",
+          description: values.description?.trim() || ' ',
           assignee_id: values.assignee_id?.trim() || undefined,
           deadline: values.deadline || undefined,
         },
