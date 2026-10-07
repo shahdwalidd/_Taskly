@@ -77,11 +77,7 @@ export function useEpicDetails(projectId: string, epicId: string | null) {
   const matchesSelectedEpic = state.epicId === epicId
 
   return {
-    status: epicId
-      ? matchesSelectedEpic
-        ? state.status
-        : 'loading'
-      : 'idle',
+    status: epicId ? (matchesSelectedEpic ? state.status : 'loading') : 'idle',
     epic: matchesSelectedEpic ? state.epic : null,
     error: matchesSelectedEpic ? state.error : null,
     retry,

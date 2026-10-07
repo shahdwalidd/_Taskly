@@ -24,7 +24,7 @@ export function EpicTasksEmpty({ onAddTask }: EpicTasksEmptyProps) {
         onClick={onAddTask}
         className="bg-primary -mt-1 flex h-8 cursor-pointer items-center gap-2 rounded-xs px-4 text-sm font-semibold text-white md:mt-0 md:h-11 md:px-6 md:text-base"
       >
-        <PlusIcon aria-hidden="true" className="size-3.5 md:size-4"  />
+        <PlusIcon aria-hidden="true" className="size-3.5 md:size-4" />
         Add New Task
       </button>
     </div>

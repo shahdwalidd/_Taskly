@@ -2,7 +2,7 @@ import CalendarIcon from '@/assets/CalendarIcon.svg?react'
 import { EpicValueBox } from './Epicvaluebox'
 
 interface EpicDateValueProps {
-  date?: string 
+  date?: string
   withChevron?: boolean
 }
 

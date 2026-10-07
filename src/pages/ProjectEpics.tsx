@@ -92,10 +92,7 @@ export function EpicsPage() {
                 }
               />
             ) : filteredEpics.length > 0 ? (
-              <EpicsList
-                epics={filteredEpics}
-                onEpicClick={setSelectedEpic}
-              />
+              <EpicsList epics={filteredEpics} onEpicClick={setSelectedEpic} />
             ) : (
               <div className="text-grey flex min-h-56 flex-col items-center justify-center gap-2 text-center">
                 <h2 className="text-slate-dark text-lg font-semibold">
