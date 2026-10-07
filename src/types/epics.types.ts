@@ -21,17 +21,22 @@ export interface EpicResponse {
   id: string
   epic_id: string | number
   title: string
+  description?: string | null
   assignee?: EpicUser | null
   created_by?: EpicUser | null
   deadline?: string | null
+  created_at?: string | null
 }
 
 export interface EpicListItem {
   id: string
   code: string
   title: string
+  description?: string
   assigneeName: string
   assigneeAvatar?: string
   createdBy: string
   date: string
+  createdAt?: string
+  createdByAvatar?: string
 }

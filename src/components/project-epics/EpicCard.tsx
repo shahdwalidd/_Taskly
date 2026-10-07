@@ -9,6 +9,7 @@ interface EpicCardProps {
   assigneeAvatar?: string
   createdBy: string
   date: string
+  onClick: () => void
 }
 
 export function EpicCard({
@@ -18,9 +19,15 @@ export function EpicCard({
   assigneeAvatar,
   createdBy,
   date,
+  onClick,
 }: EpicCardProps) {
   return (
-    <article className="border-primary bg-authcard shadow-card flex flex-col rounded-md border-l-4 p-4">
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Open epic ${code}: ${title}`}
+      className="border-primary bg-authcard shadow-card flex w-full cursor-pointer flex-col rounded-md border-l-4 p-4 text-left"
+    >
       <EpicId code={code} />
 
       <h3
@@ -33,6 +40,6 @@ export function EpicCard({
       <EpicAssignee name={assigneeName} avatarUrl={assigneeAvatar} />
 
       <EpicCardFooter createdBy={createdBy} date={date} />
-    </article>
+    </button>
   )
 }

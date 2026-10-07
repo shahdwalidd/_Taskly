@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
+import { EpicDetailsModal } from '@/components/epics-popup/EpicDetailsModal'
 import { EpicsHeader } from '@/components/project-epics/EpicsHeader'
 import { EpicsList } from '@/components/project-epics/EpicsList'
 import { EpicsSkeleton } from '@/components/project-epics/Epicsskeleton'
@@ -8,14 +9,18 @@ import { EmptyEpicsState } from '@/components/project-epics/EmptyEpicsState'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
+import { useEpicDetails } from '@/hooks/useEpicDetails'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import type { EpicListItem } from '@/types/epics.types'
 
 export function EpicsPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
+  const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
   const {
@@ -87,7 +92,10 @@ export function EpicsPage() {
                 }
               />
             ) : filteredEpics.length > 0 ? (
-              <EpicsList epics={filteredEpics} />
+              <EpicsList
+                epics={filteredEpics}
+                onEpicClick={setSelectedEpic}
+              />
             ) : (
               <div className="text-grey flex min-h-56 flex-col items-center justify-center gap-2 text-center">
                 <h2 className="text-slate-dark text-lg font-semibold">
@@ -139,6 +147,19 @@ export function EpicsPage() {
           </>
         )}
       </div>
+      {selectedEpic && (
+        <EpicDetailsModal
+          code={epicDetails.epic?.code ?? selectedEpic.code}
+          status={epicDetails.status}
+          epic={epicDetails.epic}
+          error={epicDetails.error}
+          onRetry={epicDetails.retry}
+          onClose={() => setSelectedEpic(null)}
+          onCopyLink={() => {
+            void navigator.clipboard.writeText(window.location.href)
+          }}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }
