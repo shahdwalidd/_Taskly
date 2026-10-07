@@ -23,12 +23,14 @@ export function useEpicDetails(projectId: string, epicId: string | null) {
 
   useEffect(() => {
     if (!epicId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState({ epicId: null, status: 'idle', epic: null, error: null })
       return
     }
 
+    const selectedEpicId = epicId
     let isCurrentRequest = true
-    setState({ epicId, status: 'loading', epic: null, error: null })
+    setState({ epicId: selectedEpicId, status: 'loading', epic: null, error: null })
 
     async function fetchEpicDetails() {
       try {
@@ -43,16 +45,21 @@ export function useEpicDetails(projectId: string, epicId: string | null) {
 
         const epic = await getEpicDetails(
           projectId,
-          epicId,
+          selectedEpicId,
           session.access_token,
         )
         if (isCurrentRequest) {
-          setState({ epicId, status: 'success', epic, error: null })
+          setState({
+            epicId: selectedEpicId,
+            status: 'success',
+            epic,
+            error: null,
+          })
         }
       } catch (error) {
         if (isCurrentRequest) {
           setState({
-            epicId,
+            epicId: selectedEpicId,
             status: 'error',
             epic: null,
             error:
