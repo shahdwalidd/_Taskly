@@ -70,6 +70,9 @@
   --color-lightblue: #e8edff;
   --color-babyred: #ffdad6;
   --color-darkgreen: #005235;
+  --color-bg-emerald-400:#65DCA4 ;
+  --color-navyblue: #0C56D0;
+  --color-babygray:#94A3B8;
   --text-display-lg: 56px;
   --text-display-lg--line-height: 56px;
   --text-display-lg--font-weight: 700;
@@ -135,7 +138,22 @@
   --text-span-sm--font-weight: 700;
 
   --tracking-custom: 1.4px;
-
+.scrollbar-board {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ts-slate-200) var(--ts-blue-300);
+}
+.scrollbar-board::-webkit-scrollbar {
+  height: 12px;
+}
+.scrollbar-board::-webkit-scrollbar-track {
+  background: var(--ts-blue-300);
+  border-radius: 8px;
+}
+.scrollbar-board::-webkit-scrollbar-thumb {
+  background: var(--ts-slate-200);
+  border-radius: 8px;
+}
+ 
   /* Radius */
   --radius-xs: var(--ts-radius-xs);
   --radius-sm: var(--ts-radius-sm);
@@ -158,6 +176,7 @@
   /* border */
   --color-border-subtle: rgba(0, 0, 0, 0.1);
   --shadow-avatar: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  
 }
 @layer base {
   input[type='password']::-ms-reveal,
