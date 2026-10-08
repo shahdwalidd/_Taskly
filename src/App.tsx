@@ -6,7 +6,6 @@ import { ProtectedRoutes } from '@/routes/ProtectedRoutes'
 import { PublicRoutes } from '@/routes/PublicRoutes'
 import { ProjectsPage } from '@/pages/ProjectsPage'
 import { AddProjectPage } from '@/pages/AddProjectPage'
-import { ProjectPage } from '@/pages/ProjectPage'
 import { EditProjectPage } from './pages/EditProjectPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
@@ -14,6 +13,7 @@ import { RecoveryLinkHandler } from './components/app-layout/RecoveryLinkHandler
 import { ProjectMembersPage } from './pages/ProjectMembersPage'
 import { CreateEpicPage } from './pages/CreateEpicPage'
 import { EpicsPage } from './pages/ProjectEpics'
+import { TasksPage } from './pages/TasksPage'
 function App() {
   return (
     <>
@@ -93,7 +93,7 @@ function App() {
             path="/project/:projectId/tasks"
             element={
               <ProtectedRoutes>
-                <ProjectPage />
+       <TasksPage/>
               </ProtectedRoutes>
             }
           />

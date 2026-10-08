@@ -57,6 +57,7 @@
   --color-slate-light: var(--ts-slate-200);
   --color-success: var(--ts-mint);
   --color-error: var(--ts-darkred);
+  --color-darkred: var(--ts-darkred);
   --color-warning: var(--ts-yellow);
   --color-on-success: var(--ts-darkgreen);
   --color-grey: var(--ts-gray-700);
@@ -138,29 +139,15 @@
   --text-span-sm--font-weight: 700;
 
   --tracking-custom: 1.4px;
-.scrollbar-board {
-  scrollbar-width: thin;
-  scrollbar-color: var(--ts-slate-200) var(--ts-blue-300);
-}
-.scrollbar-board::-webkit-scrollbar {
-  height: 12px;
-}
-.scrollbar-board::-webkit-scrollbar-track {
-  background: var(--ts-blue-300);
-  border-radius: 8px;
-}
-.scrollbar-board::-webkit-scrollbar-thumb {
-  background: var(--ts-slate-200);
-  border-radius: 8px;
-}
- 
+
   /* Radius */
   --radius-xs: var(--ts-radius-xs);
   --radius-sm: var(--ts-radius-sm);
   --radius-md: var(--ts-radius-md);
   --radius-lg: var(--ts-radius-lg);
-  --radius-ssm: var(--ts-radius-ssm) /* Spacing */
-    --spacing-1: var(--ts-space-1);
+  --radius-ssm: var(--ts-radius-ssm);
+  /* Spacing */
+  --spacing-1: var(--ts-space-1);
   --spacing-2: var(--ts-space-2);
   --spacing-3: var(--ts-space-3);
   --spacing-4: var(--ts-space-4);
@@ -176,8 +163,24 @@
   /* border */
   --color-border-subtle: rgba(0, 0, 0, 0.1);
   --shadow-avatar: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-  
 }
+.scrollbar-board {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ts-slate-200) var(--ts-blue-300);
+}
+.scrollbar-board::-webkit-scrollbar {
+  height: 8px;
+  width: 200px;
+}
+.scrollbar-board::-webkit-scrollbar-track {
+  background: var(--ts-blue-300);
+  border-radius: 4px;
+}
+.scrollbar-board::-webkit-scrollbar-thumb {
+  background: var(--ts-slate-200);
+  border-radius: 4px;
+}
+
 @layer base {
   input[type='password']::-ms-reveal,
   input[type='password']::-ms-clear {
