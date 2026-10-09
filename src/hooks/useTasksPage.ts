@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import type { TaskFormValues } from '@/types/addTask.types'
 import { taskStatuses } from '@/components/tasks-board/TaskStatus'
 import { useProject } from '@/hooks/useProject'
+import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useProjectMembers } from '@/hooks/useProjectMembers'
 
 const emptyTaskValues: TaskFormValues = {
@@ -19,6 +20,7 @@ export function useTasksPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
   const { project } = useProject(projectId)
   const { members } = useProjectMembers(projectId)
+  const { epics } = useProjectEpics(projectId, false, true)
 
   const [search, setSearch] = useState('')
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false)
@@ -36,11 +38,18 @@ export function useTasksPage() {
   )
 
  
-  const epicOptions: { label: string; value: string }[] = []
+  const epicOptions = epics.map((epic) => ({
+    label: epic.title,
+    value: epic.id,
+  }))
 
  
-  const openAddTask = useCallback((statusId?: string) => {
-    setTaskValues({ ...emptyTaskValues, status: statusId ?? emptyTaskValues.status })
+  const openAddTask = useCallback((statusId?: string, epicId?: string) => {
+    setTaskValues({
+      ...emptyTaskValues,
+      status: statusId ?? emptyTaskValues.status,
+      epicId: epicId ?? emptyTaskValues.epicId,
+    })
     setIsAddTaskOpen(true)
   }, [])
 

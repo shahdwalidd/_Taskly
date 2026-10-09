@@ -15,6 +15,7 @@ interface EpicDetailsModalProps {
   onRetry: () => void
   onClose: () => void
   onCopyLink: () => void
+  onAddTask: () => void
 }
 
 const boxClass =
@@ -28,6 +29,7 @@ export function EpicDetailsModal({
   onRetry,
   onClose,
   onCopyLink,
+  onAddTask,
 }: EpicDetailsModalProps) {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -152,7 +154,7 @@ export function EpicDetailsModal({
           </>
         )}
 
-        <EpicTasksSection />
+        <EpicTasksSection onAddTask={onAddTask} />
       </div>
     </div>,
     document.body,

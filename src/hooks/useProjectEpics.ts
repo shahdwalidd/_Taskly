@@ -13,7 +13,11 @@ interface EpicsState {
   error: string | null
 }
 
-export function useProjectEpics(projectId: string, isMobile: boolean) {
+export function useProjectEpics(
+  projectId: string,
+  isMobile: boolean,
+  fetchAll = false,
+) {
   const [state, setState] = useState<EpicsState>({
     projectId: '',
     status: 'loading',
@@ -61,12 +65,9 @@ export function useProjectEpics(projectId: string, isMobile: boolean) {
 
         const page = isMobile ? 1 : currentPage
         const offset = (page - 1) * limit
-        const result = await getEpics(
-          projectId,
-          session.access_token,
-          limit,
-          offset,
-        )
+        const result = fetchAll
+          ? await getEpics(projectId, session.access_token)
+          : await getEpics(projectId, session.access_token, limit, offset)
         if (isCurrentRequest && requestVersionRef.current === requestVersion) {
           setTotalCount(result.totalCount)
           setState({
@@ -96,7 +97,7 @@ export function useProjectEpics(projectId: string, isMobile: boolean) {
         requestVersionRef.current += 1
       }
     }
-  }, [projectId, currentPage, retryCount, isMobile])
+  }, [projectId, currentPage, retryCount, isMobile, fetchAll])
 
   const setCurrentPage = useCallback(
     (page: number) => {
