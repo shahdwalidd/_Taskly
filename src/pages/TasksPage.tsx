@@ -1,4 +1,5 @@
 
+import { AddTaskModal } from '@/components/add-task/AddTaskModal'
 import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
 import { AddTaskButton } from '@/components/tasks-board/AddTaskButton'
 import { EmptyTaskPanel } from '@/components/tasks-board/EmptyTaskPanel'
@@ -7,7 +8,21 @@ import { TasksHeader } from '@/components/tasks-board/TasksHeader'
 import { useTasksPage } from '@/hooks/useTasksPage'
 
 export function TasksPage() {
-  const { projectId, projectName, search, setSearch } = useTasksPage()
+  const {
+    projectId,
+    projectName,
+    search,
+    setSearch,
+    isAddTaskOpen,
+    taskValues,
+    statusOptions,
+    assigneeOptions,
+    epicOptions,
+    openAddTask,
+    closeAddTask,
+    changeTaskValue,
+    submitTask,
+  } = useTasksPage()
 
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
@@ -18,17 +33,28 @@ export function TasksPage() {
           onSearchChange={setSearch}
         />
 
-      
         <div className="flex flex-col gap-3 md:hidden">
-          <AddTaskButton />
+          <AddTaskButton onClick={() => openAddTask()} />
           <EmptyTaskPanel className="mt-3 h-160" />
         </div>
 
-       
+      
         <div className="hidden md:block">
-          <TaskBoard />
+          <TaskBoard onAddTask={openAddTask} />
         </div>
       </div>
+
+      {isAddTaskOpen && (
+        <AddTaskModal
+          values={taskValues}
+          onChange={changeTaskValue}
+          statusOptions={statusOptions}
+          assigneeOptions={assigneeOptions}
+          epicOptions={epicOptions}
+          onClose={closeAddTask}
+          onSubmit={submitTask}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }
