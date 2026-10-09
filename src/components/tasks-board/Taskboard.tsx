@@ -2,7 +2,7 @@ import { TaskColumn } from './TaskColumn'
 import { taskStatuses } from './TaskStatus'
 
 interface TaskBoardProps {
-  onAddTask: () => void
+  onAddTask: (statusId?: string) => void
 }
 
 export function TaskBoard({ onAddTask }: TaskBoardProps) {

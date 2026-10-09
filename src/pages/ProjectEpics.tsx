@@ -11,10 +11,10 @@ import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
 import { useEpicDetails } from '@/hooks/useEpicDetails'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
+import { useAddTask } from '@/hooks/useAddTask'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { AddTaskModal } from '@/components/add-task/AddTaskModal'
-import { useTasksPage } from '@/hooks/useTasksPage'
 import type { EpicListItem } from '@/types/epics.types'
 
 export function EpicsPage() {
@@ -23,17 +23,7 @@ export function EpicsPage() {
   const [search, setSearch] = useState('')
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
   const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
-  const {
-    isAddTaskOpen,
-    taskValues,
-    statusOptions,
-    assigneeOptions,
-    epicOptions,
-    openAddTask,
-    closeAddTask,
-    changeTaskValue,
-    submitTask,
-  } = useTasksPage()
+  const addTask = useAddTask(projectId)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
   const {
@@ -168,20 +158,10 @@ export function EpicsPage() {
           onCopyLink={() => {
             void navigator.clipboard.writeText(window.location.href)
           }}
-          onAddTask={() => openAddTask(undefined, selectedEpic.id)}
+          onAddTask={() => addTask.openAddTask({ epicId: selectedEpic.id })}
         />
       )}
-      {isAddTaskOpen && (
-        <AddTaskModal
-          values={taskValues}
-          onChange={changeTaskValue}
-          statusOptions={statusOptions}
-          assigneeOptions={assigneeOptions}
-          epicOptions={epicOptions}
-          onClose={closeAddTask}
-          onSubmit={submitTask}
-        />
-      )}
+      {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
     </AuthenticatedLayout>
   )
 }

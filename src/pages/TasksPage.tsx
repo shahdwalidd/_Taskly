@@ -5,6 +5,7 @@ import { AddTaskButton } from '@/components/tasks-board/AddTaskButton'
 import { EmptyTaskPanel } from '@/components/tasks-board/EmptyTaskPanel'
 import { TaskBoard } from '@/components/tasks-board/Taskboard'
 import { TasksHeader } from '@/components/tasks-board/TasksHeader'
+import { useAddTask } from '@/hooks/useAddTask'
 import { useTasksPage } from '@/hooks/useTasksPage'
 
 export function TasksPage() {
@@ -13,16 +14,8 @@ export function TasksPage() {
     projectName,
     search,
     setSearch,
-    isAddTaskOpen,
-    taskValues,
-    statusOptions,
-    assigneeOptions,
-    epicOptions,
-    openAddTask,
-    closeAddTask,
-    changeTaskValue,
-    submitTask,
   } = useTasksPage()
+  const addTask = useAddTask(projectId)
 
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
@@ -34,27 +27,19 @@ export function TasksPage() {
         />
 
         <div className="flex flex-col gap-3 md:hidden">
-          <AddTaskButton onClick={() => openAddTask()} />
+          <AddTaskButton onClick={() => addTask.openAddTask()} />
           <EmptyTaskPanel className="mt-3 h-160" />
         </div>
 
       
         <div className="hidden md:block">
-          <TaskBoard onAddTask={openAddTask} />
+          <TaskBoard
+            onAddTask={(statusId) => addTask.openAddTask({ statusId })}
+          />
         </div>
       </div>
 
-      {isAddTaskOpen && (
-        <AddTaskModal
-          values={taskValues}
-          onChange={changeTaskValue}
-          statusOptions={statusOptions}
-          assigneeOptions={assigneeOptions}
-          epicOptions={epicOptions}
-          onClose={closeAddTask}
-          onSubmit={submitTask}
-        />
-      )}
+      {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
     </AuthenticatedLayout>
   )
 }

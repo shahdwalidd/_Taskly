@@ -13,6 +13,12 @@ interface AddTaskModalProps {
   statusOptions: SelectOption[]
   assigneeOptions: SelectOption[]
   epicOptions: SelectOption[]
+  assigneePlaceholder?: string
+  assigneeDisabled?: boolean
+  epicPlaceholder?: string
+  epicDisabled?: boolean
+  titleError?: string
+  isSubmitting?: boolean
   onClose: () => void
   onSubmit: () => void
 }
@@ -23,6 +29,12 @@ export function AddTaskModal({
   statusOptions,
   assigneeOptions,
   epicOptions,
+  assigneePlaceholder = 'Select Team Member',
+  assigneeDisabled = false,
+  epicPlaceholder = 'Select Epic',
+  epicDisabled = false,
+  titleError,
+  isSubmitting = false,
   onClose,
   onSubmit,
 }: AddTaskModalProps) {
@@ -38,6 +50,7 @@ export function AddTaskModal({
         role="dialog"
         aria-modal="true"
         aria-label="Add new task"
+        aria-busy={isSubmitting}
         onSubmit={(event) => {
           event.preventDefault()
           onSubmit()
@@ -59,6 +72,7 @@ export function AddTaskModal({
               <button
                 type="button"
                 onClick={onClose}
+                disabled={isSubmitting}
                 aria-label="Close"
                 className="text-grey -mr-2 flex size-8 cursor-pointer items-center justify-center md:hidden"
               >
@@ -70,6 +84,7 @@ export function AddTaskModal({
               <TaskTitleField
                 value={values.title}
                 onChange={(value) => onChange('title', value)}
+                error={titleError}
               />
             </div>
           </div>
@@ -81,7 +96,7 @@ export function AddTaskModal({
             />
           </div>
 
-          <AddTaskModalFooter onClose={onClose} />
+          <AddTaskModalFooter onClose={onClose} isSubmitting={isSubmitting} />
         </div>
 
        
@@ -100,7 +115,8 @@ export function AddTaskModal({
             options={assigneeOptions}
             value={values.assigneeId}
             onChange={(value) => onChange('assigneeId', value)}
-            placeholder="Select Team Member"
+            placeholder={assigneePlaceholder}
+            disabled={assigneeDisabled}
             withAvatar
           />
 
@@ -110,7 +126,8 @@ export function AddTaskModal({
             options={epicOptions}
             value={values.epicId}
             onChange={(value) => onChange('epicId', value)}
-            placeholder="Select Epic"
+            placeholder={epicPlaceholder}
+            disabled={epicDisabled}
           />
 
           <TaskDateField
@@ -124,9 +141,10 @@ export function AddTaskModal({
     
         <button
           type="submit"
-          className="bg-gradient mt-10 h-10 w-full cursor-pointer rounded-sm text-sm font-semibold text-white md:hidden"
+          disabled={isSubmitting}
+          className="bg-gradient mt-10 h-10 w-full cursor-pointer rounded-sm text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 md:hidden"
         >
-          Add Task
+          {isSubmitting ? 'Adding...' : 'Add Task'}
         </button>
       </form>
     </div>,

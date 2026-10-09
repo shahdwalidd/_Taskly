@@ -17,6 +17,7 @@ export function useProjectEpics(
   projectId: string,
   isMobile: boolean,
   fetchAll = false,
+  enabled = true,
 ) {
   const [state, setState] = useState<EpicsState>({
     projectId: '',
@@ -43,6 +44,8 @@ export function useProjectEpics(
     isMobile && belongsToCurrentProject && state.epics.length < totalCount
 
   useEffect(() => {
+    if (!enabled) return
+
     let isCurrentRequest = true
     const requestVersion = ++requestVersionRef.current
 
@@ -97,7 +100,7 @@ export function useProjectEpics(
         requestVersionRef.current += 1
       }
     }
-  }, [projectId, currentPage, retryCount, isMobile, fetchAll])
+  }, [projectId, currentPage, retryCount, isMobile, fetchAll, enabled])
 
   const setCurrentPage = useCallback(
     (page: number) => {

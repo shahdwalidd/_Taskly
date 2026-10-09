@@ -11,6 +11,7 @@ interface TaskSelectFieldProps {
   onChange: (value: string) => void
   placeholder?: string 
   withAvatar?: boolean
+  disabled?: boolean
 }
 export function TaskSelectField({
   id,
@@ -20,12 +21,13 @@ export function TaskSelectField({
   onChange,
   placeholder,
   withAvatar = false,
+  disabled = false,
 }: TaskSelectFieldProps) {
   const selected = options.find((option) => option.value === value)
 
   return (
     <TaskField id={id} label={label}>
-      <div className="border-surface-highest bg-authcard focus-within:ring-primary-container relative flex h-10 items-center gap-2 rounded-md border px-2 text-xs focus-within:ring-2">
+      <div className="border-surface-highest bg-authcard focus-within:ring-primary-container has-disabled:opacity-60 relative flex h-10 items-center gap-2 rounded-md border px-2 text-xs focus-within:ring-2">
         {selected ? (
           <>
             {withAvatar && (
@@ -49,6 +51,7 @@ export function TaskSelectField({
         <select
           id={id}
           value={value}
+          disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
           className="absolute inset-0 size-full cursor-pointer opacity-0"
         >

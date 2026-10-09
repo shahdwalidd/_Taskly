@@ -8,7 +8,7 @@ interface TaskColumnProps {
   status: TaskStatus
   count?: number
   children?: ReactNode 
-  onAddTask: () => void
+  onAddTask: (statusId?: string) => void
 }
 export function TaskColumn({ status, count = 0, children, onAddTask }: TaskColumnProps) {
   return (
@@ -25,7 +25,7 @@ export function TaskColumn({ status, count = 0, children, onAddTask }: TaskColum
         />
       </div>
  
-      <AddNewTaskSlot onClick={onAddTask} />
+      <AddNewTaskSlot onClick={() => onAddTask(status.id)} />
  
       {children ?? <EmptyTaskPanel className="min-h-160 flex-1" />}
     </section>
