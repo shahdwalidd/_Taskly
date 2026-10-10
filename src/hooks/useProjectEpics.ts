@@ -18,6 +18,7 @@ export function useProjectEpics(
   isMobile: boolean,
   fetchAll = false,
   enabled = true,
+  searchTerm = '',
 ) {
   const [state, setState] = useState<EpicsState>({
     projectId: '',
@@ -26,7 +27,7 @@ export function useProjectEpics(
     error: null,
   })
   const [retryCount, setRetryCount] = useState(0)
-  const limit = 10
+  const limit = 2
   const [searchParams, setSearchParams] = useSearchParams()
   const requestedPage = Number(searchParams.get('page') ?? 1)
 
@@ -69,8 +70,8 @@ export function useProjectEpics(
         const page = isMobile ? 1 : currentPage
         const offset = (page - 1) * limit
         const result = fetchAll
-          ? await getEpics(projectId, session.access_token)
-          : await getEpics(projectId, session.access_token, limit, offset)
+          ? await getEpics(projectId, session.access_token, undefined, undefined, searchTerm)
+          : await getEpics(projectId, session.access_token, limit, offset, searchTerm)
         if (isCurrentRequest && requestVersionRef.current === requestVersion) {
           setTotalCount(result.totalCount)
           setState({
@@ -87,7 +88,11 @@ export function useProjectEpics(
             status: 'error',
             epics: [],
             error:
-              error instanceof Error ? error.message : 'Failed to load epics',
+              searchTerm.trim()
+                ? 'Failed to search epics'
+                : error instanceof Error
+                  ? error.message
+                  : 'Failed to load epics',
           })
         }
       }
@@ -100,7 +105,7 @@ export function useProjectEpics(
         requestVersionRef.current += 1
       }
     }
-  }, [projectId, currentPage, retryCount, isMobile, fetchAll, enabled])
+  }, [projectId, currentPage, retryCount, isMobile, fetchAll, enabled, searchTerm])
 
   const setCurrentPage = useCallback(
     (page: number) => {
@@ -145,6 +150,7 @@ export function useProjectEpics(
         session.access_token,
         limit,
         (page - 1) * limit,
+        searchTerm,
       )
       if (requestVersionRef.current !== requestVersion) return
 
@@ -169,7 +175,7 @@ export function useProjectEpics(
         setLoadingMore(false)
       }
     }
-  }, [hasMore, projectId])
+  }, [hasMore, projectId, searchTerm])
 
   return {
     epics: belongsToCurrentProject ? state.epics : [],

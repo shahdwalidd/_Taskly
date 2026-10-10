@@ -47,7 +47,11 @@ export async function getEpicDetails(
   })
   const result = await apiRequest<EpicResponse[]>(
     `/rest/v1/project_epics?${params.toString()}`,
-    { method: 'GET', accessToken },
+    {
+      method: 'GET',
+      accessToken,
+      headers: { Prefer: 'count=exact' },
+    },
   )
 
   if (!Array.isArray(result) || result.length === 0) {
@@ -77,12 +81,17 @@ export async function getEpics(
   accessToken: string,
   limit?: number,
   offset?: number,
+  searchTerm = '',
 ): Promise<{ epics: EpicListItem[]; totalCount: number }> {
   const paginationQuery =
     limit !== undefined && offset !== undefined
       ? `&limit=${limit}&offset=${offset}`
       : ''
   const params = new URLSearchParams({ project_id: `eq.${projectId}` })
+  const normalizedSearchTerm = searchTerm.trim()
+  if (normalizedSearchTerm) {
+    params.set('title', `ilike.%${normalizedSearchTerm}%`)
+  }
   const result = await apiRequest<EpicResponse[]>(
     `/rest/v1/project_epics?${params.toString()}${paginationQuery}`,
     {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
 import { EpicDetailsModal } from '@/components/epics-popup/EpicDetailsModal'
@@ -38,7 +38,7 @@ export function EpicsPage() {
     loadingMore,
     loadMoreFailed,
     hasMore,
-  } = useProjectEpics(projectId, isMobile)
+  } = useProjectEpics(projectId, isMobile, false, true, search)
   const sentinelRef = useInfiniteScroll(
     loadMore,
     isMobile &&
@@ -49,60 +49,39 @@ export function EpicsPage() {
   )
   const projectName = project?.name ?? 'Project'
 
-  const filteredEpics = useMemo(() => {
-    const query = search.trim().toLowerCase()
-
-    if (!query) {
-      return epics
-    }
-
-    return epics.filter(
-      (epic) =>
-        epic.title.toLowerCase().includes(query) ||
-        epic.assigneeName.toLowerCase().includes(query) ||
-        epic.code.toLowerCase().includes(query),
-    )
-  }, [epics, search])
-
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
       <div className="flex flex-col gap-6 px-6 py-4 md:gap-10 md:px-8 md:py-8">
+        <EpicsHeader
+          projectName={projectName}
+          search={search}
+          onSearchChange={(value) => {
+            setSearch(value)
+            setCurrentPage(1)
+          }}
+          onNewEpic={() => navigate(`/project/${projectId}/epics/new`)}
+        />
+
         {status === 'loading' && <EpicsSkeleton />}
 
         {status === 'error' && (
           <ErrorState
-            message={
-              error ??
-              "We're having trouble retrieving your epics right now. Please try again."
-            }
+            message={error ?? 'Failed to load epics'}
             onRetry={refetch}
           />
         )}
 
         {status === 'success' && (
           <>
-            <EpicsHeader
-              projectName={projectName}
-              search={search}
-              onSearchChange={setSearch}
-              onNewEpic={() => navigate(`/project/${projectId}/epics/new`)}
-            />
-
             {epics.length === 0 ? (
               <EmptyEpicsState
+                isSearchResult={Boolean(search.trim())}
                 onCreateClick={() =>
                   navigate(`/project/${projectId}/epics/new`)
                 }
               />
-            ) : filteredEpics.length > 0 ? (
-              <EpicsList epics={filteredEpics} onEpicClick={setSelectedEpic} />
             ) : (
-              <div className="text-grey flex min-h-56 flex-col items-center justify-center gap-2 text-center">
-                <h2 className="text-slate-dark text-lg font-semibold">
-                  No matching epics
-                </h2>
-                <p className="text-sm">Try a different search term.</p>
-              </div>
+              <EpicsList epics={epics} onEpicClick={setSelectedEpic} />
             )}
 
             <div className="flex justify-end pt-4 md:pt-8">
