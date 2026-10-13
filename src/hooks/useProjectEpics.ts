@@ -32,6 +32,7 @@ export function useProjectEpics(
   const [retryCount, setRetryCount] = useState(0)
   const limit = 2
   const requestVersionRef = useRef(0)
+  const previousSearchTermRef = useRef(searchTerm)
   const belongsToCurrentProject = state.projectId === projectId
 
   const setEpics = useCallback(
@@ -76,6 +77,13 @@ export function useProjectEpics(
 
   useEffect(() => {
     if (!enabled) return
+
+    const searchChanged = previousSearchTermRef.current !== searchTerm
+    previousSearchTermRef.current = searchTerm
+    if (searchChanged && !isMobile && pagination.currentPage !== 1) {
+      pagination.setCurrentPage(1)
+      return
+    }
 
     let isCurrentRequest = true
     const requestVersion = ++requestVersionRef.current

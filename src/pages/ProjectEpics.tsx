@@ -11,6 +11,7 @@ import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
 import { useEpicDetails } from '@/hooks/useEpicDetails'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
+import { useDebounce } from '@/hooks/useDebounce'
 import { useAddTask } from '@/hooks/useAddTask'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
@@ -21,6 +22,7 @@ export function EpicsPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
   const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
   const addTask = useAddTask(projectId)
@@ -38,7 +40,7 @@ export function EpicsPage() {
     loadingMore,
     loadMoreFailed,
     hasMore,
-  } = useProjectEpics(projectId, isMobile, false, true, search)
+  } = useProjectEpics(projectId, isMobile, false, true, debouncedSearch)
   const sentinelRef = useInfiniteScroll(
     loadMore,
     isMobile &&
@@ -56,10 +58,7 @@ export function EpicsPage() {
           projectName={projectName}
           showBreadcrumb={status !== 'loading'}
           search={search}
-          onSearchChange={(value) => {
-            setSearch(value)
-            setCurrentPage(1)
-          }}
+          onSearchChange={setSearch}
           onNewEpic={() => navigate(`/project/${projectId}/epics/new`)}
         />
 
@@ -76,7 +75,7 @@ export function EpicsPage() {
           <>
             {epics.length === 0 ? (
               <EmptyEpicsState
-                isSearchResult={Boolean(search.trim())}
+                isSearchResult={Boolean(debouncedSearch.trim())}
                 onCreateClick={() =>
                   navigate(`/project/${projectId}/epics/new`)
                 }
