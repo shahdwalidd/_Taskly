@@ -4,6 +4,7 @@ import { NewEpicButton } from './NewEpicButton'
 
 interface EpicsHeaderProps {
   projectName: string
+  showBreadcrumb?: boolean
   search: string
   onSearchChange: (value: string) => void
   onNewEpic: () => void
@@ -11,21 +12,24 @@ interface EpicsHeaderProps {
 
 export function EpicsHeader({
   projectName,
+  showBreadcrumb = true,
   search,
   onSearchChange,
   onNewEpic,
 }: EpicsHeaderProps) {
   return (
     <header className="flex flex-col gap-4">
-      <div className="hidden md:block">
-        <PageBreadcrumb
-          items={[
-            { label: 'Projects' },
-            { label: projectName },
-            { label: 'Epics', isActive: true },
-          ]}
-        />
-      </div>
+      {showBreadcrumb && (
+        <div className="hidden md:block">
+          <PageBreadcrumb
+            items={[
+              { label: 'Projects' },
+              { label: projectName },
+              { label: 'Epics', isActive: true },
+            ]}
+          />
+        </div>
+      )}
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <h1 className="text-slate-dark text-pp max-md:sr-only">

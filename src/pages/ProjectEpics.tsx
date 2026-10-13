@@ -54,6 +54,7 @@ export function EpicsPage() {
       <div className="flex flex-col gap-6 px-6 py-4 md:gap-10 md:px-8 md:py-8">
         <EpicsHeader
           projectName={projectName}
+          showBreadcrumb={status !== 'loading'}
           search={search}
           onSearchChange={(value) => {
             setSearch(value)
