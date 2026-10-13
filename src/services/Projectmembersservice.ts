@@ -5,6 +5,7 @@ function toMember(dto: ProjectMemberDto): Member {
   return {
     id: dto.user_id,
     name: dto.metadata.name,
+    avatarUrl: dto.metadata.avatar_url ?? dto.metadata.picture,
     email: dto.email,
     role: dto.role,
   }

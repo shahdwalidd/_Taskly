@@ -10,6 +10,7 @@ import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
 import { useEpicDetails } from '@/hooks/useEpicDetails'
+import { useProjectMembers } from '@/hooks/useProjectMembers'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useAddTask } from '@/hooks/useAddTask'
@@ -25,6 +26,7 @@ export function EpicsPage() {
   const debouncedSearch = useDebounce(search, 300)
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
   const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
+  const { members } = useProjectMembers(projectId)
   const addTask = useAddTask(projectId)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
@@ -138,6 +140,15 @@ export function EpicsPage() {
             void navigator.clipboard.writeText(window.location.href)
           }}
           onAddTask={() => addTask.openAddTask({ epicId: selectedEpic.id })}
+          onTitleChange={(title) => console.log(title)}
+          onDescriptionChange={(description) => console.log(description)}
+          assigneeOptions={members.map((member) => ({
+            id: member.id,
+            name: member.name,
+            avatarUrl: member.avatarUrl,
+          }))}
+          onAssigneeChange={(userId) => console.log(userId)}
+          onDeadlineChange={(deadline) => console.log(deadline)}
         />
       )}
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}

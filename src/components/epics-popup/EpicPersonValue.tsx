@@ -1,4 +1,4 @@
-import { getInitials } from '@/utils/getInitials'
+import { EpicAvatar } from './EpicAvatar'
 import { EpicValueBox } from './EpicValueeBox'
 
 interface EpicPersonValueProps {
@@ -16,16 +16,7 @@ export function EpicPersonValue({
     <EpicValueBox withChevron={withChevron}>
       {name && name !== 'Unassigned' ? (
         <>
-          <span className="bg-surface-highest text-primary relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[9px] font-bold">
-            <span aria-hidden="true">{getInitials(name)}</span>
-            {avatarUrl && (
-              <img
-                src={avatarUrl}
-                alt=""
-                className="absolute inset-0 size-full object-cover"
-              />
-            )}
-          </span>
+          <EpicAvatar name={name} avatarUrl={avatarUrl} />
           <span className="truncate">{name}</span>
         </>
       ) : (

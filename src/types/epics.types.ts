@@ -7,6 +7,7 @@ export interface CreateEpicPayload {
 }
 
 export interface EpicUser {
+  id?: string
   name?: string
   avatar_url?: string
   picture?: string
@@ -22,6 +23,7 @@ export interface EpicResponse {
   epic_id: string | number
   title: string
   description?: string | null
+  assignee_id?: string | null
   assignee?: EpicUser | null
   created_by?: EpicUser | null
   deadline?: string | null
@@ -33,6 +35,7 @@ export interface EpicListItem {
   code: string
   title: string
   description?: string
+  assigneeId?: string | null
   assigneeName: string
   assigneeAvatar?: string
   createdBy: string

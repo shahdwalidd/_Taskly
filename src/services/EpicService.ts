@@ -27,6 +27,7 @@ function toEpicListItem(epic: EpicResponse): EpicListItem {
     code: String(epic.epic_id),
     title: epic.title,
     description: epic.description ?? undefined,
+    assigneeId: epic.assignee_id ?? epic.assignee?.id ?? null,
     assigneeName: getUserName(epic.assignee),
     assigneeAvatar: getUserAvatar(epic.assignee),
     createdBy: getUserName(epic.created_by, 'Unknown'),

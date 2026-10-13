@@ -1,7 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { EpicListItem } from '@/types/epics.types'
+import { EpicAssigneeField } from './EpicAssigneeField'
+import type { EpicAssigneeOption } from './EpicAssigneeField'
 import { EpicDateValue } from './EpicDateValue'
+import { EpicDeadlineField } from './EpicDeadlineField'
 import { EpicDetailField } from './EpicDetailField'
 import { EpicDetailsHeader } from './EpicDetailsHeader'
 import { EpicPersonValue } from './EpicPersonValue'
@@ -16,6 +19,11 @@ interface EpicDetailsModalProps {
   onClose: () => void
   onCopyLink: () => void
   onAddTask: () => void
+  onTitleChange: (title: string) => void
+  onDescriptionChange: (description: string) => void
+  assigneeOptions: EpicAssigneeOption[]
+  onAssigneeChange: (userId: string | null) => void
+  onDeadlineChange: (deadline: string | null) => void
 }
 
 const boxClass =
@@ -30,7 +38,28 @@ export function EpicDetailsModal({
   onClose,
   onCopyLink,
   onAddTask,
+  onTitleChange,
+  onDescriptionChange,
+  assigneeOptions,
+  onAssigneeChange,
+  onDeadlineChange,
 }: EpicDetailsModalProps) {
+  const [titleDraft, setTitleDraft] = useState(epic?.title ?? '')
+  const [descriptionDraft, setDescriptionDraft] = useState(
+    epic?.description ?? '',
+  )
+
+  // Drafts must reset when a newly loaded or refreshed epic replaces the current values.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTitleDraft(epic?.title ?? '')
+  }, [epic?.title])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDescriptionDraft(epic?.description ?? '')
+  }, [epic?.description])
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') onClose()
@@ -47,11 +76,13 @@ export function EpicDetailsModal({
         year: 'numeric',
       })
     : 'Unknown'
-  const deadline = epic?.date
-    ? new Date(epic.date).toLocaleDateString('en-US', {
+  const deadlineValue = epic?.date ? epic.date.slice(0, 10) : ''
+  const deadline = deadlineValue
+    ? new Date(deadlineValue).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
+        timeZone: 'UTC',
       })
     : undefined
 
@@ -113,31 +144,41 @@ export function EpicDetailsModal({
 
         {status === 'success' && epic && (
           <>
-            <div
+            <input
+              type="text"
               aria-label="Epic title"
-              className={`${boxClass} mt-3 min-h-10 px-2 py-2 text-base font-semibold wrap-break-word md:mt-4 md:min-h-14 md:px-3 md:text-xl`}
-            >
-              {epic.title}
-            </div>
+              value={titleDraft}
+              onChange={(event) => setTitleDraft(event.target.value)}
+              onBlur={() => onTitleChange(titleDraft)}
+              className={`${boxClass} mt-3 min-h-10 px-2 py-2 text-base font-semibold md:mt-4 md:min-h-14 md:px-3 md:text-xl`}
+            />
 
             <textarea
-              readOnly
               aria-label="Epic description"
-              value={epic.description?.trim() || 'No description provided'}
-              className={`${boxClass} mt-8.5 h-27.5 resize-none overflow-y-auto p-2 text-sm wrap-break-word md:mt-11 md:h-37.5 md:p-3 md:text-base`}
+              placeholder="No description provided"
+              value={descriptionDraft}
+              onChange={(event) => setDescriptionDraft(event.target.value)}
+              onBlur={() => onDescriptionChange(descriptionDraft)}
+              className={`${boxClass} placeholder:text-slate-medium mt-8.5 h-27.5 resize-none overflow-y-auto p-2 text-sm wrap-break-word md:mt-11 md:h-37.5 md:p-3 md:text-base`}
             />
 
             <div className="mt-5 grid grid-cols-1 gap-x-4 gap-y-2.5 md:mt-7.5 md:grid-cols-2 md:gap-y-3.5">
               <EpicDetailField label="Assignee">
-                <EpicPersonValue
+                <EpicAssigneeField
                   name={epic.assigneeName}
                   avatarUrl={epic.assigneeAvatar}
-                  withChevron
+                  selectedId={epic.assigneeId ?? null}
+                  options={assigneeOptions}
+                  onChange={onAssigneeChange}
                 />
               </EpicDetailField>
 
               <EpicDetailField label="Deadline">
-                <EpicDateValue date={deadline} withChevron />
+                <EpicDeadlineField
+                  value={deadlineValue}
+                  displayDate={deadline}
+                  onChange={onDeadlineChange}
+                />
               </EpicDetailField>
 
               <EpicDetailField label="Created by">
