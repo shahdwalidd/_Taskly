@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { SetStateAction } from 'react'
 import { getEpics } from '@/services/EpicService'
 import { getSession } from '@/store/Authstore'
 import type { EpicListItem } from '@/types/epics.types'
-import { useSearchParams } from 'react-router-dom'
+import { usePagination } from '@/hooks/usePagination'
 
 type EpicsStatus = 'loading' | 'success' | 'error'
 
@@ -12,6 +13,8 @@ interface EpicsState {
   epics: EpicListItem[]
   error: string | null
 }
+
+const getEpicId = (epic: EpicListItem) => epic.id
 
 export function useProjectEpics(
   projectId: string,
@@ -28,34 +31,58 @@ export function useProjectEpics(
   })
   const [retryCount, setRetryCount] = useState(0)
   const limit = 2
-  const [searchParams, setSearchParams] = useSearchParams()
-  const requestedPage = Number(searchParams.get('page') ?? 1)
-
-  const currentPage =
-    Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1
-  const [totalCount, setTotalCount] = useState(0)
-  const totalPages = Math.ceil(totalCount / limit)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [loadMoreFailed, setLoadMoreFailed] = useState(false)
-  const nextPageRef = useRef(2)
-  const isFetchingMoreRef = useRef(false)
   const requestVersionRef = useRef(0)
   const belongsToCurrentProject = state.projectId === projectId
-  const hasMore =
-    isMobile && belongsToCurrentProject && state.epics.length < totalCount
+
+  const setEpics = useCallback(
+    (update: SetStateAction<EpicListItem[]>) => {
+      setState((current) => {
+        if (current.projectId !== projectId) return current
+        const epics =
+          typeof update === 'function' ? update(current.epics) : update
+        return { ...current, epics }
+      })
+    },
+    [projectId],
+  )
+
+  const fetchPage = useCallback(
+    async (page: number) => {
+      const session = getSession()
+      if (!session?.access_token) {
+        throw new Error('Authentication is required to load epics')
+      }
+      const result = await getEpics(
+        projectId,
+        session.access_token,
+        limit,
+        (page - 1) * limit,
+        searchTerm,
+      )
+      return { items: result.epics, totalCount: result.totalCount }
+    },
+    [projectId, searchTerm],
+  )
+
+  const pagination = usePagination({
+    items: belongsToCurrentProject ? state.epics : [],
+    setItems: setEpics,
+    pageSize: limit,
+    isMobile: isMobile && !fetchAll,
+    scopeKey: `${projectId}:${searchTerm}`,
+    fetchPage,
+    getItemId: getEpicId,
+  })
 
   useEffect(() => {
     if (!enabled) return
 
     let isCurrentRequest = true
     const requestVersion = ++requestVersionRef.current
+    pagination.resetLoadMore()
 
     async function fetchEpics() {
       setState({ projectId, status: 'loading', epics: [], error: null })
-      setLoadingMore(false)
-      setLoadMoreFailed(false)
-      isFetchingMoreRef.current = false
-      nextPageRef.current = 2
 
       try {
         if (!projectId) {
@@ -67,17 +94,22 @@ export function useProjectEpics(
           throw new Error('Authentication is required to load epics')
         }
 
-        const page = isMobile ? 1 : currentPage
-        const offset = (page - 1) * limit
+        const page = isMobile ? 1 : pagination.currentPage
         const result = fetchAll
-          ? await getEpics(projectId, session.access_token, undefined, undefined, searchTerm)
-          : await getEpics(projectId, session.access_token, limit, offset, searchTerm)
+          ? await getEpics(
+              projectId,
+              session.access_token,
+              undefined,
+              undefined,
+              searchTerm,
+            ).then(({ epics, totalCount }) => ({ items: epics, totalCount }))
+          : await fetchPage(page)
         if (isCurrentRequest && requestVersionRef.current === requestVersion) {
-          setTotalCount(result.totalCount)
+          pagination.setTotalCount(result.totalCount)
           setState({
             projectId,
             status: 'success',
-            epics: result.epics,
+            epics: result.items,
             error: null,
           })
         }
@@ -105,19 +137,19 @@ export function useProjectEpics(
         requestVersionRef.current += 1
       }
     }
-  }, [projectId, currentPage, retryCount, isMobile, fetchAll, enabled, searchTerm])
-
-  const setCurrentPage = useCallback(
-    (page: number) => {
-      const nextPage = Math.max(1, Math.floor(page))
-      setSearchParams((previousParams) => {
-        const nextParams = new URLSearchParams(previousParams)
-        nextParams.set('page', String(nextPage))
-        return nextParams
-      })
-    },
-    [setSearchParams],
-  )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    enabled,
+    fetchAll,
+    fetchPage,
+    isMobile,
+    pagination.currentPage,
+    pagination.resetLoadMore,
+    pagination.setTotalCount,
+    projectId,
+    retryCount,
+    searchTerm,
+  ])
 
   const refetch = useCallback(() => {
     setState((current) => ({
@@ -129,65 +161,17 @@ export function useProjectEpics(
     setRetryCount((count) => count + 1)
   }, [])
 
-  const loadMore = useCallback(async () => {
-    if (isFetchingMoreRef.current || !hasMore) return
-
-    const session = getSession()
-    if (!session?.access_token) {
-      setLoadMoreFailed(true)
-      return
-    }
-
-    const requestVersion = requestVersionRef.current
-    const page = nextPageRef.current
-    isFetchingMoreRef.current = true
-    setLoadingMore(true)
-    setLoadMoreFailed(false)
-
-    try {
-      const result = await getEpics(
-        projectId,
-        session.access_token,
-        limit,
-        (page - 1) * limit,
-        searchTerm,
-      )
-      if (requestVersionRef.current !== requestVersion) return
-
-      setState((current) => {
-        if (current.projectId !== projectId) return current
-
-        const existingIds = new Set(current.epics.map((epic) => epic.id))
-        const freshEpics = result.epics.filter(
-          (epic) => !existingIds.has(epic.id),
-        )
-        return { ...current, epics: [...current.epics, ...freshEpics] }
-      })
-      setTotalCount(result.totalCount)
-      nextPageRef.current = page + 1
-    } catch {
-      if (requestVersionRef.current === requestVersion) {
-        setLoadMoreFailed(true)
-      }
-    } finally {
-      if (requestVersionRef.current === requestVersion) {
-        isFetchingMoreRef.current = false
-        setLoadingMore(false)
-      }
-    }
-  }, [hasMore, projectId, searchTerm])
-
   return {
     epics: belongsToCurrentProject ? state.epics : [],
     status: belongsToCurrentProject ? state.status : 'loading',
     error: belongsToCurrentProject ? state.error : null,
     refetch,
-    currentPage,
-    totalPages,
-    setCurrentPage,
-    loadMore,
-    loadingMore,
-    loadMoreFailed,
-    hasMore,
+    currentPage: pagination.currentPage,
+    totalPages: pagination.totalPages,
+    setCurrentPage: pagination.setCurrentPage,
+    loadMore: pagination.loadMore,
+    loadingMore: pagination.loadingMore,
+    loadMoreFailed: pagination.loadMoreFailed,
+    hasMore: pagination.hasMore,
   }
 }

@@ -58,7 +58,7 @@ export function Pagination({
         aria-label="Previous page"
         className="border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        <ChevronLeftIcon className="h-4 w-4" />
+        <ChevronLeftIcon width={4.316666603088379} height={7} opacity={1} />
       </button>
 
       {visiblePages.map((page, index) =>
@@ -92,7 +92,7 @@ export function Pagination({
         aria-label="Next page"
         className="border-slate-light/30 flex h-8 w-8 items-center justify-center rounded-xs border hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        <ChevronRightIcon className="h-4 w-4" />
+        <ChevronRightIcon width={4.316666603088379} height={7} opacity={1} />
       </button>
     </nav>
   )
