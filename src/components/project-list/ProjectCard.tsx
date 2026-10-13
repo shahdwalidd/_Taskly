@@ -17,9 +17,9 @@ export function ProjectCard({
   createdAt,
 }: ProjectCardProps) {
   return (
-    <div className="flex min-w-0 flex-col rounded-md p-6 text-left shadow-sm">
+    <div className="flex min-w-0 flex-col rounded-md p-6 text-left shadow-sm gap-4">
       <h2 className="min-w-0 wrap-break-word whitespace-normal">{name}</h2>
-      <p className="wrap-break-words min-w-0 text-wrap whitespace-normal">
+      <p className="wrap-break-words min-w-0  text-wrap whitespace-normal">
         {description}
       </p>
 
