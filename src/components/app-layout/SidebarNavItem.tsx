@@ -20,8 +20,8 @@ export function SidebarNavItem({
 }: SidebarNavItemProps) {
   const getClassName = ({ isActive: isRouteActive }: { isActive: boolean }) =>
     cn(
-      'text-body-md flex items-center gap-3 rounded-sm px-3 py-2.5 font-medium transition-colors',
-      isCollapsed ? 'justify-center' : 'w-full',
+      'text-body-md flex w-full items-center gap-3 rounded-sm px-3 py-2.5 font-medium transition-colors',
+      isCollapsed && 'justify-center',
       isActive || isRouteActive
         ? 'bg-background text-primary shadow-sm'
         : 'text-slate-dark hover:bg-surface-low',
