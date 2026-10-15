@@ -30,6 +30,13 @@ export interface EpicResponse {
   created_at?: string | null
 }
 
+export interface EpicUpdatePayload {
+  title?: string
+  description?: string | null
+  assignee_id?: string | null
+  deadline?: string | null
+}
+
 export interface EpicListItem {
   id: string
   code: string

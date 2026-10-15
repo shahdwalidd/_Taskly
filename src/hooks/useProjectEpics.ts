@@ -47,6 +47,17 @@ export function useProjectEpics(
     [projectId],
   )
 
+  const updateEpic = useCallback(
+    (epicId: string, updates: Partial<EpicListItem>) => {
+      setEpics((currentEpics) =>
+        currentEpics.map((epic) =>
+          epic.id === epicId ? { ...epic, ...updates } : epic,
+        ),
+      )
+    },
+    [setEpics],
+  )
+
   const fetchPage = useCallback(
     async (page: number) => {
       const session = getSession()
@@ -171,6 +182,7 @@ export function useProjectEpics(
 
   return {
     epics: belongsToCurrentProject ? state.epics : [],
+    updateEpic,
     status: belongsToCurrentProject ? state.status : 'loading',
     error: belongsToCurrentProject ? state.error : null,
     refetch,

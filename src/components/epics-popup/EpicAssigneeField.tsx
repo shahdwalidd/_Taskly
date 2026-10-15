@@ -13,6 +13,9 @@ interface EpicAssigneeFieldProps {
   avatarUrl?: string
   selectedId: string | null
   options: EpicAssigneeOption[]
+  membersStatus: 'loading' | 'error' | 'success'
+  isSaving: boolean
+  onRetryMembers: () => void
   onChange: (userId: string | null) => void
 }
 
@@ -21,6 +24,9 @@ export function EpicAssigneeField({
   avatarUrl,
   selectedId,
   options,
+  membersStatus,
+  isSaving,
+  onRetryMembers,
   onChange,
 }: EpicAssigneeFieldProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -58,8 +64,10 @@ export function EpicAssigneeField({
     >
       <button
         type="button"
+        aria-label={`Assignee: ${name ?? 'Unassigned'}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        disabled={isSaving}
         onClick={() => setIsOpen((open) => !open)}
         className="block w-full cursor-pointer text-left"
       >
@@ -84,7 +92,28 @@ export function EpicAssigneeField({
             </button>
           </li>
 
-          {options.map((member) => (
+          {membersStatus === 'loading' && (
+            <li role="status" className="text-slate-medium px-2.5 py-2 text-sm">
+              Loading project members...
+            </li>
+          )}
+
+          {membersStatus === 'error' && (
+            <li className="px-2.5 py-2 text-sm">
+              <span role="alert" className="text-slate-medium">
+                Unable to load project members.
+              </span>
+              <button
+                type="button"
+                onClick={onRetryMembers}
+                className="text-primary ml-2 font-semibold underline"
+              >
+                Retry
+              </button>
+            </li>
+          )}
+
+          {membersStatus === 'success' && options.map((member) => (
             <li key={member.id}>
               <button
                 type="button"

@@ -4,12 +4,14 @@ import { EpicDateValue } from './EpicDateValue'
 interface EpicDeadlineFieldProps {
   value: string
   displayDate?: string
+  isSaving: boolean
   onChange: (value: string | null) => void
 }
 
 export function EpicDeadlineField({
   value,
   displayDate,
+  isSaving,
   onChange,
 }: EpicDeadlineFieldProps) {
   return (
@@ -20,6 +22,7 @@ export function EpicDeadlineField({
         type="date"
         aria-label="Deadline"
         value={value}
+        disabled={isSaving}
         onChange={(event) => onChange(event.target.value || null)}
         onClick={(event) => {
           try {
@@ -35,6 +38,7 @@ export function EpicDeadlineField({
         <button
           type="button"
           aria-label="Clear deadline"
+          disabled={isSaving}
           onClick={() => onChange(null)}
           className="text-slate-medium absolute top-1/2 right-2.5 z-10 -translate-y-1/2 cursor-pointer"
         >

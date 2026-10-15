@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { EpicListItem } from '@/types/epics.types'
+import { formDate } from '@/utils/formatDate'
 import { EpicAssigneeField } from './EpicAssigneeField'
 import type { EpicAssigneeOption } from './EpicAssigneeField'
 import { EpicDateValue } from './EpicDateValue'
@@ -22,6 +23,14 @@ interface EpicDetailsModalProps {
   onTitleChange: (title: string) => void
   onDescriptionChange: (description: string) => void
   assigneeOptions: EpicAssigneeOption[]
+  membersStatus: 'loading' | 'error' | 'success'
+  onRetryMembers: () => void
+  savingFields: {
+    title: boolean
+    description: boolean
+    assignee: boolean
+    deadline: boolean
+  }
   onAssigneeChange: (userId: string | null) => void
   onDeadlineChange: (deadline: string | null) => void
 }
@@ -41,6 +50,9 @@ export function EpicDetailsModal({
   onTitleChange,
   onDescriptionChange,
   assigneeOptions,
+  membersStatus,
+  onRetryMembers,
+  savingFields,
   onAssigneeChange,
   onDeadlineChange,
 }: EpicDetailsModalProps) {
@@ -53,12 +65,12 @@ export function EpicDetailsModal({
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitleDraft(epic?.title ?? '')
-  }, [epic?.title])
+  }, [epic?.id, epic?.title])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDescriptionDraft(epic?.description ?? '')
-  }, [epic?.description])
+  }, [epic?.id, epic?.description])
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -77,14 +89,7 @@ export function EpicDetailsModal({
       })
     : 'Unknown'
   const deadlineValue = epic?.date ? epic.date.slice(0, 10) : ''
-  const deadline = deadlineValue
-    ? new Date(deadlineValue).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        timeZone: 'UTC',
-      })
-    : undefined
+  const deadline = deadlineValue ? formDate(deadlineValue) : undefined
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
@@ -147,9 +152,19 @@ export function EpicDetailsModal({
             <input
               type="text"
               aria-label="Epic title"
+              required
               value={titleDraft}
               onChange={(event) => setTitleDraft(event.target.value)}
-              onBlur={() => onTitleChange(titleDraft)}
+              onBlur={() => {
+                const title = titleDraft.trim()
+                if (!title) {
+                  setTitleDraft(epic.title)
+                  return
+                }
+                if (title !== epic.title) onTitleChange(title)
+              }}
+              disabled={savingFields.title}
+              aria-busy={savingFields.title}
               className={`${boxClass} mt-3 min-h-10 px-2 py-2 text-base font-semibold md:mt-4 md:min-h-14 md:px-3 md:text-xl`}
             />
 
@@ -158,7 +173,14 @@ export function EpicDetailsModal({
               placeholder="No description provided"
               value={descriptionDraft}
               onChange={(event) => setDescriptionDraft(event.target.value)}
-              onBlur={() => onDescriptionChange(descriptionDraft)}
+              onBlur={() => {
+                const description = descriptionDraft === '' ? null : descriptionDraft
+                if (description !== (epic.description ?? null)) {
+                  onDescriptionChange(description ?? '')
+                }
+              }}
+              disabled={savingFields.description}
+              aria-busy={savingFields.description}
               className={`${boxClass} placeholder:text-slate-medium mt-8.5 h-27.5 resize-none overflow-y-auto p-2 text-sm wrap-break-word md:mt-11 md:h-37.5 md:p-3 md:text-base`}
             />
 
@@ -169,7 +191,23 @@ export function EpicDetailsModal({
                   avatarUrl={epic.assigneeAvatar}
                   selectedId={epic.assigneeId ?? null}
                   options={assigneeOptions}
-                  onChange={onAssigneeChange}
+                  membersStatus={membersStatus}
+                  isSaving={savingFields.assignee}
+                  onRetryMembers={onRetryMembers}
+                  onChange={(userId) => {
+                    const currentAssigneeId = epic.assigneeId ?? null
+                    const isAlreadyUnassigned =
+                      currentAssigneeId === null &&
+                      epic.assigneeName === 'Unassigned'
+
+                    if (
+                      userId === null
+                        ? !isAlreadyUnassigned
+                        : userId !== currentAssigneeId
+                    ) {
+                      onAssigneeChange(userId)
+                    }
+                  }}
                 />
               </EpicDetailField>
 
@@ -177,7 +215,13 @@ export function EpicDetailsModal({
                 <EpicDeadlineField
                   value={deadlineValue}
                   displayDate={deadline}
-                  onChange={onDeadlineChange}
+                  isSaving={savingFields.deadline}
+                  onChange={(value) => {
+                    const normalizedValue = value || null
+                    if (normalizedValue !== (deadlineValue || null)) {
+                      onDeadlineChange(normalizedValue)
+                    }
+                  }}
                 />
               </EpicDetailField>
 

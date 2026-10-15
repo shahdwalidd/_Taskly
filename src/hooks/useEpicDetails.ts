@@ -81,6 +81,17 @@ export function useEpicDetails(projectId: string, epicId: string | null) {
     setRetryCount((count) => count + 1)
   }, [])
 
+  const updateEpicDetails = useCallback(
+    (targetEpicId: string, updates: Partial<EpicListItem>) => {
+      setState((current) =>
+        current.epicId === targetEpicId && current.epic
+          ? { ...current, epic: { ...current.epic, ...updates } }
+          : current,
+      )
+    },
+    [],
+  )
+
   const matchesSelectedEpic = state.epicId === epicId
 
   return {
@@ -88,5 +99,6 @@ export function useEpicDetails(projectId: string, epicId: string | null) {
     epic: matchesSelectedEpic ? state.epic : null,
     error: matchesSelectedEpic ? state.error : null,
     retry,
+    updateEpicDetails,
   }
 }

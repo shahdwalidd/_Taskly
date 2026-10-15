@@ -20,11 +20,14 @@ export async function getProjectMembers(
   }
 
   const params = new URLSearchParams({ project_id: `eq.${projectId}` })
-
-  const data = await apiRequest<ProjectMemberDto[]>(
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), 15000)
+  return apiRequest<ProjectMemberDto[]>(
     `/rest/v1/get_project_members?${params.toString()}`,
-    { method: 'GET', accessToken },
+    { method: 'GET', accessToken, signal: controller.signal },
   )
-
-  return data.map(toMember)
+    .then((data) => data.map(toMember))
+    .finally(() => {
+      window.clearTimeout(timeoutId)
+    })
 }
