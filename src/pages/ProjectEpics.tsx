@@ -10,6 +10,8 @@ import { ErrorState } from '@/components/shared/ErrorState'
 import { Pagination } from '@/components/shared/Pagination'
 import { useProject } from '@/hooks/useProject'
 import { useEpicDetails } from '@/hooks/useEpicDetails'
+import { useEditEpic } from '@/hooks/useEditEpic'
+import { useProjectMembers } from '@/hooks/useProjectMembers'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useAddTask } from '@/hooks/useAddTask'
@@ -24,12 +26,14 @@ export function EpicsPage() {
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
-  const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
+  const projectMembers = useProjectMembers(projectId)
+  const { members } = projectMembers
   const addTask = useAddTask(projectId)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
   const {
     epics,
+    updateEpic,
     status,
     error,
     refetch,
@@ -41,6 +45,12 @@ export function EpicsPage() {
     loadMoreFailed,
     hasMore,
   } = useProjectEpics(projectId, isMobile, false, true, debouncedSearch)
+  const epicDetails = useEpicDetails(projectId, selectedEpic?.id ?? null)
+  const epicEditor = useEditEpic(
+    selectedEpic?.id ?? null,
+    epicDetails.updateEpicDetails,
+    updateEpic,
+  )
   const sentinelRef = useInfiniteScroll(
     loadMore,
     isMobile &&
@@ -138,6 +148,63 @@ export function EpicsPage() {
             void navigator.clipboard.writeText(window.location.href)
           }}
           onAddTask={() => addTask.openAddTask({ epicId: selectedEpic.id })}
+          onTitleChange={(title) =>
+            void epicEditor.saveField(
+              'title',
+              { title },
+              { title },
+              { title: epicDetails.epic?.title ?? '' },
+            )
+          }
+          onDescriptionChange={(description) => {
+            const value = description === '' ? null : description
+            void epicEditor.saveField(
+              'description',
+              { description: value },
+              { description: value ?? undefined },
+              { description: epicDetails.epic?.description },
+            )
+          }}
+          assigneeOptions={members.map((member) => ({
+            id: member.id,
+            name: member.name,
+            avatarUrl: member.avatarUrl,
+          }))}
+          membersStatus={projectMembers.status}
+          onRetryMembers={projectMembers.refetch}
+          savingFields={epicEditor.savingFields}
+          onAssigneeChange={(userId) => {
+            const assignee = members.find((member) => member.id === userId)
+            void epicEditor.saveField(
+              'assignee',
+              { assignee_id: userId },
+              {
+                assigneeId: userId,
+                assigneeName: assignee?.name ?? 'Unassigned',
+                assigneeAvatar: assignee?.avatarUrl,
+              },
+              {
+                assigneeId: epicDetails.epic?.assigneeId ?? null,
+                assigneeName: epicDetails.epic?.assigneeName ?? 'Unassigned',
+                assigneeAvatar: epicDetails.epic?.assigneeAvatar,
+              },
+            )
+          }}
+          onDeadlineChange={(deadline) => {
+            const normalizedDeadline = deadline
+              ? deadline.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? deadline
+              : null
+            const previousDeadline = epicDetails.epic?.date
+              ? epicDetails.epic.date.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ??
+                epicDetails.epic.date
+              : ''
+            void epicEditor.saveField(
+              'deadline',
+              { deadline: normalizedDeadline },
+              { date: normalizedDeadline ?? '' },
+              { date: previousDeadline },
+            )
+          }}
         />
       )}
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}

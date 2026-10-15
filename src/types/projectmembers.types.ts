@@ -9,6 +9,8 @@ export interface ProjectMemberDto {
     sub: string
     name: string
     email: string
+    avatar_url?: string
+    picture?: string
     department?: string
     email_verified?: boolean
     phone_verified?: boolean
@@ -17,6 +19,7 @@ export interface ProjectMemberDto {
 export interface Member {
   id: string
   name: string
+  avatarUrl?: string
   email: string
   role: MemberRole
 }

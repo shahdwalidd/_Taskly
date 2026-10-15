@@ -2,6 +2,7 @@ import type {
   CreateEpicPayload,
   EpicListItem,
   EpicResponse,
+  EpicUpdatePayload,
 } from '@/types/epics.types'
 import { apiRequest } from './apiClient'
 
@@ -27,6 +28,7 @@ function toEpicListItem(epic: EpicResponse): EpicListItem {
     code: String(epic.epic_id),
     title: epic.title,
     description: epic.description ?? undefined,
+    assigneeId: epic.assignee_id ?? epic.assignee?.id ?? null,
     assigneeName: getUserName(epic.assignee),
     assigneeAvatar: getUserAvatar(epic.assignee),
     createdBy: getUserName(epic.created_by, 'Unknown'),
@@ -73,6 +75,20 @@ export async function createEpic(
       project_id: projectId,
       ...payload,
     }),
+  })
+}
+
+export async function updateEpic(
+  epicId: string,
+  payload: EpicUpdatePayload,
+  accessToken: string,
+): Promise<void> {
+  const params = new URLSearchParams({ id: `eq.${epicId}` })
+  await apiRequest<void>(`/rest/v1/epics?${params.toString()}`, {
+    method: 'PATCH',
+    accessToken,
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify(payload),
   })
 }
 
