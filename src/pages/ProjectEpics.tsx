@@ -15,6 +15,7 @@ import { useProjectMembers } from '@/hooks/useProjectMembers'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useAddTask } from '@/hooks/useAddTask'
+import { useEpicTasks } from '@/hooks/useEpicTasks'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { AddTaskModal } from '@/components/add-task/AddTaskModal'
@@ -26,9 +27,10 @@ export function EpicsPage() {
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
+  const epicTasks = useEpicTasks(selectedEpic?.id ?? null)
   const projectMembers = useProjectMembers(projectId)
   const { members } = projectMembers
-  const addTask = useAddTask(projectId)
+  const addTask = useAddTask(projectId, epicTasks.refetch)
   const isMobile = !useMediaQuery('(min-width: 768px)')
   const { project } = useProject(projectId)
   const {
@@ -138,6 +140,10 @@ export function EpicsPage() {
       </div>
       {selectedEpic && (
         <EpicDetailsModal
+          tasks={epicTasks.tasks}
+          tasksStatus={epicTasks.status}
+          tasksError={epicTasks.error}
+          onRetryTasks={epicTasks.refetch}
           code={epicDetails.epic?.code ?? selectedEpic.code}
           status={epicDetails.status}
           epic={epicDetails.epic}

@@ -53,7 +53,7 @@ export function TaskCard({
 				{title}
 			</h3>
 			{description && (
-				<p className="text-slate-medium mt-1 line-clamp-2 break-words text-xs leading-4">
+				<p className="text-slate-medium mt-1 line-clamp-2 wrap-break-word text-xs leading-4">
 					{description}
 				</p>
 			)}

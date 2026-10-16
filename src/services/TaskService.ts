@@ -41,6 +41,19 @@ export async function getProjectTasks(
   })
 }
 
+export async function getEpicTasks(
+  epicId: string,
+  accessToken: string,
+  signal?: AbortSignal,
+): Promise<Task[]> {
+  const query = new URLSearchParams({ epic_id: `eq.${epicId}` })
+
+  return apiRequest<Task[]>(`/rest/v1/project_tasks?${query.toString()}`, {
+    accessToken,
+    signal,
+  })
+}
+
 export async function createTask(
   payload: CreateTaskPayload,
   accessToken: string,
