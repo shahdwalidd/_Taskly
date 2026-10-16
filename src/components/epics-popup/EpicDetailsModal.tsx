@@ -10,8 +10,13 @@ import { EpicDetailField } from './EpicDetailField'
 import { EpicDetailsHeader } from './EpicDetailsHeader'
 import { EpicPersonValue } from './EpicPersonValue'
 import { EpicTasksSection } from './EpicTasksSection'
+import type { Task } from '@/types/addTask.types'
 
 interface EpicDetailsModalProps {
+  tasks: Task[]
+  tasksStatus: 'idle' | 'loading' | 'success' | 'error'
+  tasksError: string | null
+  onRetryTasks: () => void
   code: string
   status: 'idle' | 'loading' | 'success' | 'error'
   epic: EpicListItem | null
@@ -39,6 +44,10 @@ const boxClass =
   'border-surface-highest bg-authcard text-slate-dark focus:ring-primary-container w-full rounded-md border outline-none focus:ring-2'
 
 export function EpicDetailsModal({
+  tasks,
+  tasksStatus,
+  tasksError,
+  onRetryTasks,
   code,
   status,
   epic,
@@ -239,7 +248,13 @@ export function EpicDetailsModal({
           </>
         )}
 
-        <EpicTasksSection onAddTask={onAddTask} />
+        <EpicTasksSection
+          tasks={tasks}
+          status={tasksStatus}
+          error={tasksError}
+          onRetry={onRetryTasks}
+          onAddTask={onAddTask}
+        />
       </div>
     </div>,
     document.body,
