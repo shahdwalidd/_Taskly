@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { saveSession, clearSession, getSession } from '@/store/Authstore'
-import { refreshAccessToken } from '@/services/AuthService'
-import { logout } from '@/services/AuthService'
+import { clearSession, getSession } from '@/store/Authstore'
+import { getValidAccessToken, logout } from '@/services/AuthService'
 
 interface Authstate {
   isauth: boolean
@@ -37,25 +36,8 @@ export function useAuth(): UseAuthReturn {
         return
       }
 
-      const isTokenExpired = Date.now() / 1000 > session.expires_at
-
-      if (!isTokenExpired) {
-        setState((current) => ({ ...current, isauth: true, isloading: false }))
-        return
-      }
-
       try {
-        const refresh = await refreshAccessToken(session.refresh_token)
-
-        saveSession(
-          {
-            access_token: refresh.access_token,
-            refresh_token: refresh.refresh_token,
-            expires_at: refresh.expires_at,
-          },
-          session.remember_me,
-        )
-
+        await getValidAccessToken()
         setState((current) => ({ ...current, isauth: true, isloading: false }))
       } catch {
         clearSession()
@@ -85,7 +67,7 @@ export function useAuth(): UseAuthReturn {
     }))
 
     try {
-      await logout(session.access_token)
+      await logout(await getValidAccessToken())
       clearSession()
       setState((current) => ({
         ...current,

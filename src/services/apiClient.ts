@@ -11,6 +11,16 @@ interface ApiRequestOptions extends RequestInit {
   includeHeaders?: boolean
 }
 
+export class ApiError extends Error {
+  readonly status: number
+
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
 function extractErrorMessage(result: unknown): string | undefined {
   if (typeof result === 'object' && result !== null) {
     if ('message' in result)
@@ -33,6 +43,10 @@ export async function apiRequest<T>(
   options: ApiRequestOptions = {},
 ): Promise<T | ApiResponse<T>> {
   const { accessToken, headers, includeHeaders, ...requestOptions } = options
+
+  if (accessToken !== undefined && !accessToken.trim()) {
+    throw new Error('Authentication is required for this request')
+  }
 
   const response = await fetch(`${supabaseUrl}${endpoint}`, {
     ...requestOptions,
@@ -57,8 +71,9 @@ export async function apiRequest<T>(
 
   if (!response.ok) {
     const apiMessage = extractErrorMessage(result)
-    throw new Error(
+    throw new ApiError(
       apiMessage ?? `Request failed with status ${response.status}`,
+      response.status,
     )
   }
 

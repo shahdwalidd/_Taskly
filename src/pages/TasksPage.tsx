@@ -1,8 +1,6 @@
 
 import { AddTaskModal } from '@/components/add-task/AddTaskModal'
 import { AuthenticatedLayout } from '@/components/app-layout/AuthenticatedLayout'
-import { AddTaskButton } from '@/components/tasks-board/AddTaskButton'
-import { EmptyTaskPanel } from '@/components/tasks-board/EmptyTaskPanel'
 import { TaskBoard } from '@/components/tasks-board/Taskboard'
 import { TasksHeader } from '@/components/tasks-board/TasksHeader'
 import { useAddTask } from '@/hooks/useAddTask'
@@ -19,24 +17,17 @@ export function TasksPage() {
 
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
-      <div className="flex flex-col gap-4 px-4 py-5 md:gap-6 md:px-8 md:py-8">
+      <div className="flex min-w-0 flex-col gap-4 px-4 py-5 md:gap-6 md:px-8 md:py-8">
         <TasksHeader
           projectName={projectName}
           search={search}
           onSearchChange={setSearch}
         />
 
-        <div className="flex flex-col gap-3 md:hidden">
-          <AddTaskButton onClick={() => addTask.openAddTask()} />
-          <EmptyTaskPanel className="mt-3 h-160" />
-        </div>
-
-      
-        <div className="hidden md:block">
-          <TaskBoard
-            onAddTask={(statusId) => addTask.openAddTask({ statusId })}
-          />
-        </div>
+        <TaskBoard
+          projectId={projectId}
+          onAddTask={(statusId) => addTask.openAddTask({ statusId })}
+        />
       </div>
 
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
