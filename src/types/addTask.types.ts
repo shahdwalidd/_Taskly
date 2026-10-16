@@ -24,6 +24,17 @@ export const TASK_STATUS_VALUES = [
 ] as const
  
 export type TaskStatusValue = (typeof TASK_STATUS_VALUES)[number]
+
+export interface Task {
+  id: string
+  code: string
+  title: string
+  status: TaskStatusValue
+  assigneeName?: string
+  dueDate?: string
+}
+
+export type TaskCardState = 'default' | 'today' | 'delayed' | 'completed'
  
 
 export interface CreateTaskPayload {
