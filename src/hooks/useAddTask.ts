@@ -5,8 +5,8 @@ import type { TaskFormValues } from '@/types/addTask.types'
 import { taskStatuses } from '@/components/tasks-board/TaskStatus'
 import { useProjectEpics } from '@/hooks/useProjectEpics'
 import { useProjectMembers } from '@/hooks/useProjectMembers'
+import { getValidAccessToken } from '@/services/AuthService'
 import { createTask, toCreateTaskPayload } from '@/services/TaskService'
-import { getSession } from '@/store/Authstore'
 
  
 const DEFAULT_STATUS = 'TO_DO'
@@ -134,8 +134,10 @@ export function useAddTask(projectId: string, onCreated?: () => void) {
       return
     }
  
-    const session = getSession()
-    if (!session?.access_token) {
+    let accessToken: string
+    try {
+      accessToken = await getValidAccessToken()
+    } catch {
       toast.error('Your session has expired. Please log in again.')
       navigate('/login', { replace: true })
       return
@@ -143,7 +145,7 @@ export function useAddTask(projectId: string, onCreated?: () => void) {
  
     setIsSubmitting(true)
     try {
-      await createTask(toCreateTaskPayload(projectId, values), session.access_token)
+      await createTask(toCreateTaskPayload(projectId, values), accessToken)
       toast.success('Task created successfully')
       reset()
       onCreated?.()

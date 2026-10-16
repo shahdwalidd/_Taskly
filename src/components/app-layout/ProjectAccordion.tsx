@@ -9,7 +9,7 @@ import ChevronIcon from '@/assets/icons/sideBaricons/ArrowbottomIcon.svg?react'
 import { cn } from '@/utils/cn'
 const projectLinks = [
   { icon: EpicsIcon, label: 'Epics', path: 'epics' },
-  { icon: TasksIcon, label: 'Tasks', path: 'tasks' },
+  { icon: TasksIcon, label: ' Tasks', path: 'tasks' },
   { icon: MembersIcon, label: 'Members', path: 'members' },
   { icon: DetailsIcon, label: 'Details', path: 'edit' },
 ]

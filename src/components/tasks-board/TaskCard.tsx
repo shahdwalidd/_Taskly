@@ -4,8 +4,10 @@ import { TaskCardFooter } from './TaskCardFooter'
 import { TaskCardStatusPill } from './TaskCardStatusPill'
 
 export interface TaskCardProps {
-	code: string
+	code?: string
 	title: string
+	description?: string
+	epicName?: string
 	statusId: TaskStatusValue
 	state: TaskCardState
 	dateLabel?: string
@@ -15,6 +17,8 @@ export interface TaskCardProps {
 export function TaskCard({
 	code,
 	title,
+	description,
+	epicName,
 	statusId,
 	state,
 	dateLabel,
@@ -30,9 +34,11 @@ export function TaskCard({
 			)}
 		>
 			<div className="flex items-center justify-between gap-2">
-				<span className="text-overlay-gray text-[10px] leading-4 font-medium tracking-wide uppercase">
-					{code}
-				</span>
+				{code && (
+					<span className="text-overlay-gray min-w-0 truncate text-[10px] leading-4 font-medium tracking-wide uppercase">
+						{code}
+					</span>
+				)}
 				<TaskCardStatusPill statusId={statusId} />
 			</div>
 
@@ -46,6 +52,16 @@ export function TaskCard({
 			>
 				{title}
 			</h3>
+			{description && (
+				<p className="text-slate-medium mt-1 line-clamp-2 break-words text-xs leading-4">
+					{description}
+				</p>
+			)}
+			{epicName && (
+				<p className="text-overlay-gray mt-2 truncate text-[10px] font-medium">
+					{epicName}
+				</p>
+			)}
 
 			<TaskCardFooter
 				state={state}

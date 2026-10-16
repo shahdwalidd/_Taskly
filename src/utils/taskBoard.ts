@@ -1,6 +1,5 @@
 import type { TaskCardProps } from '@/components/tasks-board/TaskCard'
-import { taskStatuses } from '@/components/tasks-board/TaskStatus'
-import type { Task, TaskCardState, TaskStatusValue } from '@/types/addTask.types'
+import type { Task, TaskCardState } from '@/types/addTask.types'
 import { getTodayISO } from '@/utils/formatDate'
 
 const MONTHS = [
@@ -15,9 +14,9 @@ export function formatTaskDate(dueDate: string): string {
 
 export function getTaskCardState(task: Task): TaskCardState {
   if (task.status === 'DONE') return 'completed'
-  if (!task.dueDate) return 'default'
+  if (!task.due_date) return 'default'
 
-  const due = task.dueDate.slice(0, 10)
+  const due = task.due_date.slice(0, 10)
   const today = getTodayISO()
   if (due < today) return 'delayed'
   if (due === today) return 'today'
@@ -26,20 +25,14 @@ export function getTaskCardState(task: Task): TaskCardState {
 
 export function toTaskCardProps(task: Task): TaskCardProps {
   return {
-    code: task.code,
-    title: task.title,
+    code: task.task_id == null ? undefined : String(task.task_id),
+    title: task.title?.trim() || 'Untitled task',
+    description: task.description?.trim() || undefined,
+    epicName: task.epic?.title?.trim() || undefined,
     statusId: task.status,
-    assigneeName: task.assigneeName,
+    assigneeName:
+      task.assignee?.name ?? task.assignee?.user_metadata?.name ?? undefined,
     state: getTaskCardState(task),
-    dateLabel: task.dueDate ? formatTaskDate(task.dueDate) : undefined,
+    dateLabel: task.due_date ? formatTaskDate(task.due_date) : undefined,
   }
-}
-
-export function groupTasksByStatus(tasks: Task[]): Record<TaskStatusValue, Task[]> {
-  const groups = Object.fromEntries(
-    taskStatuses.map((status) => [status.id, [] as Task[]]),
-  ) as Record<TaskStatusValue, Task[]>
-
-  for (const task of tasks) groups[task.status]?.push(task)
-  return groups
 }

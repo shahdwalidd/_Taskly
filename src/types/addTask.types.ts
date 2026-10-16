@@ -25,13 +25,37 @@ export const TASK_STATUS_VALUES = [
  
 export type TaskStatusValue = (typeof TASK_STATUS_VALUES)[number]
 
+export interface TaskUser {
+  id?: string
+  name?: string | null
+  avatar_url?: string | null
+  picture?: string | null
+  user_metadata?: {
+    name?: string
+    avatar_url?: string
+    picture?: string
+  }
+}
+
+export interface TaskEpic {
+  id?: string
+  epic_id?: string | number
+  title?: string | null
+}
+
 export interface Task {
   id: string
-  code: string
-  title: string
+  project_id: string
+  epic_id: string | null
+  title: string | null
+  description: string | null
   status: TaskStatusValue
-  assigneeName?: string
-  dueDate?: string
+  created_at: string | null
+  due_date: string | null
+  task_id: string | number | null
+  epic: TaskEpic | null
+  created_by: TaskUser | null
+  assignee: TaskUser | null
 }
 
 export type TaskCardState = 'default' | 'today' | 'delayed' | 'completed'

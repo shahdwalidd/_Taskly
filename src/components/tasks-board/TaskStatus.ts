@@ -16,6 +16,6 @@ export const taskStatuses: TaskStatus[] = [
   { id: 'IN_REVIEW', label: 'In Review', dotClass: 'bg-slate-medium', badgeClass: neutralBadge, pillClass: neutralBadge },
   { id: 'READY_FOR_QA', label: 'Ready for QA', dotClass: 'bg-navyblue', badgeClass: neutralBadge, pillClass: 'bg-primary-container text-white' },
   { id: 'REOPENED', label: 'Reopened', dotClass: 'bg-darkred', badgeClass: 'bg-babyred text-error', pillClass: 'bg-error text-white' },
-  { id: 'READY_FOR_PRODUCTION', label: 'Ready for Prod', dotClass: 'bg-darkgreen', badgeClass: 'bg-success text-on-success', pillClass: 'bg-darkgreen text-white' },
+  { id: 'READY_FOR_PRODUCTION', label: 'Ready for Production', dotClass: 'bg-darkgreen', badgeClass: 'bg-success text-on-success', pillClass: 'bg-darkgreen text-white' },
   { id: 'DONE', label: 'Done', dotClass: 'bg-emerald-400', badgeClass: 'bg-success text-on-success', pillClass: 'bg-success text-on-success' },
 ]
