@@ -11,10 +11,16 @@ export function RecoveryLinkHandler() {
     const type = params.get('type')
     const accessToken = params.get('access_token')
 
-    if (type !== 'recovery' || !accessToken) return
+    if (
+      type !== 'recovery' ||
+      !accessToken ||
+      location.pathname === '/reset-password'
+    ) {
+      return
+    }
 
     navigate(`/reset-password${location.hash}`, { replace: true })
-  }, [location.hash, navigate])
+  }, [location.hash, location.pathname, navigate])
 
   return null
 }
