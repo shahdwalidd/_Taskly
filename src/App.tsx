@@ -10,6 +10,7 @@ import { EditProjectPage } from './pages/EditProjectPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { RecoveryLinkHandler } from './components/app-layout/RecoveryLinkHandler'
+import { EntryPoint } from '@/components/app-layout/EntryPoint'
 import { ProjectMembersPage } from './pages/ProjectMembersPage'
 import { CreateEpicPage } from './pages/CreateEpicPage'
 import { EpicsPage } from './pages/ProjectEpics'
@@ -22,6 +23,7 @@ function App() {
         <RecoveryLinkHandler />
 
         <Routes>
+          <Route path="/" element={<EntryPoint />} />
           <Route
             path="/sign-up"
             element={
@@ -50,11 +52,7 @@ function App() {
           />
           <Route
             path="/reset-password"
-            element={
-              <PublicRoutes>
-                <ResetPasswordPage />
-              </PublicRoutes>
-            }
+            element={<ResetPasswordPage />}
           />
           <Route
             path="/project"
