@@ -1,6 +1,7 @@
 import type {
   CreateTaskPayload,
   Task,
+  TaskDetails,
   TaskFormValues,
   TaskStatusValue,
   TaskStatusValue as TaskStatus,
@@ -39,6 +40,50 @@ export async function getProjectTasks(
     accessToken,
     signal,
   })
+}
+
+export class TaskNotFoundError extends Error {
+  constructor() {
+    super('Task not found')
+    this.name = 'TaskNotFoundError'
+  }
+}
+
+export async function getTaskDetails(
+  projectId: string,
+  taskId: string,
+  accessToken: string,
+  signal?: AbortSignal,
+): Promise<TaskDetails> {
+  const query = new URLSearchParams({
+    project_id: `eq.${projectId}`,
+    id: `eq.${taskId}`,
+  })
+  const result = await apiRequest<unknown>(
+    `/rest/v1/project_tasks?${query.toString()}`,
+    { accessToken, signal },
+  )
+
+  if (!Array.isArray(result)) {
+    throw new Error('Invalid task details response')
+  }
+  if (result.length === 0) throw new TaskNotFoundError()
+
+  const task = result[0]
+  if (
+    typeof task !== 'object' ||
+    task === null ||
+    !('id' in task) ||
+    typeof task.id !== 'string' ||
+    !('project_id' in task) ||
+    typeof task.project_id !== 'string' ||
+    !('status' in task) ||
+    typeof task.status !== 'string'
+  ) {
+    throw new Error('Invalid task details response')
+  }
+
+  return task as TaskDetails
 }
 
 export async function getEpicTasks(

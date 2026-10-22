@@ -4,6 +4,7 @@ import { EpicTaskCard } from './EpicTaskCard'
 
 interface EpicTasksListProps {
   tasks: Task[]
+  onTaskClick?: (taskId: string) => void
 }
 
 function formatDueDate(dueDate: string | null): string {
@@ -14,7 +15,7 @@ function formatDueDate(dueDate: string | null): string {
   return formDate(dueDate)
 }
 
-export function EpicTasksList({ tasks }: EpicTasksListProps) {
+export function EpicTasksList({ tasks, onTaskClick }: EpicTasksListProps) {
   return (
     <ul className="divide-surface-low flex flex-col gap-3 md:gap-0 md:divide-y md:overflow-hidden md:rounded-lg md:border md:border-surface-highest/60 md:bg-authcard">
       {tasks.map((task) => {
@@ -35,6 +36,7 @@ export function EpicTasksList({ tasks }: EpicTasksListProps) {
         return (
           <li key={task.id}>
             <EpicTaskCard
+              onClick={() => onTaskClick?.(task.id)}
               title={task.title?.trim() || 'Untitled task'}
               assigneeName={assigneeName}
               assigneeAvatar={assigneeAvatar}

@@ -1,7 +1,7 @@
 import CalendarIcon from '@/assets/CalendarIcon.svg?react'
 import ChevronIcon from '@/assets/selecticon.svg?react'
 import { TaskField } from './TaskField'
-import { formDate } from '@/utils/formatDate'
+import { formDate, formatTaskDetailsDate } from '@/utils/formatDate'
 
 interface TaskDateFieldProps {
   id: string
@@ -9,6 +9,7 @@ interface TaskDateFieldProps {
   value: string // YYYY-MM-DD or ''
   onChange: (value: string) => void
   readOnly?: boolean
+  emptyLabel?: string
 }
 
 
@@ -19,6 +20,7 @@ export function TaskDateField({
   value,
   onChange,
   readOnly = false,
+  emptyLabel = '—',
 }: TaskDateFieldProps) {
   return (
     <TaskField id={id} label={label}>
@@ -27,13 +29,13 @@ export function TaskDateField({
 
         {value ? (
           <span className="text-slate-dark truncate font-medium">
-            {formDate(value)}
+            {readOnly ? formatTaskDetailsDate(value) : formDate(value)}
           </span>
         ) : (
-          <span className="text-slate-medium">mm/dd/yyyy</span>
+          <span className="text-slate-medium">{readOnly ? emptyLabel : 'mm/dd/yyyy'}</span>
         )}
 
-        {!readOnly && <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />}
+        <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />
 
         {!readOnly && <input
           id={id}

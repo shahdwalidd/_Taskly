@@ -25,6 +25,7 @@ interface EpicDetailsModalProps {
   onClose: () => void
   onCopyLink: () => void
   onAddTask: () => void
+  onTaskClick: (taskId: string) => void
   onTitleChange: (title: string) => void
   onDescriptionChange: (description: string) => void
   assigneeOptions: EpicAssigneeOption[]
@@ -56,6 +57,7 @@ export function EpicDetailsModal({
   onClose,
   onCopyLink,
   onAddTask,
+  onTaskClick,
   onTitleChange,
   onDescriptionChange,
   assigneeOptions,
@@ -254,6 +256,7 @@ export function EpicDetailsModal({
           error={tasksError}
           onRetry={onRetryTasks}
           onAddTask={onAddTask}
+          onTaskClick={onTaskClick}
         />
       </div>
     </div>,

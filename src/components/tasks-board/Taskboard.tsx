@@ -1,11 +1,10 @@
 import { TaskColumn } from './TaskColumn'
 import { taskStatuses } from './TaskStatus'
-import type { Task } from '@/types/addTask.types'
 
 interface TaskBoardProps {
   projectId: string
   onAddTask: (statusId?: string) => void
-  onTaskClick: (task: Task) => void
+  onTaskClick: (taskId: string) => void
 }
 
 export function TaskBoard({ projectId, onAddTask, onTaskClick }: TaskBoardProps) {

@@ -20,6 +20,8 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { AddTaskModal } from '@/components/add-task/AddTaskModal'
 import type { EpicListItem } from '@/types/epics.types'
+import { TaskDetailsModal } from '@/components/task-details/TaskDetailsModal'
+
 
 export function EpicsPage() {
   const { projectId = '' } = useParams<{ projectId: string }>()
@@ -27,6 +29,7 @@ export function EpicsPage() {
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
   const [selectedEpic, setSelectedEpic] = useState<EpicListItem | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const epicTasks = useEpicTasks(selectedEpic?.id ?? null)
   const projectMembers = useProjectMembers(projectId)
   const { members } = projectMembers
@@ -154,6 +157,7 @@ export function EpicsPage() {
             void navigator.clipboard.writeText(window.location.href)
           }}
           onAddTask={() => addTask.openAddTask({ epicId: selectedEpic.id })}
+          onTaskClick={setSelectedTaskId}
           onTitleChange={(title) =>
             void epicEditor.saveField(
               'title',
@@ -214,6 +218,14 @@ export function EpicsPage() {
         />
       )}
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
+      {selectedTaskId && (
+        <TaskDetailsModal
+          projectId={projectId}
+          taskId={selectedTaskId}
+          onClose={() => setSelectedTaskId(null)}
+          onCopyLink={() => void navigator.clipboard?.writeText(window.location.href)}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }

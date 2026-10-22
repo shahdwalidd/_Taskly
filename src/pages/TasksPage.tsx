@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { TaskDetailsModal } from '@/components/task-details/TaskDetailsModal'
 
 export function TasksPage() {
-  const [isTaskDetailsOpen, setIsTaskDetailsOpen] = useState(false)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const {
     projectId,
     projectName,
@@ -30,14 +30,16 @@ export function TasksPage() {
         <TaskBoard
           projectId={projectId}
           onAddTask={(statusId) => addTask.openAddTask({ statusId })}
-          onTaskClick={() => setIsTaskDetailsOpen(true)}
+          onTaskClick={setSelectedTaskId}
         />
       </div>
 
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
-      {isTaskDetailsOpen && (
+      {selectedTaskId && (
         <TaskDetailsModal
-          onClose={() => setIsTaskDetailsOpen(false)}
+          projectId={projectId}
+          taskId={selectedTaskId}
+          onClose={() => setSelectedTaskId(null)}
           onCopyLink={() => navigator.clipboard?.writeText(window.location.href)}
         />
       )}

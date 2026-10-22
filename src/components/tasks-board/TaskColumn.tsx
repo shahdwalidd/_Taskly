@@ -5,13 +5,12 @@ import { EmptyTaskPanel } from './EmptyTaskPanel'
 import { TaskCard } from './TaskCard'
 import { TaskColumnHeader } from './TaskColumnHeader'
 import type { TaskStatus } from './TaskStatus'
-import type { Task } from '@/types/addTask.types'
 
 interface TaskColumnProps {
   projectId: string
   status: TaskStatus
   onAddTask: (statusId?: string) => void
-  onTaskClick: (task: Task) => void
+  onTaskClick: (taskId: string) => void
 }
 
 function TaskLoadingState() {
@@ -75,7 +74,7 @@ export function TaskColumn({ projectId, status, onAddTask, onTaskClick }: TaskCo
         <ul className="flex flex-col gap-3.5">
           {tasks.map((task) => (
             <li key={task.id}>
-              <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task)} />
+              <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task.id)} />
             </li>
           ))}
         </ul>
