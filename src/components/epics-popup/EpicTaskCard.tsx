@@ -8,6 +8,7 @@ interface EpicTaskCardProps {
   assigneeAvatar?: string
   dueDate?: string
   isOverdue?: boolean
+  onClick?: () => void
 }
 
 export function EpicTaskCard({
@@ -16,9 +17,10 @@ export function EpicTaskCard({
   assigneeAvatar,
   dueDate,
   isOverdue = false,
+  onClick,
 }: EpicTaskCardProps) {
   return (
-    <div className="border-surface-highest/60 bg-authcard shadow-button grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-lg border px-4 pt-3.5 pb-4 md:rounded-none md:border-0 md:py-4 md:pr-11 md:shadow-none">
+    <button type="button" onClick={onClick} className="border-surface-highest/60 bg-authcard shadow-button grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-lg border px-4 pt-3.5 pb-4 text-left md:rounded-none md:border-0 md:py-4 md:pr-11 md:shadow-none">
       <h4
         title={title}
         className="text-slate-dark col-span-2 truncate text-sm leading-6 font-medium md:col-span-1 md:text-base"
@@ -60,6 +62,6 @@ export function EpicTaskCard({
           </div>
         </div>
       )}
-    </div>
+    </button>
   )
 }

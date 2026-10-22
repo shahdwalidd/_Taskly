@@ -58,6 +58,10 @@ export interface Task {
   assignee: TaskUser | null
 }
 
+export interface TaskDetails extends Omit<Task, 'status'> {
+  status: string
+}
+
 export type TaskCardState = 'default' | 'today' | 'delayed' | 'completed'
  
 

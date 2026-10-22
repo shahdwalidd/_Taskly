@@ -5,8 +5,11 @@ import { TaskBoard } from '@/components/tasks-board/Taskboard'
 import { TasksHeader } from '@/components/tasks-board/TasksHeader'
 import { useAddTask } from '@/hooks/useAddTask'
 import { useTasksPage } from '@/hooks/useTasksPage'
+import { useState } from 'react'
+import { TaskDetailsModal } from '@/components/task-details/TaskDetailsModal'
 
 export function TasksPage() {
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const {
     projectId,
     projectName,
@@ -27,10 +30,19 @@ export function TasksPage() {
         <TaskBoard
           projectId={projectId}
           onAddTask={(statusId) => addTask.openAddTask({ statusId })}
+          onTaskClick={setSelectedTaskId}
         />
       </div>
 
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
+      {selectedTaskId && (
+        <TaskDetailsModal
+          projectId={projectId}
+          taskId={selectedTaskId}
+          onClose={() => setSelectedTaskId(null)}
+          onCopyLink={() => navigator.clipboard?.writeText(window.location.href)}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }

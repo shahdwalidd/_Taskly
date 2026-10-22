@@ -12,6 +12,8 @@ interface TaskSelectFieldProps {
   placeholder?: string 
   withAvatar?: boolean
   disabled?: boolean
+  readOnly?: boolean
+  avatarUrl?: string | null
 }
 export function TaskSelectField({
   id,
@@ -22,6 +24,8 @@ export function TaskSelectField({
   placeholder,
   withAvatar = false,
   disabled = false,
+  readOnly = false,
+  avatarUrl,
 }: TaskSelectFieldProps) {
   const selected = options.find((option) => option.value === value)
 
@@ -35,7 +39,7 @@ export function TaskSelectField({
                 aria-hidden="true"
                 className="bg-surface-highest text-primary flex size-6 shrink-0 items-center justify-center rounded-full text-[9px] font-bold"
               >
-                {getInitials(selected.label)}
+                {avatarUrl ? <img src={avatarUrl} alt="" className="size-full rounded-full object-cover" /> : getInitials(selected.label)}
               </span>
             )}
             <span className="text-slate-dark truncate font-medium">
@@ -48,7 +52,7 @@ export function TaskSelectField({
 
         <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />
 
-        <select
+        {!readOnly && <select
           id={id}
           value={value}
           disabled={disabled}
@@ -61,7 +65,7 @@ export function TaskSelectField({
               {option.label}
             </option>
           ))}
-        </select>
+        </select>}
       </div>
     </TaskField>
   )

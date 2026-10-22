@@ -11,6 +11,7 @@ interface EpicTasksSectionProps {
   error: string | null
   onRetry: () => void
   onAddTask?: () => void
+  onTaskClick?: (taskId: string) => void
 }
 
 export function EpicTasksSection({
@@ -19,6 +20,7 @@ export function EpicTasksSection({
   error,
   onRetry,
   onAddTask,
+  onTaskClick,
 }: EpicTasksSectionProps) {
   return (
     <section className="mt-6 md:mt-9">
@@ -58,7 +60,7 @@ export function EpicTasksSection({
         )}
 
         {status === 'success' && tasks.length > 0 && (
-          <EpicTasksList tasks={tasks} />
+          <EpicTasksList tasks={tasks} onTaskClick={onTaskClick} />
         )}
 
         {status === 'error' && (

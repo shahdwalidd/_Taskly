@@ -1,13 +1,15 @@
 import CalendarIcon from '@/assets/CalendarIcon.svg?react'
 import ChevronIcon from '@/assets/selecticon.svg?react'
 import { TaskField } from './TaskField'
-import { formDate } from '@/utils/formatDate'
+import { formDate, formatTaskDetailsDate } from '@/utils/formatDate'
 
 interface TaskDateFieldProps {
   id: string
   label: string
   value: string // YYYY-MM-DD or ''
   onChange: (value: string) => void
+  readOnly?: boolean
+  emptyLabel?: string
 }
 
 
@@ -17,6 +19,8 @@ export function TaskDateField({
   label,
   value,
   onChange,
+  readOnly = false,
+  emptyLabel = '—',
 }: TaskDateFieldProps) {
   return (
     <TaskField id={id} label={label}>
@@ -25,22 +29,22 @@ export function TaskDateField({
 
         {value ? (
           <span className="text-slate-dark truncate font-medium">
-            {formDate(value)}
+            {readOnly ? formatTaskDetailsDate(value) : formDate(value)}
           </span>
         ) : (
-          <span className="text-slate-medium">mm/dd/yyyy</span>
+          <span className="text-slate-medium">{readOnly ? emptyLabel : 'mm/dd/yyyy'}</span>
         )}
 
         <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />
 
-        <input
+        {!readOnly && <input
           id={id}
           type="date"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onClick={(event) => event.currentTarget.showPicker?.()}
           className="absolute inset-0 size-full cursor-pointer opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-        />
+        />}
       </div>
     </TaskField>
   )
