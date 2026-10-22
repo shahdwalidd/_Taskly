@@ -5,8 +5,11 @@ import { TaskBoard } from '@/components/tasks-board/Taskboard'
 import { TasksHeader } from '@/components/tasks-board/TasksHeader'
 import { useAddTask } from '@/hooks/useAddTask'
 import { useTasksPage } from '@/hooks/useTasksPage'
+import { useState } from 'react'
+import { TaskDetailsModal } from '@/components/task-details/TaskDetailsModal'
 
 export function TasksPage() {
+  const [isTaskDetailsOpen, setIsTaskDetailsOpen] = useState(false)
   const {
     projectId,
     projectName,
@@ -27,10 +30,17 @@ export function TasksPage() {
         <TaskBoard
           projectId={projectId}
           onAddTask={(statusId) => addTask.openAddTask({ statusId })}
+          onTaskClick={() => setIsTaskDetailsOpen(true)}
         />
       </div>
 
       {addTask.isOpen && <AddTaskModal {...addTask.modalProps} />}
+      {isTaskDetailsOpen && (
+        <TaskDetailsModal
+          onClose={() => setIsTaskDetailsOpen(false)}
+          onCopyLink={() => navigator.clipboard?.writeText(window.location.href)}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }

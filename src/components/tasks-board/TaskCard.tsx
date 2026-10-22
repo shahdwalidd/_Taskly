@@ -4,6 +4,8 @@ import { TaskCardFooter } from './TaskCardFooter'
 import { TaskCardStatusPill } from './TaskCardStatusPill'
 
 export interface TaskCardProps {
+	task?: import('@/types/addTask.types').Task
+	onClick?: () => void
 	code?: string
 	title: string
 	description?: string
@@ -15,6 +17,8 @@ export interface TaskCardProps {
 }
 
 export function TaskCard({
+	task,
+	onClick,
 	code,
 	title,
 	description,
@@ -26,6 +30,12 @@ export function TaskCard({
 }: TaskCardProps) {
 	return (
 		<article
+			data-task-id={task?.id}
+			role={onClick ? 'button' : undefined}
+		tabIndex={onClick ? 0 : undefined}
+		onClick={onClick}
+		onKeyDown={onClick ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onClick() } } : undefined}
+		aria-label={onClick ? `View task details: ${title}` : undefined}
 			className={cn(
 				'shadow-button flex flex-col rounded-md border p-4',
 				state === 'delayed'

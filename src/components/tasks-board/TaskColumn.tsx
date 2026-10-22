@@ -5,11 +5,13 @@ import { EmptyTaskPanel } from './EmptyTaskPanel'
 import { TaskCard } from './TaskCard'
 import { TaskColumnHeader } from './TaskColumnHeader'
 import type { TaskStatus } from './TaskStatus'
+import type { Task } from '@/types/addTask.types'
 
 interface TaskColumnProps {
   projectId: string
   status: TaskStatus
   onAddTask: (statusId?: string) => void
+  onTaskClick: (task: Task) => void
 }
 
 function TaskLoadingState() {
@@ -29,7 +31,7 @@ function TaskLoadingState() {
   )
 }
 
-export function TaskColumn({ projectId, status, onAddTask }: TaskColumnProps) {
+export function TaskColumn({ projectId, status, onAddTask, onTaskClick }: TaskColumnProps) {
   const { tasks, status: loadStatus, error, refetch } = useProjectTasks(
     projectId,
     status.id,
@@ -73,7 +75,7 @@ export function TaskColumn({ projectId, status, onAddTask }: TaskColumnProps) {
         <ul className="flex flex-col gap-3.5">
           {tasks.map((task) => (
             <li key={task.id}>
-              <TaskCard {...toTaskCardProps(task)} />
+              <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task)} />
             </li>
           ))}
         </ul>

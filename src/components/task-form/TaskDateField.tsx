@@ -8,6 +8,7 @@ interface TaskDateFieldProps {
   label: string
   value: string // YYYY-MM-DD or ''
   onChange: (value: string) => void
+  readOnly?: boolean
 }
 
 
@@ -17,6 +18,7 @@ export function TaskDateField({
   label,
   value,
   onChange,
+  readOnly = false,
 }: TaskDateFieldProps) {
   return (
     <TaskField id={id} label={label}>
@@ -31,16 +33,16 @@ export function TaskDateField({
           <span className="text-slate-medium">mm/dd/yyyy</span>
         )}
 
-        <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />
+        {!readOnly && <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />}
 
-        <input
+        {!readOnly && <input
           id={id}
           type="date"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onClick={(event) => event.currentTarget.showPicker?.()}
           className="absolute inset-0 size-full cursor-pointer opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-        />
+        />}
       </div>
     </TaskField>
   )

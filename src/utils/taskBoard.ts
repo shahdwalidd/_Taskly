@@ -25,6 +25,7 @@ export function getTaskCardState(task: Task): TaskCardState {
 
 export function toTaskCardProps(task: Task): TaskCardProps {
   return {
+    task,
     code: task.task_id == null ? undefined : String(task.task_id),
     title: task.title?.trim() || 'Untitled task',
     description: task.description?.trim() || undefined,

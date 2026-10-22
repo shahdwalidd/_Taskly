@@ -12,6 +12,7 @@ interface TaskSelectFieldProps {
   placeholder?: string 
   withAvatar?: boolean
   disabled?: boolean
+  readOnly?: boolean
 }
 export function TaskSelectField({
   id,
@@ -22,6 +23,7 @@ export function TaskSelectField({
   placeholder,
   withAvatar = false,
   disabled = false,
+  readOnly = false,
 }: TaskSelectFieldProps) {
   const selected = options.find((option) => option.value === value)
 
@@ -46,9 +48,9 @@ export function TaskSelectField({
           <span className="text-slate-medium truncate">{placeholder}</span>
         )}
 
-        <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />
+        {!readOnly && <ChevronIcon aria-hidden="true" className="text-grey ml-auto shrink-0" />}
 
-        <select
+        {!readOnly && <select
           id={id}
           value={value}
           disabled={disabled}
@@ -61,7 +63,7 @@ export function TaskSelectField({
               {option.label}
             </option>
           ))}
-        </select>
+        </select>}
       </div>
     </TaskField>
   )
