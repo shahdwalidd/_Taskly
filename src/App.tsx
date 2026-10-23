@@ -15,6 +15,7 @@ import { ProjectMembersPage } from './pages/ProjectMembersPage'
 import { CreateEpicPage } from './pages/CreateEpicPage'
 import { EpicsPage } from './pages/ProjectEpics'
 import { TasksPage } from './pages/TasksPage'
+import { AcceptInvitationPage } from '@/pages/AcceptInvitationPage'
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<EntryPoint />} />
+          <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
           <Route
             path="/sign-up"
             element={

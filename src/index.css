@@ -10,6 +10,10 @@
   --ts-gray-700: #434654;
   --ts-blue-300: #f1f3ff; /* surface low */
   --ts-default-background: #f9f9ff;
+  --ts-invitation-badge: #e0e8ff;
+  --ts-invitation-card-shadow: 0px 24px 48px -12px rgba(4, 27, 60, 0.06);
+  --ts-invitation-button-gradient: linear-gradient(135deg, #003d9b 0%, #0052cc 100%);
+  --ts-invitation-accent-gradient: linear-gradient(90deg, #003d9b 0%, #0052cc 100%);
   --ts-border-subtle: rgba(195, 198, 214, 0.1);
   --ts-whitee-card: #ffffff;
 
@@ -98,6 +102,9 @@
   --text-pp--line-height: 36px;
   --text-pp--letter-spacing: -0.75px;
   --text-pp--font-weight: 600;
+  --text-invitation-mobile: 26px;
+  --text-invitation-mobile--line-height: 32px;
+  --text-invitation-mobile--letter-spacing: -0.65px;
 
   --text-heading-sm: 28px;
   --text-heading-sm--line-height: 40px;
@@ -116,6 +123,17 @@
   --shadow-invite-button:
     0px 10px 15px -3px rgba(0, 61, 155, 0.2),
     0px 4px 6px -4px rgba(0, 61, 155, 0.2);
+  --shadow-invitation-card: var(--ts-invitation-card-shadow);
+
+  --color-invitation-badge: var(--ts-invitation-badge);
+  --background-image-invitation-glow:
+    radial-gradient(141.42% 141.42% at 0% 0%, #d7e2ff 0%, rgba(215, 226, 255, 0) 50%),
+    radial-gradient(141.42% 141.42% at 100% 100%, #f1f3ff 0%, rgba(241, 243, 255, 0) 50%);
+  --background-image-invitation-button: var(--ts-invitation-button-gradient);
+  --background-image-invitation-accent: var(--ts-invitation-accent-gradient);
+  --spacing-invitation-title: 412px;
+  --spacing-invitation-badge: 25px;
+  --spacing-invitation-icon-height: 9px;
 
   --text-boy-sm: 14px;
   --text-boy-sm--font-weight: 400;
