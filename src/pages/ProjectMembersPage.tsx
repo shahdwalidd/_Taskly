@@ -5,6 +5,8 @@ import { MembersTable } from '@/components/project-members/Memberstable'
 import { PageBreadcrumb } from '@/components/project-form/PageBreadcrumb'
 import { ErrorState } from '@/components/shared/ErrorState'
 import { useProjectMembersPage } from '@/hooks/useProjectMembersPage'
+import { InviteMemberModal } from '@/components/invite-member/InviteMemberModal'
+import { useState } from 'react'
 
 export function ProjectMembersPage() {
   const {
@@ -14,8 +16,9 @@ export function ProjectMembersPage() {
     isLoading,
     isError,
     handleRetry,
-    handleInvite,
   } = useProjectMembersPage()
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
+  const [inviteEmail, setInviteEmail] = useState('')
 
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
@@ -42,7 +45,7 @@ export function ProjectMembersPage() {
                 <h1 className="text-headline-lg text-slate-dark w-full text-center md:w-auto md:text-left">
                   Project Members
                 </h1>
-                <InviteMemberButton onClick={handleInvite} />
+                <InviteMemberButton onClick={() => setIsInviteModalOpen(true)} />
               </div>
             </div>
 
@@ -56,6 +59,15 @@ export function ProjectMembersPage() {
           </>
         )}
       </div>
+      {isInviteModalOpen && (
+        <InviteMemberModal
+          email={inviteEmail}
+          onEmailChange={setInviteEmail}
+          workspaceName={projectName}
+          onClose={() => setIsInviteModalOpen(false)}
+          onSubmit={() => undefined}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }
