@@ -1,199 +1,166 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { SetStateAction } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { Task, TaskStatusValue } from '@/types/addTask.types'
-import { getValidAccessToken } from '@/services/AuthService'
+import { usePagination } from '@/hooks/usePagination'
 import { ApiError } from '@/services/apiClient'
+import { getValidAccessToken } from '@/services/AuthService'
 import { getProjectTasks } from '@/services/TaskService'
 import { clearSession } from '@/store/Authstore'
+import type { Task } from '@/types/addTask.types'
 
-const TASKS_PER_PAGE = 10
+const PAGE_SIZE = 10
 
-type LoadStatus = 'loading' | 'success' | 'error'
+type TaskLoadStatus = 'loading' | 'success' | 'error'
 
-interface ProjectTasksState {
-  requestKey: string
-  status: LoadStatus
+interface TaskState {
+  scopeKey: string
+  status: TaskLoadStatus
   tasks: Task[]
-  totalCount: number
   error: string | null
-  loadingMore: boolean
-  loadMoreFailed: boolean
 }
 
-interface PaginationState {
-  requestKey: string
-  offset: number
-}
+const getTaskId = (task: Task) => task.id
 
-export function useProjectTasks(
-  projectId: string,
-  statusId: TaskStatusValue,
-  searchTerm = '',
-) {
+export function useProjectTasks(projectId: string, searchTerm: string) {
   const navigate = useNavigate()
   const normalizedSearchTerm = searchTerm.trim()
-  const requestKey = JSON.stringify([projectId, statusId, normalizedSearchTerm])
-  const [state, setState] = useState<ProjectTasksState>({
-    requestKey: '',
+  const scopeKey = JSON.stringify([projectId, normalizedSearchTerm])
+  const requestVersionRef = useRef(0)
+  const requestControllerRef = useRef<AbortController | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
+  const [state, setState] = useState<TaskState>({
+    scopeKey: '',
     status: 'loading',
     tasks: [],
-    totalCount: 0,
     error: null,
-    loadingMore: false,
-    loadMoreFailed: false,
   })
-  const [pagination, setPagination] = useState<PaginationState>({
-    requestKey: '',
-    offset: 0,
-  })
-  const [retryCount, setRetryCount] = useState(0)
-  const offset =
-    pagination.requestKey === requestKey && state.requestKey === requestKey
-      ? pagination.offset
-      : 0
-  const hasCurrentResults = state.requestKey === requestKey
 
-  useEffect(() => {
-    const controller = new AbortController()
-    let isCurrentRequest = true
+  const setTasks = useCallback(
+    (update: SetStateAction<Task[]>) => {
+      setState((current) => {
+        if (current.scopeKey !== scopeKey) return current
+        const tasks = typeof update === 'function' ? update(current.tasks) : update
+        return { ...current, tasks }
+      })
+    },
+    [scopeKey],
+  )
+  const tasks = state.scopeKey === scopeKey ? state.tasks : []
 
-    async function fetchTasks() {
-      if (offset === 0) {
-        setState({
-          requestKey,
-          status: 'loading',
-          tasks: [],
-          totalCount: 0,
-          error: null,
-          loadingMore: false,
-          loadMoreFailed: false,
-        })
-      } else {
-        setState((current) => ({
-          ...current,
-          requestKey,
-          loadingMore: true,
-          loadMoreFailed: false,
-        }))
-      }
-
-      if (!projectId.trim()) {
-        setState({
-          requestKey,
-          status: 'error',
-          tasks: [],
-          totalCount: 0,
-          error: 'Project ID is required to load tasks',
-          loadingMore: false,
-          loadMoreFailed: false,
-        })
-        return
-      }
-
+  const fetchPage = useCallback(
+    async (page: number) => {
+      requestControllerRef.current?.abort()
+      const controller = new AbortController()
+      requestControllerRef.current = controller
       let tokenReady = false
 
       try {
         const accessToken = await getValidAccessToken()
         tokenReady = true
-        if (!isCurrentRequest) return
+        if (controller.signal.aborted) {
+          throw new DOMException('Request aborted', 'AbortError')
+        }
 
-        const result = await getProjectTasks(projectId, statusId, accessToken, {
-          limit: TASKS_PER_PAGE,
-          offset,
+        const result = await getProjectTasks(projectId, accessToken, {
+          limit: PAGE_SIZE,
+          offset: (page - 1) * PAGE_SIZE,
           searchTerm: normalizedSearchTerm,
           signal: controller.signal,
         })
 
-        if (isCurrentRequest) {
-          setState((current) => {
-            const existingTasks = offset > 0 && current.requestKey === requestKey
-              ? current.tasks
-              : []
-            const existingIds = new Set(existingTasks.map((task) => task.id))
-            const tasks = offset > 0
-              ? [...existingTasks, ...result.tasks.filter((task) => !existingIds.has(task.id))]
-              : result.tasks
-
-            return {
-              requestKey,
-              status: 'success',
-              tasks,
-              totalCount: result.totalCount,
-              error: null,
-              loadingMore: false,
-              loadMoreFailed: false,
-            }
-          })
-        }
+        return { items: result.tasks, totalCount: result.totalCount }
       } catch (error) {
-        if (!isCurrentRequest || controller.signal.aborted) return
-
         if (
-          !tokenReady ||
-          (error instanceof ApiError && [401, 403].includes(error.status))
+          !controller.signal.aborted &&
+          (!tokenReady || (error instanceof ApiError && [401, 403].includes(error.status)))
         ) {
           clearSession()
           navigate('/login', { replace: true })
-          return
+        }
+        throw error
+      }
+    },
+    [navigate, normalizedSearchTerm, projectId],
+  )
+
+  const {
+    hasMore,
+    loadMore,
+    loadingMore,
+    loadMoreFailed,
+    resetLoadMore,
+    setTotalCount,
+    totalCount,
+  } = usePagination({
+    items: tasks,
+    setItems: setTasks,
+    pageSize: PAGE_SIZE,
+    isMobile: true,
+    scopeKey,
+    fetchPage,
+    getItemId: getTaskId,
+  })
+
+  useEffect(() => {
+    let isCurrentRequest = true
+    const requestVersion = ++requestVersionRef.current
+    resetLoadMore()
+    setTotalCount(0)
+
+    async function loadTasks() {
+      try {
+        if (!projectId.trim()) {
+          throw new Error('Project ID is required to load tasks')
         }
 
-        setState((current) => {
-          if (offset > 0 && current.requestKey === requestKey) {
-            return { ...current, loadingMore: false, loadMoreFailed: true }
-          }
-
-          return {
-            requestKey,
+        const result = await fetchPage(1)
+        if (isCurrentRequest && requestVersionRef.current === requestVersion) {
+          setState({ scopeKey, status: 'success', tasks: result.items, error: null })
+          setTotalCount(result.totalCount)
+        }
+      } catch (error) {
+        if (
+          isCurrentRequest &&
+          requestVersionRef.current === requestVersion &&
+          !(error instanceof DOMException && error.name === 'AbortError')
+        ) {
+          setState({
+            scopeKey,
             status: 'error',
             tasks: [],
-            totalCount: 0,
             error: error instanceof Error ? error.message : 'Failed to load tasks',
-            loadingMore: false,
-            loadMoreFailed: false,
-          }
-        })
+          })
+        }
       }
     }
 
-    void fetchTasks()
+    void loadTasks()
 
     return () => {
       isCurrentRequest = false
-      controller.abort()
+      if (requestVersionRef.current === requestVersion) {
+        requestVersionRef.current += 1
+      }
+      requestControllerRef.current?.abort()
     }
-  }, [navigate, normalizedSearchTerm, offset, projectId, requestKey, retryCount, statusId])
+  }, [fetchPage, projectId, resetLoadMore, retryCount, scopeKey, setTotalCount])
 
-  const refetch = useCallback(() => {
-    setPagination({ requestKey, offset: 0 })
+  const retry = useCallback(() => {
+    setState((current) => ({ ...current, status: 'loading', error: null }))
     setRetryCount((count) => count + 1)
-  }, [requestKey])
+  }, [])
 
-  const loadMore = useCallback(() => {
-    if (
-      !hasCurrentResults ||
-      state.status !== 'success' ||
-      state.loadingMore ||
-      state.tasks.length >= state.totalCount
-    ) {
-      return
-    }
-
-    if (state.loadMoreFailed) {
-      setRetryCount((count) => count + 1)
-      return
-    }
-
-    setPagination({ requestKey, offset: state.tasks.length })
-  }, [hasCurrentResults, requestKey, state])
+  const matchesScope = state.scopeKey === scopeKey
 
   return {
-    tasks: hasCurrentResults ? state.tasks : [],
-    totalCount: hasCurrentResults ? state.totalCount : 0,
-    status: hasCurrentResults ? state.status : 'loading',
-    error: hasCurrentResults ? state.error : null,
-    loadingMore: hasCurrentResults && state.loadingMore,
-    loadMoreFailed: hasCurrentResults && state.loadMoreFailed,
-    refetch,
+    tasks,
+    status: matchesScope ? state.status : 'loading',
+    error: matchesScope ? state.error : null,
+    totalCount: matchesScope ? totalCount : 0,
     loadMore,
+    loadingMore: matchesScope && loadingMore,
+    loadMoreFailed: matchesScope && loadMoreFailed,
+    hasMore: matchesScope && hasMore,
+    retry,
   }
 }
