@@ -1,4 +1,5 @@
-import { useProjectTasks } from '@/hooks/useProjectTasks'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import type { Task } from '@/types/addTask.types'
 import { toTaskCardProps } from '@/utils/taskBoard'
 import { AddNewTaskSlot } from './AddNewTaskSlot'
 import { EmptyTaskPanel } from './EmptyTaskPanel'
@@ -7,9 +8,13 @@ import { TaskColumnHeader } from './TaskColumnHeader'
 import type { TaskStatus } from './TaskStatus'
 
 interface TaskColumnProps {
-  projectId: string
-  searchTerm: string
   status: TaskStatus
+  tasks: Task[]
+  searchTerm: string
+  isLoading: boolean
+  hasMore: boolean
+  loadingMore: boolean
+  onLoadMore: () => void
   onAddTask: (statusId?: string) => void
   onTaskClick: (taskId: string) => void
 }
@@ -31,31 +36,28 @@ function TaskLoadingState() {
   )
 }
 
-export function TaskColumn({ projectId, searchTerm, status, onAddTask, onTaskClick }: TaskColumnProps) {
-  const {
-    tasks,
-    totalCount,
-    status: loadStatus,
-    error,
-    loadingMore,
-    loadMoreFailed,
-    refetch,
-    loadMore,
-  } = useProjectTasks(
-    projectId,
-    status.id,
-    searchTerm,
+export function TaskColumn({
+  status,
+  tasks,
+  searchTerm,
+  isLoading,
+  hasMore,
+  loadingMore,
+  onLoadMore,
+  onAddTask,
+  onTaskClick,
+}: TaskColumnProps) {
+  const sentinelRef = useInfiniteScroll(
+    onLoadMore,
+    hasMore && !loadingMore && tasks.length > 0,
   )
 
   return (
-    <section
-      aria-label={status.label}
-      className="flex w-72 shrink-0 flex-col gap-3"
-    >
+    <section aria-label={status.label} className="flex w-72 shrink-0 flex-col gap-3">
       <div className="pb-1">
         <TaskColumnHeader
           label={status.label}
-          count={loadStatus === 'success' ? totalCount : 0}
+          count={tasks.length}
           dotClass={status.dotClass}
           badgeClass={status.badgeClass}
         />
@@ -63,24 +65,8 @@ export function TaskColumn({ projectId, searchTerm, status, onAddTask, onTaskCli
 
       <AddNewTaskSlot onClick={() => onAddTask(status.id)} />
 
-      {loadStatus === 'loading' ? (
+      {isLoading ? (
         <TaskLoadingState />
-      ) : loadStatus === 'error' ? (
-        <div
-          className="border-error/20 bg-error/5 flex flex-col items-start gap-3 rounded-md border p-4"
-          role="alert"
-        >
-          <p className="text-error wrap-break-word text-sm">
-            {error ?? 'Failed to load tasks'}
-          </p>
-          <button
-            type="button"
-            onClick={refetch}
-            className="text-primary text-sm font-semibold underline underline-offset-2"
-          >
-            Retry
-          </button>
-        </div>
       ) : tasks.length > 0 ? (
         <>
           <ul className="flex flex-col gap-3.5">
@@ -90,20 +76,7 @@ export function TaskColumn({ projectId, searchTerm, status, onAddTask, onTaskCli
               </li>
             ))}
           </ul>
-          {tasks.length < totalCount && (
-            <button
-              type="button"
-              onClick={loadMore}
-              disabled={loadingMore}
-              className="text-primary disabled:text-slate-medium rounded-md py-2 text-xs font-semibold hover:underline"
-            >
-              {loadingMore
-                ? 'Loading tasks...'
-                : loadMoreFailed
-                  ? 'Retry loading tasks'
-                  : 'Load more tasks'}
-            </button>
-          )}
+          {hasMore && tasks.length > 0 && <div ref={sentinelRef} className="h-1" />}
         </>
       ) : (
         <EmptyTaskPanel

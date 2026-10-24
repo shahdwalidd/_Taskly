@@ -34,21 +34,21 @@ export class TaskNotFoundError extends Error {
 
 export async function getProjectTasks(
   projectId: string,
-  status: TaskStatus,
   accessToken: string,
   options: {
     limit: number
     offset: number
+    status?: TaskStatus
     searchTerm?: string
     signal?: AbortSignal
   },
 ): Promise<{ tasks: Task[]; totalCount: number }> {
   const query = new URLSearchParams({
     project_id: `eq.${projectId}`,
-    status: `eq.${status}`,
     limit: String(options.limit),
     offset: String(options.offset),
   })
+  if (options.status) query.set('status', `eq.${options.status}`)
   const searchTerm = options.searchTerm?.trim()
   if (searchTerm) {
     const escapedSearchTerm = searchTerm.replace(/[\\%_]/g, '\\$&')
