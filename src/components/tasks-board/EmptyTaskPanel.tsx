@@ -3,9 +3,10 @@ import { cn } from '@/utils/cn'
 
 interface EmptyTaskPanelProps {
   className?: string
+  message?: string
 }
 
-export function EmptyTaskPanel({ className }: EmptyTaskPanelProps) {
+export function EmptyTaskPanel({ className, message = 'No tasks' }: EmptyTaskPanelProps) {
   return (
     <div
       className={cn(
@@ -15,7 +16,7 @@ export function EmptyTaskPanel({ className }: EmptyTaskPanelProps) {
     >
       <NoTasksIcon aria-hidden="true" className="text-slate-medium/60 size-7" />
       <p className="text-slate-medium/60 text-[11px] font-bold tracking-widest uppercase">
-        No tasks
+        {message}
       </p>
     </div>
   )

@@ -25,28 +25,54 @@ export function toCreateTaskPayload(
   }
 }
 
-export async function getProjectTasks(
-  projectId: string,
-  status: TaskStatus,
-  accessToken: string,
-  signal?: AbortSignal,
-): Promise<Task[]> {
-  const query = new URLSearchParams({
-    project_id: `eq.${projectId}`,
-    status: `eq.${status}`,
-  })
-
-  return apiRequest<Task[]>(`/rest/v1/project_tasks?${query.toString()}`, {
-    accessToken,
-    signal,
-  })
-}
-
 export class TaskNotFoundError extends Error {
   constructor() {
     super('Task not found')
     this.name = 'TaskNotFoundError'
   }
+}
+
+export async function getProjectTasks(
+  projectId: string,
+  status: TaskStatus,
+  accessToken: string,
+  options: {
+    limit: number
+    offset: number
+    searchTerm?: string
+    signal?: AbortSignal
+  },
+): Promise<{ tasks: Task[]; totalCount: number }> {
+  const query = new URLSearchParams({
+    project_id: `eq.${projectId}`,
+    status: `eq.${status}`,
+    limit: String(options.limit),
+    offset: String(options.offset),
+  })
+  const searchTerm = options.searchTerm?.trim()
+  if (searchTerm) {
+    const escapedSearchTerm = searchTerm.replace(/[\\%_]/g, '\\$&')
+    query.set('title', `ilike.%${escapedSearchTerm}%`)
+  }
+
+  const result = await apiRequest<Task[]>(
+    `/rest/v1/project_tasks?${query.toString()}`,
+    {
+      accessToken,
+      signal: options.signal,
+      includeHeaders: true,
+      headers: { Prefer: 'count=exact' },
+    },
+  )
+
+  if (!Array.isArray(result.data)) {
+    throw new Error('The project tasks response was invalid')
+  }
+
+  const countMatch = result.headers.get('Content-Range')?.match(/\/(\d+)$/)
+  const totalCount = countMatch ? Number(countMatch[1]) : 0
+
+  return { tasks: result.data, totalCount }
 }
 
 export async function getTaskDetails(
