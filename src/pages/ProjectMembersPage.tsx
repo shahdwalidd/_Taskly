@@ -7,6 +7,7 @@ import { ErrorState } from '@/components/shared/ErrorState'
 import { useProjectMembersPage } from '@/hooks/useProjectMembersPage'
 import { InviteMemberModal } from '@/components/invite-member/InviteMemberModal'
 import { useState } from 'react'
+import { useInviteMember } from '@/hooks/useInviteMember'
 
 export function ProjectMembersPage() {
   const {
@@ -18,7 +19,17 @@ export function ProjectMembersPage() {
     handleRetry,
   } = useProjectMembersPage()
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
-  const [inviteEmail, setInviteEmail] = useState('')
+  const invite = useInviteMember(projectId)
+
+  function openInviteModal() {
+    invite.reset()
+    setIsInviteModalOpen(true)
+  }
+
+  function closeInviteModal() {
+    setIsInviteModalOpen(false)
+    invite.reset()
+  }
 
   return (
     <AuthenticatedLayout projectId={projectId} projectName={projectName}>
@@ -45,7 +56,7 @@ export function ProjectMembersPage() {
                 <h1 className="text-headline-lg text-slate-dark w-full text-center md:w-auto md:text-left">
                   Project Members
                 </h1>
-                <InviteMemberButton onClick={() => setIsInviteModalOpen(true)} />
+                <InviteMemberButton onClick={openInviteModal} />
               </div>
             </div>
 
@@ -61,11 +72,15 @@ export function ProjectMembersPage() {
       </div>
       {isInviteModalOpen && (
         <InviteMemberModal
-          email={inviteEmail}
-          onEmailChange={setInviteEmail}
+          email={invite.email}
+          onEmailChange={invite.handleEmailChange}
+          emailError={invite.emailError}
+          requestError={invite.requestError}
+          successMessage={invite.successMessage}
+          isSubmitting={invite.isSubmitting}
           workspaceName={projectName}
-          onClose={() => setIsInviteModalOpen(false)}
-          onSubmit={() => undefined}
+          onClose={closeInviteModal}
+          onSubmit={() => void invite.submit()}
         />
       )}
     </AuthenticatedLayout>

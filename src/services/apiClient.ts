@@ -1,6 +1,10 @@
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 
+export function getApiBaseUrl() {
+  return (supabaseUrl ?? '').trim().replace(/\/+$/, '')
+}
+
 interface ApiResponse<T> {
   data: T
   headers: Headers
@@ -22,10 +26,20 @@ export class ApiError extends Error {
 }
 
 function extractErrorMessage(result: unknown): string | undefined {
+  if (typeof result === 'string' && result.trim()) {
+    return result.trim()
+  }
+
   if (typeof result === 'object' && result !== null) {
-    if ('message' in result)
-      return String((result as { message: unknown }).message)
-    if ('msg' in result) return String((result as { msg: unknown }).msg)
+    const errorBody = result as Record<string, unknown>
+    for (const field of ['message', 'msg', 'error_description', 'error', 'details']) {
+      const value = errorBody[field]
+      if (typeof value === 'string' && value.trim()) return value.trim()
+      if (typeof value === 'object' && value !== null) {
+        const nestedMessage = extractErrorMessage(value)
+        if (nestedMessage) return nestedMessage
+      }
+    }
   }
   return undefined
 }

@@ -7,6 +7,8 @@ interface InviteMemberModalProps {
   email: string
   onEmailChange: (value: string) => void
   emailError?: string
+  requestError?: string
+  successMessage?: string
   workspaceName?: string
   isSubmitting?: boolean
   onClose: () => void
@@ -17,6 +19,8 @@ export function InviteMemberModal({
   email,
   onEmailChange,
   emailError,
+  requestError,
+  successMessage,
   workspaceName = 'Architectural Studio',
   isSubmitting = false,
   onClose,
@@ -68,6 +72,22 @@ export function InviteMemberModal({
             error={emailError}
           />
         </div>
+
+        {requestError && (
+          <p className="text-label-sm text-error mt-4" role="alert">
+            {requestError}
+          </p>
+        )}
+
+        {successMessage && (
+          <p
+            className="text-label-sm text-darkgreen mt-4"
+            role="status"
+            aria-live="polite"
+          >
+            {successMessage}
+          </p>
+        )}
 
         <InviteMemberActions onCancel={onClose} isSubmitting={isSubmitting} />
       </form>

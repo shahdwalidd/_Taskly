@@ -23,7 +23,17 @@ export function InviteMemberActions({
         disabled={isSubmitting}
         className="bg-gradient shadow-invite-button h-13 cursor-pointer rounded-lg text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 md:h-12 md:rounded-md"
       >
-        {isSubmitting ? 'Sending...' : 'Send Invitation'}
+        {isSubmitting ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <span
+              className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+              aria-hidden="true"
+            />
+            Sending...
+          </span>
+        ) : (
+          'Send Invitation'
+        )}
       </button>
     </div>
   )
