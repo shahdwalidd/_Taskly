@@ -15,6 +15,7 @@ export function TasksPage() {
     projectName,
     search,
     setSearch,
+    debouncedSearch,
   } = useTasksPage()
   const addTask = useAddTask(projectId)
 
@@ -29,6 +30,7 @@ export function TasksPage() {
 
         <TaskBoard
           projectId={projectId}
+          searchTerm={debouncedSearch}
           onAddTask={(statusId) => addTask.openAddTask({ statusId })}
           onTaskClick={setSelectedTaskId}
         />

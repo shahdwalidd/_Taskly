@@ -8,6 +8,7 @@ import type { TaskStatus } from './TaskStatus'
 
 interface TaskColumnProps {
   projectId: string
+  searchTerm: string
   status: TaskStatus
   onAddTask: (statusId?: string) => void
   onTaskClick: (taskId: string) => void
@@ -30,10 +31,20 @@ function TaskLoadingState() {
   )
 }
 
-export function TaskColumn({ projectId, status, onAddTask, onTaskClick }: TaskColumnProps) {
-  const { tasks, status: loadStatus, error, refetch } = useProjectTasks(
+export function TaskColumn({ projectId, searchTerm, status, onAddTask, onTaskClick }: TaskColumnProps) {
+  const {
+    tasks,
+    totalCount,
+    status: loadStatus,
+    error,
+    loadingMore,
+    loadMoreFailed,
+    refetch,
+    loadMore,
+  } = useProjectTasks(
     projectId,
     status.id,
+    searchTerm,
   )
 
   return (
@@ -44,7 +55,7 @@ export function TaskColumn({ projectId, status, onAddTask, onTaskClick }: TaskCo
       <div className="pb-1">
         <TaskColumnHeader
           label={status.label}
-          count={loadStatus === 'success' ? tasks.length : 0}
+          count={loadStatus === 'success' ? totalCount : 0}
           dotClass={status.dotClass}
           badgeClass={status.badgeClass}
         />
@@ -71,15 +82,34 @@ export function TaskColumn({ projectId, status, onAddTask, onTaskClick }: TaskCo
           </button>
         </div>
       ) : tasks.length > 0 ? (
-        <ul className="flex flex-col gap-3.5">
-          {tasks.map((task) => (
-            <li key={task.id}>
-              <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task.id)} />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="flex flex-col gap-3.5">
+            {tasks.map((task) => (
+              <li key={task.id}>
+                <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task.id)} />
+              </li>
+            ))}
+          </ul>
+          {tasks.length < totalCount && (
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="text-primary disabled:text-slate-medium rounded-md py-2 text-xs font-semibold hover:underline"
+            >
+              {loadingMore
+                ? 'Loading tasks...'
+                : loadMoreFailed
+                  ? 'Retry loading tasks'
+                  : 'Load more tasks'}
+            </button>
+          )}
+        </>
       ) : (
-        <EmptyTaskPanel className="min-h-160 flex-1" />
+        <EmptyTaskPanel
+          className="min-h-160 flex-1"
+          message={searchTerm.trim() ? 'No matching tasks' : 'No tasks'}
+        />
       )}
     </section>
   )
