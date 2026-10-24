@@ -1,4 +1,4 @@
-import { apiRequest } from '@/services/apiClient'
+import { apiRequest, getApiBaseUrl } from '@/services/apiClient'
 import type { Member, ProjectMemberDto } from '@/types/projectmembers.types'
 
 function toMember(dto: ProjectMemberDto): Member {
@@ -30,4 +30,32 @@ export async function getProjectMembers(
     .finally(() => {
       window.clearTimeout(timeoutId)
     })
+}
+
+export async function inviteMember(
+  projectId: string,
+  email: string,
+  accessToken: string,
+): Promise<void> {
+  const appUrl = import.meta.env.VITE_APP_URL?.trim() || window.location.origin
+  const baseUrl = getApiBaseUrl()
+
+  if (!projectId.trim()) {
+    throw new Error('Project id is required to invite a member')
+  }
+
+  if (!baseUrl) {
+    throw new Error('The backend URL is not configured')
+  }
+
+  await apiRequest<unknown>('/rest/v1/rpc/invite_member', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify({
+      p_email: email,
+      p_project_id: projectId,
+      p_app_url: appUrl,
+      p_base_url: baseUrl,
+    }),
+  })
 }

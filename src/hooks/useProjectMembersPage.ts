@@ -28,10 +28,6 @@ export function useProjectMembersPage() {
     if (membersStatus === 'error') refetchMembers()
   }, [projectError, membersStatus, refetchProject, refetchMembers])
 
-  const handleInvite = useCallback(() => {
-    console.log()
-  }, [])
-
   return {
     projectId: projectId ?? '',
     projectName: project?.name ?? 'Project',
@@ -39,6 +35,5 @@ export function useProjectMembersPage() {
     isLoading,
     isError,
     handleRetry,
-    handleInvite,
   }
 }
