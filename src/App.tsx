@@ -25,6 +25,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<EntryPoint />} />
+          <Route path="/invite" element={<AcceptInvitationPage />} />
           <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
           <Route
             path="/sign-up"
