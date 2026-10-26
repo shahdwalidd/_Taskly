@@ -59,3 +59,56 @@ export async function inviteMember(
     }),
   })
 }
+
+function getAcceptedProjectId(result: unknown): string | null {
+  if (
+    typeof result === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(result)
+  ) {
+    return result
+  }
+
+  const candidate = Array.isArray(result) ? result[0] : result
+  if (typeof candidate !== 'object' || candidate === null) return null
+
+  const record = candidate as Record<string, unknown>
+  const projectId = record.project_id ?? record.projectId
+  if (typeof projectId === 'string' && projectId.trim()) return projectId.trim()
+
+  const project = record.project
+  if (typeof project === 'object' && project !== null && 'id' in project) {
+    const id = project.id
+    if (typeof id === 'string' && id.trim()) return id.trim()
+  }
+
+  return null
+}
+
+export async function acceptInvitation(
+  token: string,
+  accessToken: string,
+): Promise<{ projectId: string | null }> {
+  const result = await apiRequest<unknown>('/rest/v1/rpc/accept_invitation', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify({ p_token: token }),
+  })
+
+  if (result === false) {
+    throw new Error('This invitation could not be accepted.')
+  }
+
+  if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
+    const response = result as Record<string, unknown>
+    if (response.success === false || response.accepted === false) {
+      const message = response.message ?? response.error
+      throw new Error(
+        typeof message === 'string' && message.trim()
+          ? message.trim()
+          : 'This invitation could not be accepted.',
+      )
+    }
+  }
+
+  return { projectId: getAcceptedProjectId(result) }
+}

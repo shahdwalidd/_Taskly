@@ -3,9 +3,19 @@ import { ProjectInvitationBadge } from './ProjectInvitationBadge'
 
 interface InvitationCardProps {
   onAccept?: () => void
+  disabled?: boolean
+  isLoading?: boolean
+  error?: string | null
+  successMessage?: string | null
 }
 
-export function InvitationCard({ onAccept }: InvitationCardProps) {
+export function InvitationCard({
+  onAccept,
+  disabled = false,
+  isLoading = false,
+  error,
+  successMessage,
+}: InvitationCardProps) {
   return (
     <section
       className="relative isolate flex w-full flex-col items-center overflow-hidden rounded-md bg-authcard p-12 shadow-invitation-card max-sm:px-6 max-sm:py-10"
@@ -27,7 +37,21 @@ export function InvitationCard({ onAccept }: InvitationCardProps) {
           You've been invited to join new project
         </h1>
 
-        <AcceptInvitationButton onAccept={onAccept} />
+        {error && (
+          <p className="mb-4 w-full text-center text-sm text-error" role="alert">
+            {error}
+          </p>
+        )}
+        {successMessage && (
+          <p className="mb-4 w-full text-center text-sm text-primary" role="status">
+            {successMessage}
+          </p>
+        )}
+        <AcceptInvitationButton
+          onAccept={onAccept}
+          disabled={disabled}
+          isLoading={isLoading}
+        />
       </div>
     </section>
   )
