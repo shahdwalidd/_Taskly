@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SetStateAction } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { usePagination } from '@/hooks/usePagination'
 import { ApiError } from '@/services/apiClient'
 import { getValidAccessToken } from '@/services/AuthService'
-import { getProjectTasks } from '@/services/TaskService'
+import { getProjectTasks, updateTaskStatus as persistTaskStatus } from '@/services/TaskService'
 import { clearSession } from '@/store/Authstore'
-import type { Task } from '@/types/addTask.types'
+import type { Task, TaskStatusValue } from '@/types/addTask.types'
 
 const PAGE_SIZE = 10
 
@@ -27,6 +28,8 @@ export function useProjectTasks(projectId: string, searchTerm: string) {
   const scopeKey = JSON.stringify([projectId, normalizedSearchTerm])
   const requestVersionRef = useRef(0)
   const requestControllerRef = useRef<AbortController | null>(null)
+  const pendingTaskIdsRef = useRef(new Set<string>())
+  const [pendingTaskIds, setPendingTaskIds] = useState<Set<string>>(() => new Set())
   const [retryCount, setRetryCount] = useState(0)
   const [state, setState] = useState<TaskState>({
     scopeKey: '',
@@ -150,6 +153,70 @@ export function useProjectTasks(projectId: string, searchTerm: string) {
     setRetryCount((count) => count + 1)
   }, [])
 
+  const changeTaskStatus = useCallback(
+    async (taskId: string, nextStatus: TaskStatusValue) => {
+      const currentTask =
+        state.scopeKey === scopeKey
+          ? state.tasks.find((task) => task.id === taskId)
+          : undefined
+
+      if (
+        !currentTask ||
+        currentTask.status === nextStatus ||
+        pendingTaskIdsRef.current.has(taskId)
+      ) {
+        return
+      }
+
+      const originalStatus = currentTask.status
+      pendingTaskIdsRef.current.add(taskId)
+      setPendingTaskIds((current) => new Set(current).add(taskId))
+      setState((current) => {
+        if (current.scopeKey !== scopeKey) return current
+        return {
+          ...current,
+          tasks: current.tasks.map((task) =>
+            task.id === taskId ? { ...task, status: nextStatus } : task,
+          ),
+        }
+      })
+
+      try {
+        const accessToken = await getValidAccessToken()
+        await persistTaskStatus(taskId, nextStatus, accessToken)
+      } catch (error) {
+        setState((current) => {
+          if (current.scopeKey !== scopeKey) return current
+          return {
+            ...current,
+            tasks: current.tasks.map((task) =>
+              task.id === taskId ? { ...task, status: originalStatus } : task,
+            ),
+          }
+        })
+
+        toast.error(
+          error instanceof Error && error.message.trim()
+            ? error.message
+            : 'Failed to update task status. Please try again.',
+        )
+
+        if (!(error instanceof ApiError) || [401, 403].includes(error.status)) {
+          clearSession()
+          navigate('/login', { replace: true })
+        }
+      } finally {
+        pendingTaskIdsRef.current.delete(taskId)
+        setPendingTaskIds((current) => {
+          const next = new Set(current)
+          next.delete(taskId)
+          return next
+        })
+      }
+    },
+    [navigate, scopeKey, state.scopeKey, state.tasks],
+  )
+
   const matchesScope = state.scopeKey === scopeKey
 
   return {
@@ -161,6 +228,8 @@ export function useProjectTasks(projectId: string, searchTerm: string) {
     loadingMore: matchesScope && loadingMore,
     loadMoreFailed: matchesScope && loadMoreFailed,
     hasMore: matchesScope && hasMore,
+    pendingTaskIds,
+    changeTaskStatus,
     retry,
   }
 }
