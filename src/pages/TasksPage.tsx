@@ -36,6 +36,7 @@ export function TasksPage() {
         {!isMobile && (
           <TaskBoard
             tasks={taskPage.tasks}
+            pendingTaskIds={taskPage.pendingTaskIds}
             searchTerm={debouncedSearch}
             status={taskPage.status}
             error={taskPage.error}
@@ -46,6 +47,9 @@ export function TasksPage() {
             onLoadMore={() => void taskPage.loadMore()}
             onAddTask={(statusId) => addTask.openAddTask({ statusId })}
             onTaskClick={setSelectedTaskId}
+            onStatusChange={(taskId, status) => {
+              void taskPage.changeTaskStatus(taskId, status)
+            }}
           />
         )}
 

@@ -135,3 +135,17 @@ export async function createTask(
     body: JSON.stringify(payload),
   })
 }
+
+export async function updateTaskStatus(
+  taskId: string,
+  status: TaskStatusValue,
+  accessToken: string,
+): Promise<void> {
+  const query = new URLSearchParams({ id: `eq.${taskId}` })
+
+  await apiRequest(`/rest/v1/tasks?${query.toString()}`, {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify({ status }),
+  })
+}

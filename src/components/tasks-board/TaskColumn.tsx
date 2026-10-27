@@ -1,15 +1,16 @@
+import { useDroppable } from '@dnd-kit/core'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import type { Task } from '@/types/addTask.types'
-import { toTaskCardProps } from '@/utils/taskBoard'
 import { AddNewTaskSlot } from './AddNewTaskSlot'
+import { DraggableTaskCard } from './DraggableTaskCard'
 import { EmptyTaskPanel } from './EmptyTaskPanel'
-import { TaskCard } from './TaskCard'
 import { TaskColumnHeader } from './TaskColumnHeader'
 import type { TaskStatus } from './TaskStatus'
 
 interface TaskColumnProps {
   status: TaskStatus
   tasks: Task[]
+  pendingTaskIds: ReadonlySet<string>
   searchTerm: string
   isLoading: boolean
   hasMore: boolean
@@ -39,6 +40,7 @@ function TaskLoadingState() {
 export function TaskColumn({
   status,
   tasks,
+  pendingTaskIds,
   searchTerm,
   isLoading,
   hasMore,
@@ -47,13 +49,21 @@ export function TaskColumn({
   onAddTask,
   onTaskClick,
 }: TaskColumnProps) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: `column-${status.id}`,
+    data: { statusId: status.id },
+  })
   const sentinelRef = useInfiniteScroll(
     onLoadMore,
     hasMore && !loadingMore && tasks.length > 0,
   )
 
   return (
-    <section aria-label={status.label} className="flex w-72 shrink-0 flex-col gap-3">
+    <section
+      ref={setNodeRef}
+      aria-label={status.label}
+      className={`flex w-72 shrink-0 flex-col gap-3 rounded-md transition-colors ${isOver ? 'bg-primary/5 ring-2 ring-primary/30' : ''}`}
+    >
       <div className="pb-1">
         <TaskColumnHeader
           label={status.label}
@@ -72,7 +82,11 @@ export function TaskColumn({
           <ul className="flex flex-col gap-3.5">
             {tasks.map((task) => (
               <li key={task.id}>
-                <TaskCard {...toTaskCardProps(task)} onClick={() => onTaskClick(task.id)} />
+                <DraggableTaskCard
+                  task={task}
+                  disabled={pendingTaskIds.has(task.id)}
+                  onTaskClick={onTaskClick}
+                />
               </li>
             ))}
           </ul>
