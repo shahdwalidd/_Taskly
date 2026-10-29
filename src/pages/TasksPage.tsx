@@ -77,6 +77,7 @@ export function TasksPage() {
           taskId={selectedTaskId}
           onClose={() => setSelectedTaskId(null)}
           onCopyLink={() => navigator.clipboard?.writeText(window.location.href)}
+          onTaskUpdated={taskPage.reconcileTask}
         />
       )}
     </AuthenticatedLayout>

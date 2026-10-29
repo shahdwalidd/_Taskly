@@ -2,6 +2,7 @@ import type {
   CreateTaskPayload,
   Task,
   TaskDetails,
+  TaskDetailsUpdate,
   TaskFormValues,
   TaskStatusValue,
   TaskStatusValue as TaskStatus,
@@ -147,5 +148,20 @@ export async function updateTaskStatus(
     method: 'PATCH',
     accessToken,
     body: JSON.stringify({ status }),
+  })
+}
+
+export async function updateTaskDetails(
+  taskId: string,
+  updates: TaskDetailsUpdate,
+  accessToken: string,
+): Promise<void> {
+  const query = new URLSearchParams({ id: `eq.${taskId}` })
+
+  await apiRequest(`/rest/v1/tasks?${query.toString()}`, {
+    method: 'PATCH',
+    accessToken,
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify(updates),
   })
 }

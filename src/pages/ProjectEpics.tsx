@@ -224,6 +224,7 @@ export function EpicsPage() {
           taskId={selectedTaskId}
           onClose={() => setSelectedTaskId(null)}
           onCopyLink={() => void navigator.clipboard?.writeText(window.location.href)}
+          onTaskUpdated={epicTasks.reconcileTask}
         />
       )}
     </AuthenticatedLayout>

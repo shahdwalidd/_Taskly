@@ -46,6 +46,7 @@ export interface TaskEpic {
 export interface Task {
   id: string
   project_id: string
+  assignee_id?: string | null
   epic_id: string | null
   title: string | null
   description: string | null
@@ -74,3 +75,14 @@ export interface CreateTaskPayload {
   assignee_id?: string
   due_date?: string 
 }
+
+export interface TaskDetailsUpdate {
+  title?: string
+  description?: string | null
+  assignee_id?: string | null
+  epic_id?: string | null
+  due_date?: string | null
+  status?: TaskStatusValue
+}
+
+export type TaskDetailsEditableField = keyof TaskDetailsUpdate
