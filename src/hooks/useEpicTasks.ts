@@ -4,7 +4,7 @@ import { getValidAccessToken } from '@/services/AuthService'
 import { ApiError } from '@/services/apiClient'
 import { getEpicTasks } from '@/services/TaskService'
 import { clearSession } from '@/store/Authstore'
-import type { Task } from '@/types/addTask.types'
+import type { Task, TaskDetails, TaskStatusValue } from '@/types/addTask.types'
 
 type EpicTasksStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -93,6 +93,43 @@ export function useEpicTasks(epicId: string | null) {
     setRetryCount((count) => count + 1)
   }, [])
 
+  const reconcileTask = useCallback(
+    (taskId: string, updates: Partial<TaskDetails>) => {
+      const taskUpdates: Partial<Task> = {
+        title: updates.title,
+        description: updates.description,
+        status:
+          updates.status === undefined
+            ? undefined
+            : (updates.status as TaskStatusValue),
+        assignee_id: updates.assignee_id,
+        assignee: updates.assignee,
+        epic_id: updates.epic_id,
+        epic: updates.epic,
+        due_date: updates.due_date,
+      }
+      setState((current) => {
+        if (current.epicId !== epicId) return current
+        const belongsToEpic =
+          updates.epic_id === undefined || updates.epic_id === epicId
+        return {
+          ...current,
+          tasks: current.tasks
+            .filter((task) => task.id !== taskId || belongsToEpic)
+            .map((task) =>
+              task.id === taskId
+                ? {
+                    ...task,
+                  ...taskUpdates,
+                  }
+                : task,
+            ),
+        }
+      })
+    },
+    [epicId],
+  )
+
   const matchesEpic = state.epicId === epicId
 
   return {
@@ -100,5 +137,6 @@ export function useEpicTasks(epicId: string | null) {
     status: epicId ? (matchesEpic ? state.status : 'loading') : 'idle',
     error: matchesEpic ? state.error : null,
     refetch,
+    reconcileTask,
   }
 }

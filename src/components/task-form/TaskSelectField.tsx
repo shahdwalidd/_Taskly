@@ -14,6 +14,7 @@ interface TaskSelectFieldProps {
   disabled?: boolean
   readOnly?: boolean
   avatarUrl?: string | null
+  onFocus?: () => void
 }
 export function TaskSelectField({
   id,
@@ -26,6 +27,7 @@ export function TaskSelectField({
   disabled = false,
   readOnly = false,
   avatarUrl,
+  onFocus,
 }: TaskSelectFieldProps) {
   const selected = options.find((option) => option.value === value)
 
@@ -56,6 +58,7 @@ export function TaskSelectField({
           id={id}
           value={value}
           disabled={disabled}
+          onFocus={onFocus}
           onChange={(event) => onChange(event.target.value)}
           className="absolute inset-0 size-full cursor-pointer opacity-0"
         >

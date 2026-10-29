@@ -1,17 +1,25 @@
 import { createPortal } from 'react-dom'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import CalendarIcon from '@/assets/CalendarIcon.svg?react'
 import CloseIcon from '@/assets/CloseIcon (2).svg?react'
+import { useProjectEpics } from '@/hooks/useProjectEpics'
+import { useProjectMembers } from '@/hooks/useProjectMembers'
 import { useTaskDetails } from '@/hooks/useTaskDetails'
-import type { TaskDetails } from '@/types/addTask.types'
-import { formatTaskDetailsDate } from '@/utils/formatDate'
+import {
+  TASK_STATUS_VALUES,
+  type SelectOption,
+  type TaskDetails,
+  type TaskStatusValue,
+} from '@/types/addTask.types'
+import { formatTaskDetailsDate, getTodayISO } from '@/utils/formatDate'
 import { getInitials } from '@/utils/getInitials'
 import { TaskDateField } from '../task-form/TaskDateField'
 import { TaskDescriptionField } from '../task-form/TaskDescriptionField'
 import { TaskField } from '../task-form/TaskField'
 import { TaskSelectField } from '../task-form/TaskSelectField'
 import { TaskTitleField } from '../task-form/TaskTitleField'
-import { getTaskStatusLabel } from '../tasks-board/TaskStatus'
+import { getTaskStatusLabel, taskStatuses } from '../tasks-board/TaskStatus'
 import { TaskDetailsFooter } from './TaskDetailsFooter'
 
 interface TaskDetailsModalProps {
@@ -19,6 +27,7 @@ interface TaskDetailsModalProps {
   taskId: string
   onClose: () => void
   onCopyLink: () => void
+  onTaskUpdated?: (taskId: string, updates: Partial<TaskDetails>) => void
 }
 
 function getSafeAvatarUrl(value?: string | null) {
@@ -31,55 +40,248 @@ function getSafeAvatarUrl(value?: string | null) {
   }
 }
 
-function TaskProperties({ task }: { task: TaskDetails }) {
+function isTaskStatus(value: string): value is TaskStatusValue {
+  return TASK_STATUS_VALUES.includes(value as TaskStatusValue)
+}
+
+interface TaskPropertiesProps {
+  task: TaskDetails
+  projectId: string
+  savingFields: ReadonlySet<string>
+  onSaveField: (
+    field: 'status' | 'assignee_id' | 'epic_id' | 'due_date',
+    updates: {
+      status?: TaskStatusValue
+      assignee_id?: string | null
+      epic_id?: string | null
+      due_date?: string | null
+    },
+    optimisticTask: Partial<TaskDetails>,
+  ) => Promise<void>
+}
+
+type SaveTaskField = ReturnType<typeof useTaskDetails>['saveField']
+
+function EditableTaskTitle({
+  task,
+  disabled,
+  saveField,
+}: {
+  task: TaskDetails
+  disabled: boolean
+  saveField: SaveTaskField
+}) {
+  const [draft, setDraft] = useState(task.title ?? '')
+
+  return (
+    <TaskTitleField
+      value={draft}
+      disabled={disabled}
+      onChange={setDraft}
+      onBlur={() => {
+        const nextTitle = draft.trim()
+        const currentTitle = task.title?.trim() ?? ''
+        if (!nextTitle) {
+          setDraft(task.title ?? '')
+          toast.error('Task title cannot be empty.')
+          return
+        }
+        if (nextTitle === currentTitle) {
+          setDraft(task.title ?? '')
+          return
+        }
+        void saveField('title', { title: nextTitle }, { title: nextTitle })
+      }}
+      placeholder="Untitled task"
+    />
+  )
+}
+
+function EditableTaskDescription({
+  task,
+  disabled,
+  saveField,
+}: {
+  task: TaskDetails
+  disabled: boolean
+  saveField: SaveTaskField
+}) {
+  const [draft, setDraft] = useState(task.description ?? '')
+
+  return (
+    <TaskDescriptionField
+      value={draft}
+      disabled={disabled}
+      onChange={setDraft}
+      onBlur={() => {
+        const nextDescription = draft.trim() ? draft : null
+        const currentDescription = task.description?.trim()
+          ? task.description
+          : null
+        if (nextDescription === currentDescription) {
+          setDraft(task.description ?? '')
+          return
+        }
+        void saveField(
+          'description',
+          { description: nextDescription },
+          { description: nextDescription },
+        )
+      }}
+      placeholder="No description provided"
+    />
+  )
+}
+
+function TaskProperties({ task, projectId, savingFields, onSaveField }: TaskPropertiesProps) {
   const status = task.status?.trim() ?? ''
+  const membersQuery = useProjectMembers(projectId)
+  const epicsQuery = useProjectEpics(projectId, false, true)
+  const assigneeId = task.assignee_id ?? task.assignee?.id ?? ''
   const assigneeName = task.assignee?.name?.trim() || task.assignee?.user_metadata?.name?.trim() || 'Unassigned'
   const assigneeAvatar = getSafeAvatarUrl(task.assignee?.avatar_url ?? task.assignee?.user_metadata?.avatar_url ?? task.assignee?.picture ?? task.assignee?.user_metadata?.picture)
+  const memberOptions: SelectOption[] = membersQuery.members.map((member) => ({
+    value: member.id,
+    label: member.name?.trim() || member.email,
+  }))
+  if (assigneeId && !memberOptions.some((option) => option.value === assigneeId)) {
+    memberOptions.unshift({ value: assigneeId, label: assigneeName })
+  }
+  const epicId = task.epic_id ?? task.epic?.id ?? ''
   const epicTitle = task.epic?.title?.trim() ?? ''
-  const epicId = task.epic?.epic_id == null ? '' : String(task.epic.epic_id)
-  const epicCode = epicId && !epicId.toUpperCase().startsWith('EPIC-') ? `EPIC-${epicId}` : epicId
+  const epicCode = task.epic?.epic_id == null ? '' : String(task.epic.epic_id)
+  const formattedEpicCode = epicCode && !epicCode.toUpperCase().startsWith('EPIC-')
+    ? `EPIC-${epicCode}`
+    : epicCode
   const epicName = epicTitle
-    ? epicCode ? `(${epicCode}) ${epicTitle}` : epicTitle
+    ? formattedEpicCode ? `(${formattedEpicCode}) ${epicTitle}` : epicTitle
     : ''
+  const epicOptions: SelectOption[] = epicsQuery.epics.map((epic) => ({
+    value: epic.id,
+    label: `(${epic.code.toUpperCase().startsWith('EPIC-') ? epic.code : `EPIC-${epic.code}`}) ${epic.title}`,
+  }))
+  if (epicId && !epicOptions.some((option) => option.value === epicId)) {
+    epicOptions.unshift({ value: epicId, label: epicName || 'Current epic' })
+  }
+  const dueDate = task.due_date?.slice(0, 10) ?? ''
   const createdByName = task.created_by?.name?.trim() || task.created_by?.user_metadata?.name?.trim() || '—'
   const createdByAvatar = getSafeAvatarUrl(task.created_by?.avatar_url ?? task.created_by?.user_metadata?.avatar_url ?? task.created_by?.picture ?? task.created_by?.user_metadata?.picture)
+
+  useEffect(() => {
+    if (
+      epicsQuery.status === 'success' &&
+      epicId &&
+      !epicsQuery.epics.some((epic) => epic.id === epicId)
+    ) {
+      void onSaveField('epic_id', { epic_id: null }, { epic_id: null, epic: null })
+    }
+  }, [epicId, epicsQuery.epics, epicsQuery.status, onSaveField])
 
   return (
     <>
       <TaskSelectField
         id="task-details-status"
         label="Status"
-        options={[{ value: status, label: getTaskStatusLabel(status) }]}
+        options={[
+          ...(!isTaskStatus(status) && status ? [{ value: status, label: getTaskStatusLabel(status) }] : []),
+          ...taskStatuses.map(({ id, label }) => ({ value: id, label })),
+        ]}
         value={status}
-        onChange={() => undefined}
-        readOnly
+        disabled={savingFields.has('status')}
+        onChange={(value) => {
+          if (!isTaskStatus(value) || value === status) return
+          void onSaveField('status', { status: value }, { status: value })
+        }}
       />
       <TaskSelectField
         id="task-details-assignee"
         label="Assignee"
-        options={assigneeName === 'Unassigned' ? [] : [{ value: assigneeName, label: assigneeName }]}
-        value={assigneeName === 'Unassigned' ? '' : assigneeName}
-        onChange={() => undefined}
+        options={memberOptions}
+        value={assigneeId}
+        disabled={savingFields.has('assignee_id') || membersQuery.status !== 'success'}
+        onChange={(value) => {
+          const nextAssigneeId = value || null
+          if (nextAssigneeId === (assigneeId || null)) return
+          const member = membersQuery.members.find((item) => item.id === value)
+          const nextName = member?.name?.trim() || member?.email || 'Unassigned'
+          const nextAvatar = member?.avatarUrl ?? null
+          void onSaveField(
+            'assignee_id',
+            { assignee_id: nextAssigneeId },
+            {
+              assignee_id: nextAssigneeId,
+              assignee: member
+                ? { id: member.id, name: nextName, avatar_url: nextAvatar }
+                : null,
+            },
+          )
+        }}
         placeholder="Unassigned"
         withAvatar
-        avatarUrl={assigneeAvatar}
-        readOnly
+        avatarUrl={assigneeId ? assigneeAvatar : null}
       />
+      {membersQuery.status === 'error' && (
+        <button
+          type="button"
+          onClick={() => void membersQuery.refetch()}
+          className="text-primary -mt-3 self-start text-xs font-semibold underline"
+        >
+          Retry loading project members
+        </button>
+      )}
       <TaskSelectField
         id="task-details-epic"
         label="Epic"
-        options={epicName ? [{ value: epicName, label: epicName }] : []}
-        value={epicName}
-        onChange={() => undefined}
+        options={epicOptions}
+        value={epicId}
+        disabled={savingFields.has('epic_id')}
+        onFocus={epicsQuery.refetch}
+        onChange={(value) => {
+          const nextEpicId = value || null
+          if (nextEpicId === (epicId || null)) return
+          const epic = epicsQuery.epics.find((item) => item.id === value)
+          void onSaveField(
+            'epic_id',
+            { epic_id: nextEpicId },
+            {
+              epic_id: nextEpicId,
+              epic: epic
+                ? { id: epic.id, epic_id: epic.code, title: epic.title }
+                : null,
+            },
+          )
+        }}
         placeholder="No epic"
-        readOnly
       />
+      {epicsQuery.status === 'error' && (
+        <button
+          type="button"
+          onClick={epicsQuery.refetch}
+          className="text-primary -mt-3 self-start text-xs font-semibold underline"
+        >
+          Retry loading epics
+        </button>
+      )}
       <TaskDateField
         id="task-details-due-date"
         label="Due date"
-        value={task.due_date?.slice(0, 10) ?? ''}
-        onChange={() => undefined}
-        readOnly
+        value={dueDate}
+        disabled={savingFields.has('due_date')}
+        min={getTodayISO()}
+        clearable
+        onChange={(value) => {
+          if (value && value < getTodayISO()) {
+            toast.error('Due date cannot be earlier than today.')
+            return
+          }
+          if (value === dueDate) return
+          const nextDueDate = value ? `${value}T12:00:00Z` : null
+          void onSaveField(
+            'due_date',
+            { due_date: nextDueDate },
+            { due_date: nextDueDate },
+          )
+        }}
         emptyLabel="No date"
       />
       <TaskField id="task-details-created-by" label="Created by">
@@ -112,8 +314,12 @@ function LoadingState() {
   )
 }
 
-export function TaskDetailsModal({ projectId, taskId, onClose, onCopyLink }: TaskDetailsModalProps) {
-  const { status, task, retry } = useTaskDetails(projectId, taskId)
+export function TaskDetailsModal({ projectId, taskId, onClose, onCopyLink, onTaskUpdated }: TaskDetailsModalProps) {
+  const { status, task, retry, savingFields, saveField } = useTaskDetails(
+    projectId,
+    taskId,
+    onTaskUpdated,
+  )
   const dialogRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -168,7 +374,12 @@ export function TaskDetailsModal({ projectId, taskId, onClose, onCopyLink }: Tas
             </div>
             <div className="mt-icon-menu-width md:mt-6.5">
               {status === 'success' && task ? (
-                <TaskTitleField value={task.title?.trim() ?? ''} onChange={() => undefined} readOnly placeholder="Untitled task" />
+                <EditableTaskTitle
+                  key={`${task.id}:${task.title}`}
+                  task={task}
+                  disabled={savingFields.has('title')}
+                  saveField={saveField}
+                />
               ) : (
                 <div className="text-label-sm text-grey mt-4 uppercase">Title</div>
               )}
@@ -185,7 +396,12 @@ export function TaskDetailsModal({ projectId, taskId, onClose, onCopyLink }: Tas
             )}
             {status === 'not-found' && <p role="status" className="text-slate-medium flex min-h-64 items-center justify-center text-sm">Task not found</p>}
             {status === 'success' && task && (
-              <TaskDescriptionField value={task.description?.trim() ?? ''} onChange={() => undefined} readOnly placeholder="No description" />
+              <EditableTaskDescription
+                key={`${task.id}:${task.description}`}
+                task={task}
+                disabled={savingFields.has('description')}
+                saveField={saveField}
+              />
             )}
           </div>
 
@@ -195,7 +411,14 @@ export function TaskDetailsModal({ projectId, taskId, onClose, onCopyLink }: Tas
         </div>
 
         <aside className="mt-4 flex flex-col gap-4 md:mt-0 md:w-80 md:shrink-0 md:gap-6 md:border-l md:border-surface-highest/60 md:px-8 md:pt-9">
-          {status === 'success' && task && <TaskProperties task={task} />}
+          {status === 'success' && task && (
+            <TaskProperties
+              task={task}
+              projectId={projectId}
+              savingFields={savingFields}
+              onSaveField={saveField}
+            />
+          )}
           {status === 'loading' && Array.from({ length: 6 }, (_, index) => <div key={index} className="bg-authcard h-16 animate-pulse rounded-md" />)}
         </aside>
       </section>

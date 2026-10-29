@@ -6,10 +6,12 @@ interface TaskTitleFieldProps {
   onChange: (value: string) => void
   error?: string
   readOnly?: boolean
+  disabled?: boolean
   placeholder?: string
+  onBlur?: () => void
 }
 
-export function TaskTitleField({ value, onChange, error, readOnly = false, placeholder = 'e.g., Finalize structural schematics' }: TaskTitleFieldProps) {
+export function TaskTitleField({ value, onChange, error, readOnly = false, disabled = false, placeholder = 'e.g., Finalize structural schematics', onBlur }: TaskTitleFieldProps) {
   return (
     <TaskField id="task-title" label="Title">
       <input
@@ -17,7 +19,9 @@ export function TaskTitleField({ value, onChange, error, readOnly = false, place
         type="text"
         value={value}
         readOnly={readOnly}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? 'task-title-error' : undefined}
