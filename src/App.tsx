@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { SignUp } from '@/pages/SignUp'
 import Login from '@/pages/LoginPage'
@@ -67,10 +67,18 @@ function App() {
             }
           />
           <Route
-            path="/statistics"
+            path="/my-statistics"
             element={
               <ProtectedRoutes>
                 <StatisticsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/statistics"
+            element={
+              <ProtectedRoutes>
+                <Navigate to="/my-statistics" replace />
               </ProtectedRoutes>
             }
           />

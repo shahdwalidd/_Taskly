@@ -1,6 +1,8 @@
 import NoTasksIcon from '@/assets/NoTasksIcon.svg?react'
+import { taskStatuses } from '@/components/tasks-board/TaskStatus'
+import type { TaskStatusValue } from '@/types/addTask.types'
 
-export type AnalyticsStatus = 'TO_DO' | 'IN_PROGRESS' | 'BLOCKED' | 'DONE'
+export type AnalyticsStatus = TaskStatusValue
 
 export interface DayStatusCount {
   status: AnalyticsStatus
@@ -10,6 +12,7 @@ export interface DayStatusCount {
 export interface WeekDay {
   weekday: string
   date: string
+  dayNumber: string
   isToday?: boolean
   statuses: DayStatusCount[]
 }
@@ -19,18 +22,17 @@ interface WeeklyCalendarProps {
   mobileDays: WeekDay[]
 }
 
-const statusLabel: Record<AnalyticsStatus, string> = {
-  TO_DO: 'To Do',
-  IN_PROGRESS: 'In Progress',
-  BLOCKED: 'Blocked',
-  DONE: 'Done',
-}
+const statusLabel = Object.fromEntries(taskStatuses.map(({ id, label }) => [id, label])) as Record<AnalyticsStatus, string>
 
 const desktopStatusStyle: Record<AnalyticsStatus, string> = {
   TO_DO: 'bg-background text-slate-medium',
   IN_PROGRESS: 'bg-primary-container/10 text-primary',
   BLOCKED: 'bg-babyred/20 text-error',
   DONE: 'bg-on-success/10 text-on-success',
+  IN_REVIEW: 'bg-surface-low text-slate-medium',
+  READY_FOR_QA: 'bg-primary-container/15 text-primary',
+  REOPENED: 'bg-babyred text-error',
+  READY_FOR_PRODUCTION: 'bg-success text-on-success',
 }
 
 const mobileStatusStyle: Record<AnalyticsStatus, string> = {
@@ -38,6 +40,10 @@ const mobileStatusStyle: Record<AnalyticsStatus, string> = {
   IN_PROGRESS: 'bg-primary-container text-white',
   BLOCKED: 'bg-babyred text-error',
   DONE: 'bg-success text-on-success',
+  IN_REVIEW: 'bg-surface-highest text-slate-medium',
+  READY_FOR_QA: 'bg-primary-container text-white',
+  REOPENED: 'bg-babyred text-error',
+  READY_FOR_PRODUCTION: 'bg-darkgreen text-white',
 }
 
 function DesktopCalendar({ days }: { days: WeekDay[] }) {
@@ -98,7 +104,7 @@ function MobileCalendar({ days }: { days: WeekDay[] }) {
                 {day.weekday}
               </span>
               <span className={`text-lg leading-5 font-bold ${day.isToday ? 'text-primary-container' : 'text-slate-dark'}`}>
-                {day.date}
+                {day.dayNumber}
               </span>
             </div>
           </div>

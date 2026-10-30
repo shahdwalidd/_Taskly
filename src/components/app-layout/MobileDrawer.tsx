@@ -62,7 +62,7 @@ export function MobileDrawer({
           <SidebarNavItem
             icon={StatsIcon}
             label="My Statistics"
-            to="/statistics"
+            to="/my-statistics"
             onNavigate={onClose}
           />
 

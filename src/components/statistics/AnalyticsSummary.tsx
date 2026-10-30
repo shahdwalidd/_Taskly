@@ -7,13 +7,13 @@ import OverdueSummaryMobileIcon from '@/assets/statistics/OverdueSummaryMobile.s
 import OverdueSummaryDesktopIcon from '@/assets/statistics/OverdueSummaryDesktop.svg?react'
 
 interface AnalyticsSummaryProps {
-  desktop: { totalTasks: number; completedTasks: number; overdueTasks: number }
-  mobile: { totalTasks: number; completedTasks: number; overdueTasks: number }
+  desktop: { totalTasks: number | null; completedTasks: number | null; overdueTasks: number | null }
+  mobile: { totalTasks: number | null; completedTasks: number | null; overdueTasks: number | null }
 }
 
 interface SummaryCardProps {
   label: string
-  value: number
+  value: number | null
   tone: 'blue' | 'green' | 'red'
   icon: ReactNode
 }
@@ -31,8 +31,8 @@ function SummaryCard({ label, value, tone, icon }: SummaryCardProps) {
         <p className="text-analytics-summary-label text-grey uppercase md:text-xs md:leading-4 md:font-bold md:tracking-wide md:text-slate-dark/60">
           {label}
         </p>
-        <p className={`text-xl leading-7 font-bold md:text-3xl md:leading-9 ${tone === 'red' ? 'text-error' : 'text-slate-dark'}`}>
-          {value}
+        <p aria-live="polite" className={`text-xl leading-7 font-bold md:text-3xl md:leading-9 ${tone === 'red' ? 'text-error' : 'text-slate-dark'}`}>
+          {value ?? '—'}
         </p>
       </div>
       <span className={`order-1 flex size-4 items-center justify-center rounded-sm bg-transparent md:order-0 md:size-12 ${toneClasses[tone]}`} aria-hidden="true">

@@ -49,6 +49,7 @@ export async function getProjects(
   accessToken: string,
   limit?: number,
   offset?: number,
+  signal?: AbortSignal,
 ): Promise<{ projects: Project[]; totalCount: number }> {
   const paginationQuery =
     limit !== undefined && offset !== undefined
@@ -63,6 +64,7 @@ export async function getProjects(
         Prefer: 'count=exact',
       },
       accessToken,
+      signal,
     },
   )
   const contentRange = result.headers.get('Content-Range')
