@@ -11,7 +11,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
   const jobTitle = user?.user_metadata.department ?? ''
   const initials = getInitials(userName)
   return (
-    <header className="bg-background border-border-subtle flex items-center justify-between border-b px-6 py-3 md:px-8">
+    <header className="bg-background border-border-subtle flex h-20 items-center justify-between border-b px-6 py-3 md:h-16 md:px-8">
       <div className="flex items-center gap-4 md:hidden">
         <button
           onClick={onMenuClick}

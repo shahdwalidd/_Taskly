@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { UseFormRegister, FieldValues, Path } from 'react-hook-form'
-import eyeOn from '@/assets/icons/eyeon.svg'
-import eyeOff from '@/assets/icons/eye-off.svg'
+import EyeOnIcon from '@/assets/icons/eyeon.svg?react'
+import EyeOffIcon from '@/assets/icons/eye-off.svg?react'
 interface PasswordFieldProps<T extends FieldValues> {
   label: string
   name: Path<T>
@@ -59,11 +59,11 @@ export function PasswordField<T extends FieldValues>({
             onClick={() => setShowPassword(!showPassword)}
             className="text-slate-medium absolute top-1/2 right-3 -translate-y-1/2"
           >
-            <img
-              src={showPassword ? eyeOff : eyeOn}
-              alt=""
-              className="h-icon-eye-height w-icon-eye-width"
-            />
+            {showPassword ? (
+              <EyeOffIcon aria-hidden="true" />
+            ) : (
+              <EyeOnIcon aria-hidden="true" />
+            )}
           </button>
         )}
       </div>

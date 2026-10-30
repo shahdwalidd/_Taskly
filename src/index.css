@@ -156,6 +156,34 @@
   --text-span-sm--letter-spacing: 1.2px;
   --text-span-sm--font-weight: 700;
 
+  /* Analytics screen measurements from the mobile design */
+  --text-analytics-overview: 10px;
+  --text-analytics-overview--line-height: 15px;
+  --text-analytics-overview--font-weight: 700;
+  --text-analytics-overview--letter-spacing: 1px;
+  --text-analytics-summary-label: 10px;
+  --text-analytics-summary-label--line-height: 15px;
+  --text-analytics-summary-label--font-weight: 500;
+  --text-analytics-summary-label--letter-spacing: 0.5px;
+  --text-analytics-day-label: 9px;
+  --text-analytics-day-label--line-height: 9px;
+  --text-analytics-day-label--font-weight: 700;
+  --text-analytics-project-row: 10px;
+  --text-analytics-project-row--line-height: 15px;
+  --text-analytics-project-row--font-weight: 700;
+  --text-analytics-donut-total: 30px;
+  --text-analytics-donut-total--line-height: 22px;
+  --text-analytics-donut-total--font-weight: 800;
+  --text-analytics-donut-label: 14px;
+  --text-analytics-donut-label--line-height: 16px;
+  --text-analytics-donut-label--font-weight: 700;
+  --text-analytics-legend: 10px;
+  --text-analytics-legend--line-height: 15px;
+  --text-analytics-legend--font-weight: 500;
+  --spacing-analytics-summary-card: 113px;
+  --spacing-analytics-calendar-tail: 15px;
+  --spacing-analytics-project-card: 155px;
+
   --tracking-custom: 1.4px;
 
   /* Radius */

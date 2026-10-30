@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { SignUp } from '@/pages/SignUp'
 import Login from '@/pages/LoginPage'
@@ -16,6 +16,7 @@ import { CreateEpicPage } from './pages/CreateEpicPage'
 import { EpicsPage } from './pages/ProjectEpics'
 import { TasksPage } from './pages/TasksPage'
 import { AcceptInvitationPage } from '@/pages/AcceptInvitationPage'
+import { StatisticsPage } from '@/pages/StatisticsPage'
 function App() {
   return (
     <>
@@ -62,6 +63,22 @@ function App() {
             element={
               <ProtectedRoutes>
                 <ProjectsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/my-statistics"
+            element={
+              <ProtectedRoutes>
+                <StatisticsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/statistics"
+            element={
+              <ProtectedRoutes>
+                <Navigate to="/my-statistics" replace />
               </ProtectedRoutes>
             }
           />
