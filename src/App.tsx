@@ -16,6 +16,7 @@ import { CreateEpicPage } from './pages/CreateEpicPage'
 import { EpicsPage } from './pages/ProjectEpics'
 import { TasksPage } from './pages/TasksPage'
 import { AcceptInvitationPage } from '@/pages/AcceptInvitationPage'
+import { StatisticsPage } from '@/pages/StatisticsPage'
 function App() {
   return (
     <>
@@ -62,6 +63,14 @@ function App() {
             element={
               <ProtectedRoutes>
                 <ProjectsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/statistics"
+            element={
+              <ProtectedRoutes>
+                <StatisticsPage />
               </ProtectedRoutes>
             }
           />

@@ -59,7 +59,12 @@ export function MobileDrawer({
             to="/project"
             onNavigate={onClose}
           />
-          <SidebarNavItem icon={StatsIcon} label="My Statistics" />
+          <SidebarNavItem
+            icon={StatsIcon}
+            label="My Statistics"
+            to="/statistics"
+            onNavigate={onClose}
+          />
 
           {hasActiveProject && (
             <>

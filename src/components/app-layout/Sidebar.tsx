@@ -63,6 +63,7 @@ export function Sidebar({
             icon={StatsIcon}
             label="My Statistics"
             isCollapsed={isCollapsed}
+            to="/statistics"
           />
         </div>
 

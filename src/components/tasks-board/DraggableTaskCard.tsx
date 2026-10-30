@@ -2,6 +2,7 @@ import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import type { Task } from '@/types/addTask.types'
 import { toTaskCardProps } from '@/utils/taskBoard'
+import DragHandleIcon from '@/assets/icons/DragHandle.svg?react'
 import { TaskCard } from './TaskCard'
 
 interface DraggableTaskCardProps {
@@ -49,19 +50,7 @@ export function DraggableTaskCard({
           onClick={(event) => event.stopPropagation()}
           className="text-slate-medium hover:text-primary focus-visible:text-primary touch-none cursor-grab rounded-xs p-1 active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
         >
-          <svg
-            aria-hidden="true"
-            className="size-4"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-          >
-            <circle cx="5" cy="3" r="1" />
-            <circle cx="11" cy="3" r="1" />
-            <circle cx="5" cy="8" r="1" />
-            <circle cx="11" cy="8" r="1" />
-            <circle cx="5" cy="13" r="1" />
-            <circle cx="11" cy="13" r="1" />
-          </svg>
+          <DragHandleIcon aria-hidden="true" />
         </button>
       }
     />

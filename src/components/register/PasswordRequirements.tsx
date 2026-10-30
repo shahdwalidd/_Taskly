@@ -1,5 +1,5 @@
-import circle from '@/assets/icons/circle.svg'
-import checkcircle from '@/assets/icons/checkcircle.svg'
+import CircleIcon from '@/assets/icons/circle.svg?react'
+import CheckCircleIcon from '@/assets/icons/checkcircle.svg?react'
 interface PasswordRequirementsProps {
   password: string
 }
@@ -25,11 +25,7 @@ export function PasswordRequirements({ password }: PasswordRequirementsProps) {
       {' '}
       {requirements.map((requirement) => (
         <li className="flex items-center gap-2" key={requirement.label}>
-          <img
-            src={requirement.met ? checkcircle : circle}
-            alt=""
-            className="h-icon-circle w-icon-circle"
-          />
+          {requirement.met ? <CheckCircleIcon aria-hidden="true" /> : <CircleIcon aria-hidden="true" />}
           <span className="text-label-sm text-grey">{requirement.label}</span>
         </li>
       ))}

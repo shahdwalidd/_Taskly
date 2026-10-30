@@ -26,7 +26,7 @@ export function BottomNav({ projectId }: BottomNavProps) {
       ]
     : [{ icon: FolderIcon, label: 'Projects' }]
   return (
-    <nav className="bg-surface-low fixed inset-x-0 bottom-0 z-30 flex px-7 md:hidden">
+    <nav className="bg-surface-low fixed inset-x-0 bottom-0 z-30 flex h-16 items-center px-7 md:hidden">
       {items.map(({ icon: Icon, label, path }) => {
         const to =
           path && projectId ? `/project/${projectId}/${path}` : '/project'
@@ -37,7 +37,7 @@ export function BottomNav({ projectId }: BottomNavProps) {
             end={label === 'Projects'}
             className={({ isActive }) =>
               cn(
-                'flex flex-1 flex-col items-center gap-1 py-2 text-xs',
+                'flex flex-1 flex-col items-center gap-1 text-xs',
                 isActive ? 'text-primary-container' : 'text-slate-dark-70',
               )
             }
