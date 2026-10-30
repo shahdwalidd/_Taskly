@@ -109,7 +109,11 @@ export function useMyStatistics(filters: CalendarStatsFilters) {
       .then((accessToken) => getProjects(accessToken, undefined, undefined, controller.signal))
       .then(({ projects: projectData }) => {
         if (!controller.signal.aborted) {
-          setProjects({ key: PROJECTS_KEY, status: 'success', data: projectData, error: null })
+          const uniqueProjects = projectData.filter(
+            (project, index, list) =>
+              list.findIndex((item) => item.id === project.id) === index,
+          )
+          setProjects({ key: PROJECTS_KEY, status: 'success', data: uniqueProjects, error: null })
         }
       })
       .catch((error: unknown) => {

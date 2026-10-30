@@ -66,7 +66,7 @@ export function DateRangePicker({ startDate, endDate, onApply }: DateRangePicker
   const rangeLength = draftRange?.from && draftRange.to
     ? countInclusiveDays(draftRange.from, draftRange.to)
     : 0
-  const hasValidRange = Boolean(draftRange?.from && draftRange.to && rangeLength <= 7)
+  const hasValidRange = Boolean(draftRange?.from && draftRange.to && rangeLength >= 1 && rangeLength <= 7)
   const rangeError = rangeLength > 7
     ? 'Choose no more than 7 calendar days.'
     : draftRange?.from && !draftRange.to
@@ -99,7 +99,7 @@ export function DateRangePicker({ startDate, endDate, onApply }: DateRangePicker
       </button>
 
       {isOpen && (
-        <div role="dialog" aria-label="Select a date range" className="absolute top-full left-0 z-30 mt-2 w-[min(22.5rem,calc(100vw-2rem))] rounded-lg border border-slate-light/30 bg-white p-4 shadow-xl md:w-96 md:p-6">
+        <div role="dialog" aria-label="Select a date range" className="absolute top-full right-0 left-auto z-30 mt-2 w-[min(22.5rem,calc(100vw-2rem))] rounded-lg border border-slate-light/30 bg-white p-4 shadow-xl md:right-auto md:left-0 md:w-96 md:p-6">
           <DayPicker
             mode="range"
             resetOnSelect

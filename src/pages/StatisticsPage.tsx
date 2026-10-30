@@ -16,6 +16,7 @@ import type { CalendarStatsFilters, TasksCalendarStats } from '@/services/Statis
 import { formatShortDate, getCurrentWeekRange, parseIsoDate, toIsoDate } from '@/utils/dateRange'
 import DropdownChevronIcon from '@/assets/statistics/DropdownChevron.svg?react'
 import WeekPreviousIcon from '@/assets/statistics/WeekPrevious.svg?react'
+import WeekNextIcon from '@/assets/statistics/WeekNext.svg?react'
 
 function createCalendarDays(
   startDate: string,
@@ -108,6 +109,14 @@ export function StatisticsPage() {
     : []
   const statusStatistics = stats ? getStatusStatistics(stats.totals) : []
 
+  const shiftWeek = (days: number) => {
+    const start = parseIsoDate(dateRange.startDate)
+    const end = parseIsoDate(dateRange.endDate)
+    start.setDate(start.getDate() + days)
+    end.setDate(end.getDate() + days)
+    setDateRange({ startDate: toIsoDate(start), endDate: toIsoDate(end) })
+  }
+
   return (
     <AuthenticatedLayout>
       <div className="flex flex-col gap-6 px-4 pt-4 pb-6 md:gap-8 md:px-8 md:py-8">
@@ -118,14 +127,27 @@ export function StatisticsPage() {
 
         <section aria-label="Analytics filters" className="relative z-20 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:rounded-lg md:bg-surface-low md:p-4">
           <div className="hidden items-center gap-3 md:flex">
-            <span className="rounded-sm p-1 text-slate-medium">
+            <button
+              type="button"
+              onClick={() => shiftWeek(-7)}
+              aria-label="Previous week"
+              className="rounded-sm p-1 text-slate-medium hover:bg-surface-low focus-visible:outline-2 focus-visible:outline-primary"
+            >
               <WeekPreviousIcon aria-hidden="true" />
-            </span>
+            </button>
             <DateRangePicker
               startDate={dateRange.startDate}
               endDate={dateRange.endDate}
               onApply={setDateRange}
             />
+            <button
+              type="button"
+              onClick={() => shiftWeek(7)}
+              aria-label="Next week"
+              className="rounded-sm p-1 text-slate-medium hover:bg-surface-low focus-visible:outline-2 focus-visible:outline-primary"
+            >
+              <WeekNextIcon aria-hidden="true" />
+            </button>
           </div>
 
           <div className="hidden items-center gap-3 md:flex">

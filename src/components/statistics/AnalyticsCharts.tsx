@@ -137,7 +137,7 @@ function ProjectsCard({
   onRetry: () => void
 }) {
   return (
-    <article className="h-analytics-project-card rounded-2xl border border-slate-light/20 bg-white p-5 shadow-sm md:h-auto md:min-h-66 md:rounded-lg md:p-8">
+    <article className="min-h-analytics-project-card rounded-2xl border border-slate-light/20 bg-white p-5 shadow-sm md:h-auto md:min-h-66 md:rounded-lg md:p-8">
       <h3 className="text-lg leading-4 font-bold tracking-wide text-slate-dark md:leading-7 md:tracking-normal">All Projects</h3>
       {loading ? (
         <p role="status" className="mt-6 text-sm text-slate-medium">Loading projects…</p>
